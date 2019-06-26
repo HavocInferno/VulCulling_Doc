@@ -54,6 +54,37 @@ TECHNIQUES
 Math for Game Developers - Frustum Culling
 https://www.youtube.com/watch?v=4p-E_31XOPM
 
+Lighthouse3d: View Frustum Culling
+http://www.lighthouse3d.com/tutorials/view-frustum-culling/
+
+Dual-Cone View Culling for Virtual Reality Applications (?)
+https://blog.squareys.de/dual-cone-view-culling-for-vr/
+
+Wie Sie einen Einstieg in das Frustum Culling finden.
+https://viscircle.de/wie-sie-einen-einstieg-in-das-frustum-culling-finden/
+
+gamedev.net: Frustum Culling
+https://www.gamedev.net/articles/programming/general-and-gameplay-programming/frustum-culling-r4613/
+
+Why Frustum Culling Matters, and Why It's Not Important
+https://gist.github.com/nothings/913056601b56e5719cc987684a16544e
+
+Computing a single virtual eye for VR frustum culling
+https://twitter.com/morgan3d/status/608710628958720000
+
+Oculus: Superfrustum culling
+https://www.youtube.com/watch?v=BZhOUGG45_o&feature=youtu.be&t=46m12s
+
+VR and frustum culling
+https://computergraphics.stackexchange.com/questions/1736/vr-and-frustum-culling
+
+
+
+VULKAN DETAILS
+
+View frustum culling class
+https://github.com/SaschaWillems/Vulkan/blob/master/base/frustum.hpp
+
 
 
 ######## MISC ########
@@ -63,3 +94,6 @@ https://www.youtube.com/user/khronosgroup/playlists
 
 Practical Development for Vulkan (presented by Valve Software)
 https://www.gdcvault.com/play/1023577/Practical-Development-for-Vulkan-(presented
+
+UE4: Visibility and Occlusion Culling
+https://docs.unrealengine.com/en-US/Engine/Rendering/VisibilityCulling/index.html

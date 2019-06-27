@@ -97,3 +97,18 @@ https://www.gdcvault.com/play/1023577/Practical-Development-for-Vulkan-(presente
 
 UE4: Visibility and Occlusion Culling
 https://docs.unrealengine.com/en-US/Engine/Rendering/VisibilityCulling/index.html
+
+GDC 2016: Fast and Flexible: Technical Art and Rendering For The Unknown
+https://www.youtube.com/watch?v=ClRtgeUsdOg
+
+GDC 2015: Advanced VR Rendering Performance
+https://www.youtube.com/watch?v=ya8vKZRBXdw
+
+GDC 2016: Advanced VR Rendering Performance
+https://www.youtube.com/watch?v=eIlb688pUu4
+
+2017 DevU - 06 Bringing Vulkan to VR - Cass Everitt
+https://www.youtube.com/watch?v=jbCQI3DZ9w8&list=PLYO7XTAX41FOURVQnOMFI-uHyuyIGh6eX&index=8&t=0s
+
+Refocusing on VR Innovation: Can Standards Simplify Cross-Platform Virtual Reality Development?
+https://www.youtube.com/watch?v=PQnJOQkdiow&list=PLYO7XTAX41FPg08uM_bgPE9HLgDAyzDaZ&index=3&t=0s

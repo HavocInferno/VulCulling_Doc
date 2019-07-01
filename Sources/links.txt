@@ -1,0 +1,114 @@
+######## OCCLUSION CULLING ########
+
+TECHNIQUES
+
+ITCS 4010/5010:Game Engine Design: Culling Techniques
+https://webpages.uncc.edu/krs/courses/5010/ged/lectures/cull_lod2.pdf
+
+A Survey of Visibility for Walkthrough Applications
+https://www.researchgate.net/publication/2440562_A_Survey_of_Visibility_for_Walkthrough_Applications
+
+Occlusion Culling Methods (2001)
+https://pdfs.semanticscholar.org/c1a0/aa9000f62bb9b1a60f27182e23872c375e1e.pdf
+
+Overview on popular occlusion culling techniques
+https://www.gamesindustry.biz/articles/2016-12-07-overview-on-popular-occlusion-culling-techniques
+
+Occlusion Culling Algorithms (1999)
+https://www.gamasutra.com/view/feature/131801/occlusion_culling_algorithms.php
+
+Understanding Culling Methods | Live Training | Unreal Engine
+https://www.youtube.com/watch?v=6WtE3CoFMXU
+
+thebennybox: How Occlusion Culling Works
+https://www.youtube.com/playlist?list=PLEETnX-uPtBVszVeAIDl5jp5j9YT9EFae
+
+
+
+VULKAN DETAILS
+
+06 - Cull and LOD
+Purely GPU based frustum visibility culling and level-of-detail system. A compute shader is used to modify draw commands stored in an indirect draw commands buffer to toggle model visibility and select it's level-of-detail based on camera distance, no calculations have to be done on and synced with the CPU.
+https://github.com/SaschaWillems/Vulkan/blob/master/examples/computecullandlod/computecullandlod.cpp
+
+04 - Occlusion queries
+Using query pool objects to get number of passed samples for rendered primitives got determining on-screen visibility.
+https://github.com/SaschaWillems/Vulkan/blob/master/examples/occlusionquery/occlusionquery.cpp
+
+GPU occlusion culling using compute shader with Vulkan
+https://github.com/sydneyzh/gpu_occlusion_culling_vk
+https://www.youtube.com/watch?v=dN1c1QPgnJA
+
+EXPERIMENTS IN GPU-BASED OCCLUSION CULLING
+https://interplayoflight.wordpress.com/2017/11/15/experiments-in-gpu-based-occlusion-culling/
+
+Nvidia: OpenGL sample for shader-based occlusion culling
+https://github.com/nvpro-samples/gl_occlusion_culling
+
+
+
+######## FRUSTUM CULLING ########
+
+TECHNIQUES
+
+Math for Game Developers - Frustum Culling
+https://www.youtube.com/watch?v=4p-E_31XOPM
+
+Lighthouse3d: View Frustum Culling
+http://www.lighthouse3d.com/tutorials/view-frustum-culling/
+
+Dual-Cone View Culling for Virtual Reality Applications (?)
+https://blog.squareys.de/dual-cone-view-culling-for-vr/
+
+Wie Sie einen Einstieg in das Frustum Culling finden.
+https://viscircle.de/wie-sie-einen-einstieg-in-das-frustum-culling-finden/
+
+gamedev.net: Frustum Culling
+https://www.gamedev.net/articles/programming/general-and-gameplay-programming/frustum-culling-r4613/
+
+Why Frustum Culling Matters, and Why It's Not Important
+https://gist.github.com/nothings/913056601b56e5719cc987684a16544e
+
+# Computing a single virtual eye for VR frustum culling
+# https://twitter.com/morgan3d/status/608710628958720000
+
+Oculus: Superfrustum culling
+https://www.youtube.com/watch?v=BZhOUGG45_o&feature=youtu.be&t=46m12s
+
+# VR and frustum culling
+# https://computergraphics.stackexchange.com/questions/1736/vr-and-frustum-culling
+
+
+
+VULKAN DETAILS
+
+# View frustum culling class
+# https://github.com/SaschaWillems/Vulkan/blob/master/base/frustum.hpp
+
+
+
+######## MISC ########
+
+# The Khronos Group YT
+# https://www.youtube.com/user/khronosgroup/playlists
+
+# Practical Development for Vulkan (presented by Valve Software)
+# https://www.gdcvault.com/play/1023577/Practical-Development-for-Vulkan-(presented
+
+# UE4: Visibility and Occlusion Culling
+# https://docs.unrealengine.com/en-US/Engine/Rendering/VisibilityCulling/index.html
+
+# GDC 2016: Fast and Flexible: Technical Art and Rendering For The Unknown
+# https://www.youtube.com/watch?v=ClRtgeUsdOg
+ 
+# GDC 2015: Advanced VR Rendering Performance
+# https://www.youtube.com/watch?v=ya8vKZRBXdw
+ 
+# GDC 2016: Advanced VR Rendering Performance
+# https://www.youtube.com/watch?v=eIlb688pUu4
+
+# 2017 DevU - 06 Bringing Vulkan to VR - Cass Everitt
+# https://www.youtube.com/watch?v=jbCQI3DZ9w8&list=PLYO7XTAX41FOURVQnOMFI-uHyuyIGh6eX&index=8&t=0s
+
+# Refocusing on VR Innovation: Can Standards Simplify Cross-Platform Virtual Reality Development?
+# https://www.youtube.com/watch?v=PQnJOQkdiow&list=PLYO7XTAX41FPg08uM_bgPE9HLgDAyzDaZ&index=3&t=0s

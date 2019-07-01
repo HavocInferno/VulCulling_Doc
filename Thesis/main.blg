@@ -1,0 +1,18 @@
+[0] Config.pm:304> INFO - This is Biber 2.12
+[0] Config.pm:307> INFO - Logfile is 'main.blg'
+[52] biber-MSWIN64:315> INFO - === 
+[84] Biber.pm:371> INFO - Reading 'main.bcf'
+[199] Biber.pm:889> INFO - Found 2 citekeys in bib section 0
+[214] Biber.pm:4093> INFO - Processing section 0
+[226] Biber.pm:4254> INFO - Looking for bibtex format file 'bibliography_Citavi.bib' for section 0
+[242] bibtex.pm:1523> INFO - LaTeX decoding ...
+[269] bibtex.pm:1340> INFO - Found BibTeX data source 'bibliography_Citavi.bib'
+[276] Utils.pm:193> WARN - Entry 'Hey.2001' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[285] Utils.pm:193> WARN - I didn't find a database entry for 'latex' (section 0)
+[295] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[295] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[295] Biber.pm:3921> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[295] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-US'
+[300] bbl.pm:636> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[301] bbl.pm:739> INFO - Output to main.bbl
+[303] Biber.pm:110> INFO - WARNINGS: 2

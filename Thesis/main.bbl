@@ -1,0 +1,62 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{Hey.2001}{article}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,uniquepart=base,hash=d272e5b537ff7410133569f7965b2e31}{%
+           family={Hey},
+           familyi={H\bibinitperiod},
+           given={Heinrich},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=fe86a8aa7dfe3b0b563170e8cbd83793}{%
+           family={Purgathofer},
+           familyi={P\bibinitperiod},
+           given={Werner},
+           giveni={W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{bb940a2ff82196a1212c2b8938554c8f}
+      \strng{fullhash}{bb940a2ff82196a1212c2b8938554c8f}
+      \strng{bibnamehash}{bb940a2ff82196a1212c2b8938554c8f}
+      \strng{authorbibnamehash}{bb940a2ff82196a1212c2b8938554c8f}
+      \strng{authornamehash}{bb940a2ff82196a1212c2b8938554c8f}
+      \strng{authorfullhash}{bb940a2ff82196a1212c2b8938554c8f}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{EUROGRAPHICS STAR}
+      \field{title}{Occlusion Culling Methods}
+      \field{year}{2001}
+      \verb{urlraw}
+      \verb https://pdfs.semanticscholar.org/c1a0/aa9000f62bb9b1a60f27182e23872c375e1e.pdf
+      \endverb
+      \verb{url}
+      \verb https://pdfs.semanticscholar.org/c1a0/aa9000f62bb9b1a60f27182e23872c375e1e.pdf
+      \endverb
+      \warn{\item Entry 'Hey.2001' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+  \enddatalist
+  \missing{latex}
+\endrefsection
+\endinput
+

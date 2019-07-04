@@ -5,19 +5,46 @@
 Use with pdfLaTeX and Biber.
 
 \section{Section}
-Citation test (with Biber)~\parencite{latex}.
- 
-Occlusion Culling Methods \parencite{Hey.2001}:
-\textbf{Abstract}: 
-Occlusion culling methods are an important tool for efficient rendering of large scenes. Usually only a small
-part of such a scene is visible from a specific viewpoint. Therefore occlusion culling methods try to determine
-which parts of the scene are invisible and can be culled. That way usually only a small part of the scene's
-primitives has to be drawn. This is especially important for real-time rendering because large scenes can easily
-contain much more primitives than available hardware can render in real-time. In this state of the art report we
-present an overview of the already large number of existing occlusion culling methods and their different
-approaches and characteristics.
+1. Experiments in GPU-based occlusion culling (Anagnostou, Interplay of Light) \cite{Anagnostou.2017}: \\
+tldr CPU occlusion culling is very coarse as the CPU isn't great at rasterising. GPU can rasterise efficiently and supports hardware occlusion queries. Problem: "drawcall level" granularity, needs query and fence around every drawcall, thus can't handle instancing very well. Other problem: readback to CPU necessary, to avoid stalling use previous frame occlusion info for current frame. Thus popping likely for fast moving objects or camera. 
+Other solution: render low res occlusion buffer on GPU, produce mip chain, determine screen-space size of each prop and compare vs appropriate mip-level of buffer. Still needs CPU readback though, unless... compute shader in modern API: "In this case I will be using a compute shader to perform the occlusion tests, producing a list of visible props that I will then be consuming on the GPU, avoiding the CPU roundtrip."\\
 
+2. Why Frustum Culling Matters, and Why It's Not Important \cite{Barrett.2017}: \\
+tldr disregardm, oversimplified explanation of frustum culling.\\
 
+3. Overview on popular occlusion culling techniques \cite{gamesindustry.biz.2016}: \\
+tldr temporal culling methods are prone to artifacting with fast object or camera movement, CPU culling "is the most efficient, forward-looking approach", then again the article is written by someone from Umbra3D, a CPU occlusion culling middleware. 
+Still, precomputed visibility sets for weak devices are brought up, low res HI-Z depth buffer rasterised on the CPU with SIMD units for dynamic culling, see Intel's 2015/2016 occlusion culling article.\\
+
+4. Frustum Culling \cite{Gerlits.2017}: \\
+tldr code samples and brief performance numbers for bounding sphere, AABB, OBB based culling, SSE support, MT support, somewhat simple GPU culling. Sphere or AABB with SSE + MT support quite fast, 0.1-0.2ms for 100k objects on unspecified i5 quadcore.\\
+
+5. Dual-Cone View Culling for Virtual Reality Applications \cite{Hale.2018}: \\
+tldr not discernibly faster than frustum pyramid culling plus stencil mesh. Needs careful tuning for each HMD to avoid performing worse when a larger image is rendered and warped to view. With SIMD, more accurate cones etc may be more efficient.\\
+
+6. Culling Techniques \cite{ITCS.Subramanian}: \\
+tldr general explanation. Of interest maybe hierarchical bounding volumes for frustum culling. As the goal is a fast rendering of extreme number of objects, hierarchical ordering seems obviously necessary.\\
+
+7. A Survey of Visibility for Walkthrough Applications \cite{CohenOr.2003}: \\
+tldr .\\
+
+8. Occlusion Culling Methods \cite{Hey.2001}: \\
+tldr .\\
+
+9. Math for Game Developers - Frustum Culling\cite{Rodriguez.2013}: \\
+tldr as expected, brief mathematical explanation on how to compute whether a prop is inside the view frustum (based on position and prop radius).\\
+
+10. Wie Sie einen Einstieg in das Frustum Culling finden \cite{VisCircleGmbH.}: \\
+tldr D3D sample code for view frustum culling. Very brief, not very useful. But raises the questions how to compute (and store) bounding sphere radius for each prop, and how to compute and update frustum planes each frame (aka reconstruct from view + proj matrices or set up at start and then move all planes according to camera movement).\\
+
+11. Superfrustum culling \cite{Whiting.2017}: \\
+tldr instead of one frustum per eye, construct one superfrustum covering both. On paper means somewhat fewer objects are culled, but the reduced overhead still comes out on top. In their testing, shaved off ~1ms on lower end CPUs. Also monoscopic far-field for lower end devices and far draw distances: past a certain distance, stereo separation becomes very small, nigh indistinguishable, so it may be faster to render the far field monoscopic and then composit with the near-field stereo image. \\
+
+12. OpenGL sample for shader-based occlusion culling \cite{Kubisch.2014}: \\
+tldr shader-based batched occlusion culling system: leverages multi\char`_draw\char`_indirect and works well with setups where all geo is stored in one big buffer. \\
+
+Thus, things up in the air: 
+frustum culling, occlusion culling, detail culling, distance culling, hierarchical culling, cpu culling vs gpu culling, dual-view frustum culling vs superfrustum culling, stencil meshing, ...center-distance culling for foveated rendering, SIMD and MT optimization, ...
 
 \subsection{Subsection}
 

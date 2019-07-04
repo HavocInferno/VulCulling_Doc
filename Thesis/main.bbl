@@ -19,6 +19,216 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
+    \entry{Anagnostou.2017}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=5544867831c2018dc51d345951222a06}{%
+           family={Anagnostou},
+           familyi={A\bibinitperiod},
+           given={Kostas},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5544867831c2018dc51d345951222a06}
+      \strng{fullhash}{5544867831c2018dc51d345951222a06}
+      \strng{bibnamehash}{5544867831c2018dc51d345951222a06}
+      \strng{authorbibnamehash}{5544867831c2018dc51d345951222a06}
+      \strng{authornamehash}{5544867831c2018dc51d345951222a06}
+      \strng{authorfullhash}{5544867831c2018dc51d345951222a06}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{EXPERIMENTS IN GPU-BASED OCCLUSION CULLING}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://interplayoflight.wordpress.com/2017/11/15/experiments-in-gpu-based-occlusion-culling/
+      \endverb
+      \verb{url}
+      \verb https://interplayoflight.wordpress.com/2017/11/15/experiments-in-gpu-based-occlusion-culling/
+      \endverb
+      \warn{\item Entry 'Anagnostou.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Barrett.2017}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=ac2d8248c83ef7ac6ce8983b7a961df6}{%
+           family={Barrett},
+           familyi={B\bibinitperiod},
+           given={Sean},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \strng{fullhash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \strng{bibnamehash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \strng{authorbibnamehash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \strng{authornamehash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \strng{authorfullhash}{ac2d8248c83ef7ac6ce8983b7a961df6}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Why Frustum Culling Matters, and Why It's Not Important}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://gist.github.com/nothings/913056601b56e5719cc987684a16544e
+      \endverb
+      \verb{url}
+      \verb https://gist.github.com/nothings/913056601b56e5719cc987684a16544e
+      \endverb
+      \warn{\item Entry 'Barrett.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{gamesindustry.biz.2016}{misc}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{a4b52e5432884761f50fb9571273b93e}
+      \field{labeltitlesource}{title}
+      \field{title}{Overview on popular occlusion culling techniques: The experts at Umbra share their knowledge on solving the 3D visibility problem}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://www.gamesindustry.biz/articles/2016-12-07-overview-on-popular-occlusion-culling-techniques
+      \endverb
+      \verb{url}
+      \verb https://www.gamesindustry.biz/articles/2016-12-07-overview-on-popular-occlusion-culling-techniques
+      \endverb
+      \warn{\item Entry 'gamesindustry.biz.2016' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Gerlits.2017}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=916fe2c3d3281a0c31d03244e1b06897}{%
+           family={Gerlits},
+           familyi={G\bibinitperiod},
+           given={Anatoliy},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{916fe2c3d3281a0c31d03244e1b06897}
+      \strng{fullhash}{916fe2c3d3281a0c31d03244e1b06897}
+      \strng{bibnamehash}{916fe2c3d3281a0c31d03244e1b06897}
+      \strng{authorbibnamehash}{916fe2c3d3281a0c31d03244e1b06897}
+      \strng{authornamehash}{916fe2c3d3281a0c31d03244e1b06897}
+      \strng{authorfullhash}{916fe2c3d3281a0c31d03244e1b06897}
+      \field{sortinit}{4}
+      \field{sortinithash}{11cdaee3b18e01d77f3f428b13c1fc76}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Frustum Culling}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://www.gamedev.net/articles/programming/general-and-gameplay-programming/frustum-culling-r4613/
+      \endverb
+      \verb{url}
+      \verb https://www.gamedev.net/articles/programming/general-and-gameplay-programming/frustum-culling-r4613/
+      \endverb
+      \warn{\item Entry 'Gerlits.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Hale.2018}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=4fa381a7a6ab5c6adb6fda7a7e35b083}{%
+           family={Hale},
+           familyi={H\bibinitperiod},
+           given={Jonathan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \strng{fullhash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \strng{bibnamehash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \strng{authorbibnamehash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \strng{authornamehash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \strng{authorfullhash}{4fa381a7a6ab5c6adb6fda7a7e35b083}
+      \field{sortinit}{5}
+      \field{sortinithash}{3c19c3776b658b3558e9e2e4840c01e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Dual-Cone View Culling for Virtual Reality Applications}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://blog.squareys.de/dual-cone-view-culling-for-vr/
+      \endverb
+      \verb{url}
+      \verb https://blog.squareys.de/dual-cone-view-culling-for-vr/
+      \endverb
+      \warn{\item Entry 'Hale.2018' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{ITCS.Subramanian}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=1cce7df2c380c2a448bbe424ac373a53}{%
+           family={{Dr. K.R. Subramanian}},
+           familyi={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Charlotte, NC}%
+      }
+      \strng{namehash}{1cce7df2c380c2a448bbe424ac373a53}
+      \strng{fullhash}{1cce7df2c380c2a448bbe424ac373a53}
+      \strng{bibnamehash}{1cce7df2c380c2a448bbe424ac373a53}
+      \strng{authorbibnamehash}{1cce7df2c380c2a448bbe424ac373a53}
+      \strng{authornamehash}{1cce7df2c380c2a448bbe424ac373a53}
+      \strng{authorfullhash}{1cce7df2c380c2a448bbe424ac373a53}
+      \field{sortinit}{6}
+      \field{sortinithash}{57e57fb8451e7fcfa45d1e069f6d3136}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{ITCS 4010/5010: Game Engine Design}
+      \field{title}{Culling Techniques}
+      \verb{urlraw}
+      \verb https://webpages.uncc.edu/krs/courses/5010/ged/lectures/cull_lod2.pdf
+      \endverb
+      \verb{url}
+      \verb https://webpages.uncc.edu/krs/courses/5010/ged/lectures/cull_lod2.pdf
+      \endverb
+    \endentry
+    \entry{CohenOr.2003}{article}{}
+      \name{author}{4}{}{%
+        {{uniquename=0,uniquepart=base,hash=cdf44d78713bc27a81394749a9d8bbdc}{%
+           family={Cohen-Or},
+           familyi={C\bibinithyphendelim O\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=a54c94ef1f9caaf92597b8dd59966f16}{%
+           family={Chrysanthou},
+           familyi={C\bibinitperiod},
+           given={Yiorgos\bibnamedelima L.},
+           giveni={Y\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=1970af53a2b840bd3b890d01429f40ed}{%
+           family={Silva},
+           familyi={S\bibinitperiod},
+           given={Cl{á}udio\bibnamedelima T.},
+           giveni={C\bibinitperiod\bibinitdelim T\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=524f75af9d9e2501adb63051d530e308}{%
+           family={Durand},
+           familyi={D\bibinitperiod},
+           given={Fr{é}do},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \strng{fullhash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \strng{bibnamehash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \strng{authorbibnamehash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \strng{authornamehash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \strng{authorfullhash}{b5f34ec1737f8d2add7fa6bafbcc3a5e}
+      \field{sortinit}{7}
+      \field{sortinithash}{c818dd9105a2852444fc9f5e145c294e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE TRANSACTIONS ON VISUALIZATION AND COMPUTER GRAPHICS}
+      \field{number}{3}
+      \field{title}{A Survey of Visibility for Walkthrough Applications}
+      \field{volume}{9}
+      \field{year}{2003}
+      \field{pages}{412\bibrangedash 431}
+      \range{pages}{20}
+      \verb{urlraw}
+      \verb https://www.researchgate.net/publication/2440562_A_Survey_of_Visibility_for_Walkthrough_Applications
+      \endverb
+      \verb{url}
+      \verb https://www.researchgate.net/publication/2440562_A_Survey_of_Visibility_for_Walkthrough_Applications
+      \endverb
+      \warn{\item Entry 'CohenOr.2003' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
     \entry{Hey.2001}{article}{}
       \name{author}{2}{}{%
         {{uniquename=0,uniquepart=base,hash=d272e5b537ff7410133569f7965b2e31}{%
@@ -40,8 +250,8 @@
       \strng{authorbibnamehash}{bb940a2ff82196a1212c2b8938554c8f}
       \strng{authornamehash}{bb940a2ff82196a1212c2b8938554c8f}
       \strng{authorfullhash}{bb940a2ff82196a1212c2b8938554c8f}
-      \field{sortinit}{2}
-      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{sortinit}{8}
+      \field{sortinithash}{07edf88d4ea82509b9c4b4d13f41c452}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{EUROGRAPHICS STAR}
@@ -55,8 +265,113 @@
       \endverb
       \warn{\item Entry 'Hey.2001' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
     \endentry
+    \entry{Rodriguez.2013}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=13786a27b96e9f6fb37bc2eb8922cd0c}{%
+           family={Rodriguez},
+           familyi={R\bibinitperiod},
+           given={Jorge},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \strng{fullhash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \strng{bibnamehash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \strng{authorbibnamehash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \strng{authornamehash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \strng{authorfullhash}{13786a27b96e9f6fb37bc2eb8922cd0c}
+      \field{sortinit}{9}
+      \field{sortinithash}{1dd72ab054147731c9d824b49aba0534}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Math for Game Developers}
+      \field{title}{Math for Game Developers - Frustum Culling}
+      \field{volume}{29}
+      \field{year}{2013}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=4p-E_31XOPM
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=4p-E_31XOPM
+      \endverb
+      \warn{\item Entry 'Rodriguez.2013' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{VisCircleGmbH.}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labeltitlesource}{title}
+      \field{title}{Wie Sie einen Einstieg in das Frustum Culling finden.}
+      \verb{urlraw}
+      \verb https://viscircle.de/wie-sie-einen-einstieg-in-das-frustum-culling-finden/
+      \endverb
+      \verb{url}
+      \verb https://viscircle.de/wie-sie-einen-einstieg-in-das-frustum-culling-finden/
+      \endverb
+      \warn{\item Entry 'VisCircleGmbH.' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Whiting.2017}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=c55177e3c5a1ea4fcf35cdb0165e35ff}{%
+           family={Whiting},
+           familyi={W\bibinitperiod},
+           given={Nick},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Facebook Technologies, LLC.}%
+      }
+      \strng{namehash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \strng{fullhash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \strng{bibnamehash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \strng{authorbibnamehash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \strng{authornamehash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \strng{authorfullhash}{c55177e3c5a1ea4fcf35cdb0165e35ff}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Oculus Connect 4 | The Road to Shipping: Technical Postmortem for Robo Recall: Superfrustum culling}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=BZhOUGG45_o&feature=youtu.be&t=46m12s
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=BZhOUGG45_o&feature=youtu.be&t=46m12s
+      \endverb
+      \warn{\item Entry 'Whiting.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Kubisch.2014}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=3ee16da8d3df7a694b14c455a74586b6}{%
+           family={Kubisch},
+           familyi={K\bibinitperiod},
+           given={Christoph},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3ee16da8d3df7a694b14c455a74586b6}
+      \strng{fullhash}{3ee16da8d3df7a694b14c455a74586b6}
+      \strng{bibnamehash}{3ee16da8d3df7a694b14c455a74586b6}
+      \strng{authorbibnamehash}{3ee16da8d3df7a694b14c455a74586b6}
+      \strng{authornamehash}{3ee16da8d3df7a694b14c455a74586b6}
+      \strng{authorfullhash}{3ee16da8d3df7a694b14c455a74586b6}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{NVIDIA DesignWorks Samples}
+      \field{title}{OpenGL sample for shader-based occlusion culling}
+      \field{year}{2014}
+      \verb{urlraw}
+      \verb https://github.com/nvpro-samples/gl_occlusion_culling
+      \endverb
+      \verb{url}
+      \verb https://github.com/nvpro-samples/gl_occlusion_culling
+      \endverb
+      \warn{\item Entry 'Kubisch.2014' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
   \enddatalist
-  \missing{latex}
 \endrefsection
 \endinput
 

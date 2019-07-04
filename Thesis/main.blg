@@ -1,18 +1,27 @@
 [0] Config.pm:304> INFO - This is Biber 2.12
 [0] Config.pm:307> INFO - Logfile is 'main.blg'
-[52] biber-MSWIN64:315> INFO - === 
-[84] Biber.pm:371> INFO - Reading 'main.bcf'
-[199] Biber.pm:889> INFO - Found 2 citekeys in bib section 0
-[214] Biber.pm:4093> INFO - Processing section 0
-[226] Biber.pm:4254> INFO - Looking for bibtex format file 'bibliography_Citavi.bib' for section 0
-[242] bibtex.pm:1523> INFO - LaTeX decoding ...
-[269] bibtex.pm:1340> INFO - Found BibTeX data source 'bibliography_Citavi.bib'
-[276] Utils.pm:193> WARN - Entry 'Hey.2001' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
-[285] Utils.pm:193> WARN - I didn't find a database entry for 'latex' (section 0)
-[295] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[295] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[295] Biber.pm:3921> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[295] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-US'
-[300] bbl.pm:636> INFO - Writing 'main.bbl' with encoding 'UTF-8'
-[301] bbl.pm:739> INFO - Output to main.bbl
-[303] Biber.pm:110> INFO - WARNINGS: 2
+[36] biber-MSWIN64:315> INFO - === 
+[66] Biber.pm:371> INFO - Reading 'main.bcf'
+[152] Biber.pm:889> INFO - Found 12 citekeys in bib section 0
+[167] Biber.pm:4093> INFO - Processing section 0
+[179] Biber.pm:4254> INFO - Looking for bibtex format file 'bibliography_Citavi.bib' for section 0
+[183] bibtex.pm:1523> INFO - LaTeX decoding ...
+[204] bibtex.pm:1340> INFO - Found BibTeX data source 'bibliography_Citavi.bib'
+[209] Utils.pm:193> WARN - Entry 'Anagnostou.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[213] Utils.pm:193> WARN - Entry 'Barrett.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[213] Utils.pm:193> WARN - Entry 'gamesindustry.biz.2016' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[216] Utils.pm:193> WARN - Entry 'Gerlits.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[219] Utils.pm:193> WARN - Entry 'Hale.2018' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[230] Utils.pm:193> WARN - Entry 'CohenOr.2003' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[234] Utils.pm:193> WARN - Entry 'Hey.2001' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[237] Utils.pm:193> WARN - Entry 'Rodriguez.2013' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[238] Utils.pm:193> WARN - Entry 'VisCircleGmbH.' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[241] Utils.pm:193> WARN - Entry 'Whiting.2017' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[244] Utils.pm:193> WARN - Entry 'Kubisch.2014' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring
+[289] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[289] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[289] Biber.pm:3921> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[289] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-US'
+[301] bbl.pm:636> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[307] bbl.pm:739> INFO - Output to main.bbl
+[315] Biber.pm:110> INFO - WARNINGS: 11

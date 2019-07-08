@@ -2007,6 +2007,13 @@
     <bcf:citekey order="10">VisCircleGmbH.</bcf:citekey>
     <bcf:citekey order="11">Whiting.2017</bcf:citekey>
     <bcf:citekey order="12">Kubisch.2014</bcf:citekey>
+    <bcf:citekey order="13">sydneyzh.2018</bcf:citekey>
+    <bcf:citekey order="14">Anagnostou.2017</bcf:citekey>
+    <bcf:citekey order="15">Hobson.2019</bcf:citekey>
+    <bcf:citekey order="16">Haines.1999</bcf:citekey>
+    <bcf:citekey order="17">DiDonato.01.03.2017</bcf:citekey>
+    <bcf:citekey order="18">EpicGamesInc..2016</bcf:citekey>
+    <bcf:citekey order="19">FacebookTechnologiesLLC..2016</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

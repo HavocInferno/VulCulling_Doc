@@ -7,13 +7,8 @@
 \babel@toc {ngerman}{}
 \babel@toc {english}{}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
-\contentsline {section}{\numberline {1.1}Section}{1}{section.1.1}% 
-\contentsline {subsection}{\numberline {1.1.1}Subsection}{2}{subsection.1.1.1}% 
-\contentsline {chapter}{\numberline {A}General Addenda}{6}{appendix.A}% 
-\contentsline {section}{\numberline {A.1}Detailed Addition}{6}{section.A.1}% 
-\contentsline {chapter}{\numberline {B}Figures}{7}{appendix.B}% 
-\contentsline {section}{\numberline {B.1}Example 1}{7}{section.B.1}% 
-\contentsline {section}{\numberline {B.2}Example 2}{7}{section.B.2}% 
-\contentsline {chapter}{\nonumberline List of Figures}{8}{chapter*.11}% 
-\contentsline {chapter}{\nonumberline List of Tables}{9}{chapter*.12}% 
-\contentsline {chapter}{\nonumberline Bibliography}{10}{chapter*.13}% 
+\contentsline {section}{\numberline {1.1}Culling general research}{1}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Another angle: Monoscopic far-field rendering}{3}{section.1.2}% 
+\contentsline {chapter}{\nonumberline List of Figures}{4}{chapter*.4}% 
+\contentsline {chapter}{\nonumberline List of Tables}{5}{chapter*.5}% 
+\contentsline {chapter}{\nonumberline Bibliography}{6}{chapter*.6}% 

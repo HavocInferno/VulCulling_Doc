@@ -371,6 +371,160 @@
       \endverb
       \warn{\item Entry 'Kubisch.2014' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
     \endentry
+    \entry{sydneyzh.2018}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=268247a9dca4954acd5822ccca21157a}{%
+           family={sydneyzh},
+           familyi={s\bibinitperiod}}}%
+      }
+      \strng{namehash}{268247a9dca4954acd5822ccca21157a}
+      \strng{fullhash}{268247a9dca4954acd5822ccca21157a}
+      \strng{bibnamehash}{268247a9dca4954acd5822ccca21157a}
+      \strng{authorbibnamehash}{268247a9dca4954acd5822ccca21157a}
+      \strng{authornamehash}{268247a9dca4954acd5822ccca21157a}
+      \strng{authorfullhash}{268247a9dca4954acd5822ccca21157a}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{GPU occlusion culling using compute shader with Vulkan}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://github.com/sydneyzh/gpu_occlusion_culling_vk
+      \endverb
+      \verb{url}
+      \verb https://github.com/sydneyzh/gpu_occlusion_culling_vk
+      \endverb
+      \warn{\item Entry 'sydneyzh.2018' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Hobson.2019}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=e107aea200538ac4f3ebc188d78f0688}{%
+           family={Hobson},
+           familyi={H\bibinitperiod},
+           given={Tim},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Epic Games, Inc.}%
+      }
+      \strng{namehash}{e107aea200538ac4f3ebc188d78f0688}
+      \strng{fullhash}{e107aea200538ac4f3ebc188d78f0688}
+      \strng{bibnamehash}{e107aea200538ac4f3ebc188d78f0688}
+      \strng{authorbibnamehash}{e107aea200538ac4f3ebc188d78f0688}
+      \strng{authornamehash}{e107aea200538ac4f3ebc188d78f0688}
+      \strng{authorfullhash}{e107aea200538ac4f3ebc188d78f0688}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Understanding Culling Methods | Live Training | Unreal Engine}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=6WtE3CoFMXU
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=6WtE3CoFMXU
+      \endverb
+      \warn{\item Entry 'Hobson.2019' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Haines.1999}{misc}{}
+      \name{author}{2}{}{%
+        {{uniquename=0,uniquepart=base,hash=f2cd5883c9757f88d9a81f92ee663907}{%
+           family={Haines},
+           familyi={H\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=c2ad285eb682bccdfe2685694db2188f}{%
+           family={M{ü}ller},
+           familyi={M\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d59560bb97b73b8f59a082c521db7548}
+      \strng{fullhash}{d59560bb97b73b8f59a082c521db7548}
+      \strng{bibnamehash}{d59560bb97b73b8f59a082c521db7548}
+      \strng{authorbibnamehash}{d59560bb97b73b8f59a082c521db7548}
+      \strng{authornamehash}{d59560bb97b73b8f59a082c521db7548}
+      \strng{authorfullhash}{d59560bb97b73b8f59a082c521db7548}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Occlusion Culling Algorithms}
+      \field{year}{1999}
+      \verb{urlraw}
+      \verb https://www.gamasutra.com/view/feature/131801/occlusion_culling_algorithms.php
+      \endverb
+      \verb{url}
+      \verb https://www.gamasutra.com/view/feature/131801/occlusion_culling_algorithms.php
+      \endverb
+      \warn{\item Entry 'Haines.1999' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{DiDonato.01.03.2017}{misc}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,uniquepart=base,hash=ec0e9e3d8b68594f9d9501546a0676a1}{%
+           family={{Di Donato}},
+           familyi={D\bibinitperiod},
+           given={Daniele},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=42bd1e61b04959b9ce8b580712155f32}{%
+           family={Palandri},
+           familyi={P\bibinitperiod},
+           given={R{é}mi},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=581719c48289fcc33b42a5295d7b5929}{%
+           family={Vance},
+           familyi={V\bibinitperiod},
+           given={Ryan},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \strng{fullhash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \strng{bibnamehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \strng{authorbibnamehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \strng{authornamehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \strng{authorfullhash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{High quality mobile VR with Unreal Engine and Oculus}
+      \field{year}{01.03.2017}
+    \endentry
+    \entry{EpicGamesInc..2016}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labeltitlesource}{title}
+      \field{title}{Monoscopic Far Field Rendering}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://docs.unrealengine.com/en-US/Platforms/VR/DevelopVR/MonoFarFieldRendering/index.html
+      \endverb
+      \verb{url}
+      \verb https://docs.unrealengine.com/en-US/Platforms/VR/DevelopVR/MonoFarFieldRendering/index.html
+      \endverb
+      \warn{\item Entry 'EpicGamesInc..2016' (bibliography_Citavi.bib): Invalid format '08.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{FacebookTechnologiesLLC..2016}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labeltitlesource}{title}
+      \field{title}{Hybrid Monoscopic Rendering}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://developer.oculus.com/documentation/unreal/1.14/concepts/unreal-hybrid-monoscopic/
+      \endverb
+      \verb{url}
+      \verb https://developer.oculus.com/documentation/unreal/1.14/concepts/unreal-hybrid-monoscopic/
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

@@ -2,9 +2,8 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chapter:introduction}
-Use with pdfLaTeX and Biber.
 
-\section{Section}
+\section{Culling general research}
 1. Experiments in GPU-based occlusion culling (Anagnostou, Interplay of Light) \cite{Anagnostou.2017}: \\
 tldr CPU occlusion culling is very coarse as the CPU isn't great at rasterising. GPU can rasterise efficiently and supports hardware occlusion queries. Problem: "drawcall level" granularity, needs query and fence around every drawcall, thus can't handle instancing very well. Other problem: readback to CPU necessary, to avoid stalling use previous frame occlusion info for current frame. Thus popping likely for fast moving objects or camera. 
 Other solution: render low res occlusion buffer on GPU, produce mip chain, determine screen-space size of each prop and compare vs appropriate mip-level of buffer. Still needs CPU readback though, unless... compute shader in modern API: "In this case I will be using a compute shader to perform the occlusion tests, producing a list of visible props that I will then be consuming on the GPU, avoiding the CPU roundtrip."\\
@@ -29,7 +28,7 @@ tldr general explanation. Of interest maybe hierarchical bounding volumes for fr
 tldr .\\
 
 8. Occlusion Culling Methods \cite{Hey.2001}: \\
-tldr .\\
+tldr overview of methods anno 2001 (duh). Hierarchical frustum culling, occluder fusion, etc.\\
 
 9. Math for Game Developers - Frustum Culling\cite{Rodriguez.2013}: \\
 tldr as expected, brief mathematical explanation on how to compute whether a prop is inside the view frustum (based on position and prop radius).\\
@@ -38,14 +37,30 @@ tldr as expected, brief mathematical explanation on how to compute whether a pro
 tldr D3D sample code for view frustum culling. Very brief, not very useful. But raises the questions how to compute (and store) bounding sphere radius for each prop, and how to compute and update frustum planes each frame (aka reconstruct from view + proj matrices or set up at start and then move all planes according to camera movement).\\
 
 11. Superfrustum culling \cite{Whiting.2017}: \\
-tldr instead of one frustum per eye, construct one superfrustum covering both. On paper means somewhat fewer objects are culled, but the reduced overhead still comes out on top. In their testing, shaved off ~1ms on lower end CPUs. Also monoscopic far-field for lower end devices and far draw distances: past a certain distance, stereo separation becomes very small, nigh indistinguishable, so it may be faster to render the far field monoscopic and then composit with the near-field stereo image. \\
+tldr instead of one frustum per eye, construct one superfrustum covering both. On paper means somewhat fewer objects are culled, but the reduced overhead still comes out on top. In their testing, shaved off ~1ms on lower end CPUs. Also monoscopic far-field for lower end devices and far draw distances: past a certain distance, stereo separation becomes very small, nigh indistinguishable, so it may be faster to render the far field monoscopic and then composit with the near-field stereo image.\\
 
 12. OpenGL sample for shader-based occlusion culling \cite{Kubisch.2014}: \\
-tldr shader-based batched occlusion culling system: leverages multi\char`_draw\char`_indirect and works well with setups where all geo is stored in one big buffer. \\
+tldr shader-based batched occlusion culling system: leverages multi\char`_draw\char`_indirect and works well with setups where all geo is stored in one big buffer.\\
 
-Thus, things up in the air: 
-frustum culling, occlusion culling, detail culling, distance culling, hierarchical culling, cpu culling vs gpu culling, dual-view frustum culling vs superfrustum culling, stencil meshing, ...center-distance culling for foveated rendering, SIMD and MT optimization, ...
+13. GPU occlusion culling using compute shader with Vulkan \cite{sydneyzh.2018}: \\
+tldr follows \cite{Anagnostou.2017} to showcase GPU occlusion culling.\\
 
+14. Understanding Culling Methods | Live Training | Unreal Engine \cite{Hobson.2019}: \\
+tldr basic explanation of methods employed in UE4.\\
+
+15. Occlusion Culling Algorithms \cite{Haines.1999}: \\
+tldr .\\
+
+\newpage\textbf{Thus, things up in the air: 
+frustum culling, occlusion culling, detail culling, distance culling, hierarchical culling, cpu culling vs gpu culling, dual-view frustum culling vs superfrustum culling, stencil meshing, ...center-distance culling for foveated rendering, SIMD and MT optimization, ...}
+
+\section{Another angle: Monoscopic far-field rendering}
+Slides 14-31 in \cite{DiDonato.01.03.2017}, \cite{EpicGamesInc..2016}, \cite{FacebookTechnologiesLLC..2016}: Basic idea is to render near-field (e.g. first 30ft) in stereo for good separation effect, anything beyond that in mono, then mask the background and composite the two images. This leverages the fact that stereo separation becomes very minimal beyond a certain distance, even so small that it's less than 1px shift. When tuned correctly and used in scenes with many objects beyond the threshold distance, this can yield good performance improvements of up to 25\%. The savings from only drawing far objects once must outweigh the cost of adding another camera and more render passes. 
+Another question is how savings scale when multiview rendering is used, as it already avoids a lot of redundant vertex shader work. 
+While Epic Games seem to have dropped the feature from Unreal Engine in 4.22 for yet unknown reasons, I couldn't find much further research about it. 
+One curious extension would be to use the far-field depth buffer to shift the image slightly in post-processing to create a fake stereo separation effect. Or perhaps to render not a centered far-field image, but to use the far-field image of each eye in alternating fashion. This may allow a further reduction in near-field far plane while still being a convincing approximation. 
+
+\iffalse
 \subsection{Subsection}
 
 See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot}, \autoref{fig:sample-listing}, \autoref{fig:tum}, \autoref{fig:tumslide}.
@@ -159,3 +174,4 @@ This is how the glossary will be used.
 This will be a few tough weeks.}
 
 \done{Nevertheless, celebrate it when it is done!}
+\fi

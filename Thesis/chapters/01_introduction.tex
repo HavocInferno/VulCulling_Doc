@@ -1,9 +1,9 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
-\chapter{Introduction}\label{chapter:introduction}
+\chapter{Prior research}\label{chapter:introduction}
 
-\section{Culling general research}
+\section{Culling methods research}
 1. Experiments in GPU-based occlusion culling (Anagnostou, Interplay of Light) \cite{Anagnostou.2017}: \\
 tldr CPU occlusion culling is very coarse as the CPU isn't great at rasterising. GPU can rasterise efficiently and supports hardware occlusion queries. Problem: "drawcall level" granularity, needs query and fence around every drawcall, thus can't handle instancing very well. Other problem: readback to CPU necessary, to avoid stalling use previous frame occlusion info for current frame. Thus popping likely for fast moving objects or camera. 
 Other solution: render low res occlusion buffer on GPU, produce mip chain, determine screen-space size of each prop and compare vs appropriate mip-level of buffer. Still needs CPU readback though, unless... compute shader in modern API: "In this case I will be using a compute shader to perform the occlusion tests, producing a list of visible props that I will then be consuming on the GPU, avoiding the CPU roundtrip."\\
@@ -51,8 +51,12 @@ tldr basic explanation of methods employed in UE4.\\
 15. Occlusion Culling Algorithms \cite{Haines.1999}: \\
 tldr .\\
 
-\newpage\textbf{Thus, things up in the air: 
-frustum culling, occlusion culling, detail culling, distance culling, hierarchical culling, cpu culling vs gpu culling, dual-view frustum culling vs superfrustum culling, stencil meshing, ...center-distance culling for foveated rendering, SIMD and MT optimization, ...}
+\subsection{Culling aspects worth looking at}
+\textbf{Thus, things up in the air: }\\
+CPU-based: (hierarchical/chunk-based) frustum culling, occlusion culling (e.g. mipped depth raster) and front-to-back ordering, detail culling (e.g. size-distance function or center-distance culling of peripheral objects), simple distance culling\\
+GPU-based: same, really, but shader/compute based (However, I have a lot of respect for these approaches as GPU-based culling is a whole other beast. I would prefer to stick with CPU-based approaches for starters.)\\
+Specifically for frustum culling: dual-view frustum culling vs superfrustum culling evaluation\\
+General: stencil meshing, SIMD and MT optimization
 
 \section{Another angle: Monoscopic far-field rendering}
 Slides 14-31 in \cite{DiDonato.01.03.2017}, \cite{EpicGamesInc..2016}, \cite{FacebookTechnologiesLLC..2016}: Basic idea is to render near-field (e.g. first 30ft) in stereo for good separation effect, anything beyond that in mono, then mask the background and composite the two images. This leverages the fact that stereo separation becomes very minimal beyond a certain distance, even so small that it's less than 1px shift. When tuned correctly and used in scenes with many objects beyond the threshold distance, this can yield good performance improvements of up to 25\%. The savings from only drawing far objects once must outweigh the cost of adding another camera and more render passes. 

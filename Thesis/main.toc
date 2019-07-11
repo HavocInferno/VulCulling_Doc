@@ -6,8 +6,9 @@
 \contentsline {chapter}{\nonumberline Kurzfassung}{v}{chapter*.2}% 
 \babel@toc {ngerman}{}
 \babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
-\contentsline {section}{\numberline {1.1}Culling general research}{1}{section.1.1}% 
+\contentsline {chapter}{\numberline {1}Prior research}{1}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Culling methods research}{1}{section.1.1}% 
+\contentsline {subsection}{\numberline {1.1.1}Culling aspects worth looking at}{3}{subsection.1.1.1}% 
 \contentsline {section}{\numberline {1.2}Another angle: Monoscopic far-field rendering}{3}{section.1.2}% 
 \contentsline {chapter}{\nonumberline List of Figures}{4}{chapter*.4}% 
 \contentsline {chapter}{\nonumberline List of Tables}{5}{chapter*.5}% 

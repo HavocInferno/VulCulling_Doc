@@ -4,6 +4,7 @@
 \chapter{Prior research}\label{chapter:introduction}
 
 \section{Culling methods research}
+\subsection{Assorted sources}
 1. Experiments in GPU-based occlusion culling (Anagnostou, Interplay of Light) \cite{Anagnostou.2017}: \\
 tldr CPU occlusion culling is very coarse as the CPU isn't great at rasterising. GPU can rasterise efficiently and supports hardware occlusion queries. Problem: "drawcall level" granularity, needs query and fence around every drawcall, thus can't handle instancing very well. Other problem: readback to CPU necessary, to avoid stalling use previous frame occlusion info for current frame. Thus popping likely for fast moving objects or camera. 
 Other solution: render low res occlusion buffer on GPU, produce mip chain, determine screen-space size of each prop and compare vs appropriate mip-level of buffer. Still needs CPU readback though, unless... compute shader in modern API: "In this case I will be using a compute shader to perform the occlusion tests, producing a list of visible props that I will then be consuming on the GPU, avoiding the CPU roundtrip."\\
@@ -48,8 +49,20 @@ tldr follows \cite{Anagnostou.2017} to showcase GPU occlusion culling.\\
 14. Understanding Culling Methods | Live Training | Unreal Engine \cite{Hobson.2019}: \\
 tldr basic explanation of methods employed in UE4.\\
 
-15. Occlusion Culling Algorithms \cite{Haines.1999}: \\
-tldr .\\
+More:\\
+15. Occlusion Culling Algorithms \cite{Haines.1999}. \\
+16. View Frustum Culling \cite{Lighthouse3d.com.2011}.\\
+17. How Occlusion Culling Works \cite{thebennybox.2018}.\\
+18. Cull and LOD: Compute shader culling and LOD using indirect rendering \cite{Willems.2016.6}.\\
+19. Occlusion queries: Using occlusion query for visibility testing \cite{Willems.2016.4}.\\
+20. Visibility and Occlusion Culling \cite{EpicGamesInc..n.d.}.\\
+
+\subsection{Other conference talks}
+21. Advanced VR Rendering with Valve's Alex Vlachos (GDC'15) \cite{Vlachos.2016}.\\
+22. Advanced VR Rendering (GDC'16) \cite{Vlachos.2016b}.\\
+23. Practical Development for Vulkan (GDC'16) \cite{Ginsburg.2016}.\\
+24. Fast and Flexible: Technical Art and Rendering for The Unknown (VRDC'16) \cite{Answer.2016}.\\
+25. Bringing Vulkan to VR (DevU'17) \cite{Everitt.2017}.\\
 
 \subsection{Culling aspects worth looking at}
 \textbf{Thus, things up in the air: }\\
@@ -59,10 +72,26 @@ Specifically for frustum culling: dual-view frustum culling vs superfrustum cull
 General: stencil meshing, SIMD and MT optimization
 
 \section{Another angle: Monoscopic far-field rendering}
-Slides 14-31 in \cite{DiDonato.01.03.2017}, \cite{EpicGamesInc..2016}, \cite{FacebookTechnologiesLLC..2016}: Basic idea is to render near-field (e.g. first 30ft) in stereo for good separation effect, anything beyond that in mono, then mask the background and composite the two images. This leverages the fact that stereo separation becomes very minimal beyond a certain distance, even so small that it's less than 1px shift. When tuned correctly and used in scenes with many objects beyond the threshold distance, this can yield good performance improvements of up to 25\%. The savings from only drawing far objects once must outweigh the cost of adding another camera and more render passes. 
+Slides 14-31 in \cite{DiDonato.01.03.2017}, \cite{EpicGamesInc..2016} and \cite{FacebookTechnologiesLLC..2016}: Basic idea is to render near-field (e.g. first 30ft) in stereo for good separation effect, anything beyond that in mono, then mask the background and composite the two images. This leverages the fact that stereo separation becomes very minimal beyond a certain distance, even so small that it's less than 1px shift. When tuned correctly and used in scenes with many objects beyond the threshold distance, this can yield good performance improvements of up to 25\%. The savings from only drawing far objects once must outweigh the cost of adding another camera and more render passes. 
 Another question is how savings scale when multiview rendering is used, as it already avoids a lot of redundant vertex shader work. 
 While Epic Games seem to have dropped the feature from Unreal Engine in 4.22 for yet unknown reasons, I couldn't find much further research about it. 
 One curious extension would be to use the far-field depth buffer to shift the image slightly in post-processing to create a fake stereo separation effect. Or perhaps to render not a centered far-field image, but to use the far-field image of each eye in alternating fashion. This may allow a further reduction in near-field far plane while still being a convincing approximation. 
+
+\section{Renderer implementation current status}
+\begin{itemize}
+\item using Vulkan 1.1.85 and OpenVR 1.2.10b 
+\item basic rendering setup complete: 
+\begin{itemize}
+\item VK\char`_multiview based stereo rendering 
+\item Phong-shaded and wireframe pipelines 
+\item VR stencil mesh mask 
+\item OpenVR rendermodel readout 
+\item OpenVR roomscale tracking 
+\item 3D props supported in .obj format 
+\end{itemize}
+\item so far tested successfully with Valve Index, HTC Vive and Vive Pro, Samsung Odyssey 
+\item tested unsuccessfully (projection issues) with Oculus Rift CV1 
+\end{itemize}
 
 \iffalse
 \subsection{Subsection}

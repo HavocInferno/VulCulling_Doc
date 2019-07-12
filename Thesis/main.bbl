@@ -464,6 +464,296 @@
       \endverb
       \warn{\item Entry 'Haines.1999' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
     \endentry
+    \entry{Lighthouse3d.com.2011}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labeltitlesource}{title}
+      \field{title}{View Frustum Culling}
+      \field{year}{2011}
+      \verb{urlraw}
+      \verb http://www.lighthouse3d.com/tutorials/view-frustum-culling/
+      \endverb
+      \verb{url}
+      \verb http://www.lighthouse3d.com/tutorials/view-frustum-culling/
+      \endverb
+      \warn{\item Entry 'Lighthouse3d.com.2011' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{thebennybox.2018}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=2b29e7266abc21c4970227715d0d80e7}{%
+           family={thebennybox},
+           familyi={t\bibinitperiod}}}%
+      }
+      \strng{namehash}{2b29e7266abc21c4970227715d0d80e7}
+      \strng{fullhash}{2b29e7266abc21c4970227715d0d80e7}
+      \strng{bibnamehash}{2b29e7266abc21c4970227715d0d80e7}
+      \strng{authorbibnamehash}{2b29e7266abc21c4970227715d0d80e7}
+      \strng{authornamehash}{2b29e7266abc21c4970227715d0d80e7}
+      \strng{authorfullhash}{2b29e7266abc21c4970227715d0d80e7}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{How Occlusion Culling Works}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://www.youtube.com/playlist?list=PLEETnX-uPtBVszVeAIDl5jp5j9YT9EFae
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/playlist?list=PLEETnX-uPtBVszVeAIDl5jp5j9YT9EFae
+      \endverb
+      \warn{\item Entry 'thebennybox.2018' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Willems.2016.6}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=bfb3d736b7e5e44d323660c9e659d5d3}{%
+           family={Willems},
+           familyi={W\bibinitperiod},
+           given={Sascha},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{fullhash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{bibnamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authorbibnamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authornamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authorfullhash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{6}
+      \field{title}{Cull and LOD: Compute shader culling and LOD using indirect rendering}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://github.com/SaschaWillems/Vulkan/blob/master/examples/computecullandlod/computecullandlod.cpp
+      \endverb
+      \verb{url}
+      \verb https://github.com/SaschaWillems/Vulkan/blob/master/examples/computecullandlod/computecullandlod.cpp
+      \endverb
+      \warn{\item Entry 'Willems.2016.6' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Willems.2016.4}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=bfb3d736b7e5e44d323660c9e659d5d3}{%
+           family={Willems},
+           familyi={W\bibinitperiod},
+           given={Sascha},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{fullhash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{bibnamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authorbibnamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authornamehash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \strng{authorfullhash}{bfb3d736b7e5e44d323660c9e659d5d3}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{4}
+      \field{title}{Occlusion queries: Using occlusion query for visbility testing}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://github.com/SaschaWillems/Vulkan/blob/master/examples/occlusionquery/occlusionquery.cpp
+      \endverb
+      \verb{url}
+      \verb https://github.com/SaschaWillems/Vulkan/blob/master/examples/occlusionquery/occlusionquery.cpp
+      \endverb
+      \warn{\item Entry 'Willems.2016.4' (bibliography_Citavi.bib): Invalid format '01.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{EpicGamesInc..n.d.}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labeltitlesource}{title}
+      \field{title}{Visibility and Occlusion Culling}
+      \field{year}{n.d.}
+      \verb{urlraw}
+      \verb https://docs.unrealengine.com/en-US/Engine/Rendering/VisibilityCulling/index.html
+      \endverb
+      \verb{url}
+      \verb https://docs.unrealengine.com/en-US/Engine/Rendering/VisibilityCulling/index.html
+      \endverb
+      \warn{\item Entry 'EpicGamesInc..n.d.' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Vlachos.2016}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=20dceacf6381d753f10b79339fecad00}{%
+           family={Vlachos},
+           familyi={V\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {GDC'15}%
+      }
+      \strng{namehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{fullhash}{20dceacf6381d753f10b79339fecad00}
+      \strng{bibnamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authorbibnamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authornamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authorfullhash}{20dceacf6381d753f10b79339fecad00}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced VR Rendering with Valve's Alex Vlachos}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=ya8vKZRBXdw
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=ya8vKZRBXdw
+      \endverb
+      \warn{\item Entry 'Vlachos.2016' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Vlachos.2016b}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=20dceacf6381d753f10b79339fecad00}{%
+           family={Vlachos},
+           familyi={V\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {GDC'16}%
+      }
+      \strng{namehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{fullhash}{20dceacf6381d753f10b79339fecad00}
+      \strng{bibnamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authorbibnamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authornamehash}{20dceacf6381d753f10b79339fecad00}
+      \strng{authorfullhash}{20dceacf6381d753f10b79339fecad00}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced VR~Rendering Performance}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=eIlb688pUu4
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=eIlb688pUu4
+      \endverb
+      \warn{\item Entry 'Vlachos.2016b' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Ginsburg.2016}{misc}{}
+      \name{author}{3}{}{%
+        {{uniquename=0,uniquepart=base,hash=d42be0892aedb8c91629d0bcc1e85a4d}{%
+           family={Ginsburg},
+           familyi={G\bibinitperiod},
+           given={Dan},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=6f6625c2b97d4e6bae74834671217ffd}{%
+           family={Karlsson},
+           familyi={K\bibinitperiod},
+           given={Baldur},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=cb84be00b9ec0d1109e2c652a132e97e}{%
+           family={Sekulic},
+           familyi={S\bibinitperiod},
+           given={Dean},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {GDC'16}%
+      }
+      \strng{namehash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \strng{fullhash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \strng{bibnamehash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \strng{authorbibnamehash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \strng{authornamehash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \strng{authorfullhash}{acdd5b7c93f6441f27e03315a1ba21d6}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Practical Development for Vulkan (presented by Valve Software)}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://www.gdcvault.com/play/1023577/Practical-Development-for-Vulkan-(presented
+      \endverb
+      \verb{url}
+      \verb https://www.gdcvault.com/play/1023577/Practical-Development-for-Vulkan-(presented
+      \endverb
+      \warn{\item Entry 'Ginsburg.2016' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Answer.2016}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=544f784e97ff094985dc33b81532c969}{%
+           family={Answer},
+           familyi={A\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {VRDC'16}%
+      }
+      \strng{namehash}{544f784e97ff094985dc33b81532c969}
+      \strng{fullhash}{544f784e97ff094985dc33b81532c969}
+      \strng{bibnamehash}{544f784e97ff094985dc33b81532c969}
+      \strng{authorbibnamehash}{544f784e97ff094985dc33b81532c969}
+      \strng{authornamehash}{544f784e97ff094985dc33b81532c969}
+      \strng{authorfullhash}{544f784e97ff094985dc33b81532c969}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Fast and Flexible: Technical Art and Rendering For The Unknown}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=ClRtgeUsdOg
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=ClRtgeUsdOg
+      \endverb
+      \warn{\item Entry 'Answer.2016' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
+    \entry{Everitt.2017}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=c31f845454eb98f569011996b1b9aad8}{%
+           family={Everitt},
+           familyi={E\bibinitperiod},
+           given={Cass},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {The Khronos Group}%
+      }
+      \strng{namehash}{c31f845454eb98f569011996b1b9aad8}
+      \strng{fullhash}{c31f845454eb98f569011996b1b9aad8}
+      \strng{bibnamehash}{c31f845454eb98f569011996b1b9aad8}
+      \strng{authorbibnamehash}{c31f845454eb98f569011996b1b9aad8}
+      \strng{authornamehash}{c31f845454eb98f569011996b1b9aad8}
+      \strng{authorfullhash}{c31f845454eb98f569011996b1b9aad8}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{2017 DevU - 06 Bringing Vulkan to VR - Cass Everitt}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=jbCQI3DZ9w8&list=PLYO7XTAX41FOURVQnOMFI-uHyuyIGh6eX&index=8&t=0s
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=jbCQI3DZ9w8&list=PLYO7XTAX41FOURVQnOMFI-uHyuyIGh6eX&index=8&t=0s
+      \endverb
+      \warn{\item Entry 'Everitt.2017' (bibliography_Citavi.bib): Invalid format '12.07.2019' of date field 'urldate' - ignoring}
+    \endentry
     \entry{DiDonato.01.03.2017}{misc}{}
       \name{author}{3}{}{%
         {{uniquename=0,uniquepart=base,hash=ec0e9e3d8b68594f9d9501546a0676a1}{%
@@ -491,16 +781,16 @@
       \strng{authorbibnamehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
       \strng{authornamehash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
       \strng{authorfullhash}{1b4d0528bc136ebe1ffbf8a3b8d55efe}
-      \field{sortinit}{1}
-      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{High quality mobile VR with Unreal Engine and Oculus}
       \field{year}{01.03.2017}
     \endentry
     \entry{EpicGamesInc..2016}{misc}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
       \field{labeltitlesource}{title}
       \field{title}{Monoscopic Far Field Rendering}
       \field{year}{2016}
@@ -513,8 +803,8 @@
       \warn{\item Entry 'EpicGamesInc..2016' (bibliography_Citavi.bib): Invalid format '08.07.2019' of date field 'urldate' - ignoring}
     \endentry
     \entry{FacebookTechnologiesLLC..2016}{misc}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{sortinit}{2}
+      \field{sortinithash}{cbff857e587bcb4635511624d773949e}
       \field{labeltitlesource}{title}
       \field{title}{Hybrid Monoscopic Rendering}
       \field{year}{2016}

@@ -8,8 +8,11 @@
 \babel@toc {english}{}
 \contentsline {chapter}{\numberline {1}Prior research}{1}{chapter.1}% 
 \contentsline {section}{\numberline {1.1}Culling methods research}{1}{section.1.1}% 
-\contentsline {subsection}{\numberline {1.1.1}Culling aspects worth looking at}{3}{subsection.1.1.1}% 
+\contentsline {subsection}{\numberline {1.1.1}Assorted sources}{1}{subsection.1.1.1}% 
+\contentsline {subsection}{\numberline {1.1.2}Other conference talks}{3}{subsection.1.1.2}% 
+\contentsline {subsection}{\numberline {1.1.3}Culling aspects worth looking at}{3}{subsection.1.1.3}% 
 \contentsline {section}{\numberline {1.2}Another angle: Monoscopic far-field rendering}{3}{section.1.2}% 
-\contentsline {chapter}{\nonumberline List of Figures}{4}{chapter*.4}% 
-\contentsline {chapter}{\nonumberline List of Tables}{5}{chapter*.5}% 
-\contentsline {chapter}{\nonumberline Bibliography}{6}{chapter*.6}% 
+\contentsline {section}{\numberline {1.3}Renderer implementation current status}{4}{section.1.3}% 
+\contentsline {chapter}{\nonumberline List of Figures}{5}{chapter*.4}% 
+\contentsline {chapter}{\nonumberline List of Tables}{6}{chapter*.5}% 
+\contentsline {chapter}{\nonumberline Bibliography}{7}{chapter*.6}% 

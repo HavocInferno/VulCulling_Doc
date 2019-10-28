@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.7.1)  12 JUL 2019 13:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.7.1)  28 OCT 2019 18:17
 entering extended mode
 **./main.tex
 (main.tex
@@ -2305,123 +2305,134 @@ chapter without number
 ]
 Package tocbasic Info: character protrusion at toc deactivated on input line 41
 .
- (main.toc)
+ (main.toc [6
+
+
+
+
+])
 \tf@toc=\write9
 \openout9 = `main.toc'.
 
- [6
-
-
-
-
-] (chapters/01_introduction.tex
+LaTeX Font Info:    Font shape `T1/pplx/m/sl' in size <10.95> not available
+(Font)              Font shape `T1/pplx/m/it' tried instead on input line 44.
+ [7] (chapters/01_introduction.tex
 chapter 1.
 LaTeX Font Info:    Font shape `T1/pplx/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/pplx/b/n' tried instead on input line 6.
 LaTeX Font Info:    Font shape `T1/pplx/bx/n' in size <12> not available
 (Font)              Font shape `T1/pplx/b/n' tried instead on input line 7.
-
-Underfull \hbox (badness 10000) in paragraph at lines 8--11
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 12--14
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 15--18
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 19--21
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 22--24
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 25--27
-
- []
-
 [1
 
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 28--30
-
- []
+Overfull \vbox (155.6355pt too high) has occurred while \output is active []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 31--33
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 34--36
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--39
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--42
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--45
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--48
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 49--51
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 52--59
-
- []
-
-LaTeX Font Info:    Font shape `T1/pplx/m/sl' in size <10.95> not available
-(Font)              Font shape `T1/pplx/m/it' tried instead on input line 59.
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 61--66
+chapter 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--44
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+pplx on input line 82.
 
-LaTeX Font Info:    No file OMSpplx.fd. on input line 82.
+Underfull \hbox (badness 10000) in paragraph at lines 45--47
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--51
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 52--54
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--57
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--60
+
+ []
+
+[3
+
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 61--63
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--72
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--78
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--84
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--92
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 94--99
+
+ []
+
+[5]
+LaTeX Font Info:    Try loading font information for OMS+pplx on input line 118
+.
+LaTeX Font Info:    No file OMSpplx.fd. on input line 118.
+
 
 LaTeX Font Warning: Font shape `OMS/pplx/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbullet' on input line 82.
+(Font)              for symbol `textbullet' on input line 118.
 
-[3]) [4]
+) [6]
 Package tocbasic Info: character protrusion at lof deactivated on input line 55
 .
  (main.lof)
 \tf@lof=\write10
 \openout10 = `main.lof'.
 
- [5
+ [7
 
 
 ]
@@ -2434,7 +2445,7 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 56
 
 No file main.gls.
 No file main.acr.
-[6
+[8
 
 
 ]
@@ -2465,7 +2476,7 @@ Overfull \hbox (57.8285pt too wide) in paragraph at lines 59--59
  / aa9000f62bb9b1a60f27182e23872c375e1e .
  []
 
-[7
+[9
 
 
 ]
@@ -2476,7 +2487,7 @@ Overfull \hbox (10.71402pt too wide) in paragraph at lines 59--59
  []
 
 No complaints by nag.
-[8]
+[10]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 61.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 61.
  (main.aux)
@@ -2493,13 +2504,13 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 62108 strings out of 492895
- 1346625 string characters out of 3133486
+ 62170 strings out of 492895
+ 1347245 string characters out of 3133486
  2069887 words of memory out of 3000000
- 64768 multiletter control sequences out of 15000+200000
+ 64795 multiletter control sequences out of 15000+200000
  582778 words of font info for 242 fonts, out of 3000000 for 9000
  1145 hyphenation exceptions out of 8191
- 81i,8n,136p,9085b,2277s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 81i,8n,136p,9085b,2575s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Zen\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\ec
 tt1095.pk>{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program 
 Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Zen/AppDat
@@ -2507,9 +2518,9 @@ a/Roaming/MiKTeX/2.9/fonts/type1/public/fpl/fplrc8a.pfb><C:/Program Files/MiKTe
 X 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
 pe1/urw/palatino/uplr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/palati
 no/uplri8a.pfb>
-Output written on main.pdf (15 pages, 396710 bytes).
+Output written on main.pdf (18 pages, 419544 bytes).
 PDF statistics:
- 385 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 500000)
- 38023 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 544 PDF objects out of 1000 (max. 8388607)
+ 93 named destinations out of 1000 (max. 500000)
+ 38239 words of extra memory for PDF output out of 42996 (max. 10000000)
 

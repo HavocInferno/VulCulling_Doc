@@ -1,6 +1,39 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
+\chapter{Outline}
+
+\section{Introduction}
+\subsection{Briefly - what's the goal}
+\subsection{Why VR?}
+\subsection{Why Vulkan?}
+\subsection{Why a new engine?}
+\section{Explanation - Engine}
+\subsection{Rendering loop}
+\subsection{Geometry handling}
+\subsection{Instance management}
+\subsection{VR loop(?)}
+\section{Explanation - Optimizations}
+\subsection{Multiview stereo rendering}
+\subsection{Hierarchical frustum culling}
+\subsubsection{Superfrustum culling}
+\subsubsection{Round robin culling}
+\subsection{Software occlusion culling}
+\subsubsection{Masked software occlusion culling}
+\subsubsection{Round robin culling}
+\subsection{Monoscopic far-field rendering}
+\subsubsection{Variants}
+\subsection{VR stencil mask}
+\section{Explanation - Performance measurements}
+\subsection{Framerate, frametimes, framepacing}
+\subsection{Resource usage}
+\section{Benchmark results}
+\subsection{Individual impacts}
+\subsection{Combined and partially combined impacts}
+\subsection{Interpretation}
+\section{Further suggested and possible optimizations}
+\section{Outlook}
+
 \chapter{Prior research}\label{chapter:introduction}
 
 \section{Culling methods research}
@@ -77,20 +110,27 @@ Another question is how savings scale when multiview rendering is used, as it al
 While Epic Games seem to have dropped the feature from Unreal Engine in 4.22 for yet unknown reasons, I couldn't find much further research about it. 
 One curious extension would be to use the far-field depth buffer to shift the image slightly in post-processing to create a fake stereo separation effect. Or perhaps to render not a centered far-field image, but to use the far-field image of each eye in alternating fashion. This may allow a further reduction in near-field far plane while still being a convincing approximation. 
 
-\section{Renderer implementation current status}
+\section{Research during implementation and testing}
+TBD
+
+\section{Renderer current status}
 \begin{itemize}
-\item using Vulkan 1.1.85 and OpenVR 1.2.10b 
-\item basic rendering setup complete: 
+\item using Vulkan 1.1.?? and OpenVR 1.?? 
+\item using RTG's rtvklib rendering library and wx-vk UI library, both still in development
+\item available rendering features: 
 \begin{itemize}
 \item VK\char`_multiview based stereo rendering 
-\item Phong-shaded and wireframe pipelines 
-\item VR stencil mesh mask 
-\item OpenVR rendermodel readout 
+\item pipelines for blinn-phong shading, PBR shading, skybox
 \item OpenVR roomscale tracking 
-\item 3D props supported in .obj format 
+\item assets supported in in-house .hvr format
 \end{itemize}
 \item so far tested successfully with Valve Index, HTC Vive and Vive Pro, Samsung Odyssey 
-\item tested unsuccessfully (projection issues) with Oculus Rift CV1 
+\item rendering features to be ported from discontinued Valkun project: 
+\begin{itemize}
+\item VR stencil mesh mask
+\item OpenVR rendermodel readout 
+\item OpenVR roomscale tracking 
+\end{itemize}
 \end{itemize}
 
 \iffalse

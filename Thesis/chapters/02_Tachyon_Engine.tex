@@ -1,0 +1,77 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+
+\chapter{The RTG Tachyon Engine}
+
+\section{The Engine}
+Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, Tachyon was chosen, an engine currently in development at RTG Echtzeitgraphik GmbH. Tachyon uses a fully Vulkan based forward renderer (internally called rtvklib) with support for multiple viewports of various types, including an OpenVR based virtual reality path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule for the future. The renderer integrates Vulkan version 1.1.85 and up and OpenVR version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
+
+\subsection{Render setup} 
+As typical for the verbose nature of Vulkan, render initialization starts with the creation of all necessary basic Vulkan resources such as descriptors, descriptor sets, activation of a minimal set of Vulkan extensions and layers and device enumeration. 
+More specific to rtvklib, multiple Vulkan pipelines are active by default:
+\begin{itemize}
+\item a material pipeline offering support for a Phong and a PBR shader as well as geometry and index buffers of arbitrary size
+\item a skybox pipeline with a simplified skybox shader
+\item a point cloud pipeline, primarily to allow rendering of LiDAR scan data
+\end{itemize}
+To facilitate rendering into multiple viewports, Tachyon uses the concept of render targets. Each render target can reference an arbitrary subset of pipelines, comes with its own set of Vulkan framebuffers, command buffers and render pass and its own virtual camera. 
+Whenever any 3D object is to be loaded, rtvklib uses several manager classes to keep track of the various resource types needed for an object. There are managers for geometry, materials, textures and instances among other types. When an object is loaded, the former three hold the respective buffers. When an object is to be rendered, it first needs to be instanced, handled by the latter. An instance references the various geometry and materials of the original object again, but also holds data specific to individual objects in the virtual world, such as transforms or bounding geometry. 
+
+The renderer initialization also encompasses virtual reality through OpenVR. Given a valid OpenVR environment and HMD is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. 
+
+\subsection{Render loop} 
+After all startup and initialization is done, the engine's render loop has the following structure. 
+
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+    void VKRenderer::Update()
+{
+	mRenderMutex.lock();
+	mGeometryManager->Update();
+	mMaterialManager->Update();
+	mInstanceManager->Update();
+	mTextureManager->Update();
+	mLightManager->Update();
+	mPointCloud->Update();
+	UpdateGlobalParamsBuffer();
+
+	for (auto renderTarget : mRenderTargets)
+	{
+		renderTarget->Update();
+		mInstanceManager->FrustumCulling(renderTarget); 
+	}
+
+	if (mPipelinesInvalid) UpdateRenderPipelines();
+	if (mCommandBuffersInvalid) UpdateCommandBuffers();
+	mRenderMutex.unlock();
+}
+  \end{lstlisting}
+  \end{tabular}
+  \caption[Yeet]{Renderer update function}\label{fig:lst_VKRenderer_Update}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+void VKRenderer::RenderFrame()
+{
+	if (!mDevice)
+		return;
+
+	mRenderMutex.lock();
+	for (auto renderTarget : mRenderTargets)
+	{
+		renderTarget->RenderFrame();
+	}
+	mRenderMutex.unlock();
+	\end{lstlisting}
+  \end{tabular}
+  \caption[Yeet]{Renderer frame render function}\label{fig:lst_VKRenderer_RenderFrame}
+\end{figure}
+
+\subsection{VR loop(?)}
+blabla

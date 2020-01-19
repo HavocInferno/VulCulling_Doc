@@ -6,18 +6,31 @@ When looking at real-time rendering as it is done today - albeit from a strongly
 Now if one wants to speed up that overall process, there are two major ways. One way is to reduce the amount of data that is put into the pipeline so less data needs to be processed overall, the other way is to increase the efficiency of the processing itself.  
 This first chapter of optimization approaches presents ways of reducing the amount of data or work input. 
 
-\section{(Hierarchical) Superfrustum Culling}
+\subsubsection{(Hierarchical) Frustum culling}
+The following options build on top of the regular frustum culling concept. In this the objects in the scene are checked against a camera frustum whether they are inside or outside of it or intersecting with the surface of the frustum. The checks themselves can be generally optimized in various ways, regardless of whether stereoscopy is desired or not. Often only an object's bounding geometry is checked, collections of objects can be precomputed so larger numbers may be discarded at once. An advanced option of culling is to delegate the calculations into a GPU compute shader so potentially less data needs to be transferred from the CPU per frame and much higher vector/matrix calculation is gained in exchange for slower branching. Some modern renderers also do very granular culling like bitmasked checks of precomputed triangle sets, as seen in Ubisoft's Anvil Next engine used in Assassin's Creed Origins [Source]. 
+Another optional layer of the culling process is to maintain hierarchical container structures for the scene objects so larger numbers can be discarded or included early on. 
+For all those options the goal is the same, to get as result the list or buffer of objects visible by the given camera frustum in the scene. 
+
+\section{Superfrustum Culling}
 \subsection{Theory}
-blabla
+The basic idea behind Superfrustum culling is to essentially do regular frustum culling despite rendering into two cameras, one per eye. The naive way of extending the frustum concept to a stereoscopic camera is to add a second frustum so there is one per eye, then perform the culling check for both frusta and merge the results. 
+As is easily visible from [Figure X.x] though, the spatial proximity of of these two frusta leads to a large overlap volume, especially as field of view increases with more advanced headsets. One possible strategy to leverage more performance when culling two eyes is a so-called Superfrustum, assuming the frustum is the common six sided trapezoid. Cass Everitt of [Facebook LLC], formerly [Oculus LLC] has suggested this approach at [Oculus Connect 5?] and provided computation sketches at [FB source]. The idea is to combine the left and right eye frusta by taking the respective widest outer FOV tangent - usually the left eye's right side and the right eye's left side - and using these as the new side tangents of the superfrustum. Another way to express these is to take the widest half opening angles of each eye and adding them up to a combined opening angle. Similar is done for the top and bottom tangents, although these will usually be nearly identical for the two eyes. 
+A pitfall of the superfrustum is its necessary depth recession. This is easy to visualize when combining the two frusta by extending aforementioned side tangents backwards until they cross. The meeting point of this step is the new origin of the superfrustum, slightly recessed behind the two separate eyes. 
+[Name Surname?] of Silicon Studios offered a generalized way to compute this recession for un-mirrored eye orientation, while Everitt has extended his sketches by an asymmetry normalization. Both of these are important to consider as virtual reality headsets can have slightly canted and asymmetrical lenses, either by design or by manufacturing tolerance. Ignoring these two corrections may still result in a sufficient superfrustum if computed conservatively, but should be included for fully correct setups. 
+
+
+[Figures by Everitt and Silicon]
 \subsection{Estimated impact}
 blabla
 \subsection{Implementation specifics}
+The frustum culling approach in Tachyon is fully CPU-based and utilizes pre-computed hierarchical draw buffers. More specifically, at startup the scene is divided into a coarse grid of \codeword{chunk}s where each grid possesses an octree. Also at startup, a thread pool with the current number of hardware threads is created. At asset load time, these octrees are populated with the loaded objects through optimistic size-aware insertion. Each cell of a tree then precomputes a draw buffer containing a combined draw call for all objects associated with that cell. These buffers can be recomputed at any time, but the operation should be avoided at runtime as it incurs costly CPU to GPU transfers. 
+In a culling pass, first all \codeword{chunk}s within a certain draw distance radius of the camera are chosen, so there is an additional very primitive distance culling taking place. Then each \codeword{chunk} submits a culling call using its tree to the thread pool. Each such call works as follows: 
+
+[blablabla, Figure etc]
+
+
+\section{Round Robin Culling}
 blabla
 
-\section{(Hierarchical) Round Robin Culling}
-\subsection{Theory}
-blabla
-\subsection{Estimated impact}
-blabla
-\subsection{Implementation specifics}
+\section{Conical Frustum Culling}
 blabla

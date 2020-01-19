@@ -2,6 +2,9 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Stereo Rendering Optimization - Input reduction}
+When looking at real-time rendering as it is done today - albeit from a strongly simplified perspective - the CPU could be described as a employer and the GPU as an employee. For each frame, the CPU produces certain render tasks and supplies the necessary information such as draw calls, shader parameters, buffers and so forth. The GPU then consumes these tasks and associated items and dos the heavy lifting to produce the required results. 
+Now if one wants to speed up that overall process, there are two major ways. One way is to reduce the amount of data that is put into the pipeline so less data needs to be processed overall, the other way is to increase the efficiency of the processing itself.  
+This first chapter of optimization approaches presents ways of reducing the amount of data or work input. 
 
 \section{(Hierarchical) Superfrustum Culling}
 \subsection{Theory}

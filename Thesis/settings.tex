@@ -94,6 +94,16 @@
   stringstyle=\color{TUMAccentGreen}
 }
 
+\lstset{
+  language=[11]C++,
+  keywordstyle={\bfseries \color{TUMBlue}},
+  stringstyle={\color{TUMAccentGreen}}
+}
+%\lstset{
+%  language=C,
+%  keywordstyle={\bfseries \color{blue}}
+%}
+
 % use this for C# highlighting
 % %\setmonofont{Consolas} %to be used with XeLaTeX or LuaLaTeX
 % \definecolor{bluekeywords}{rgb}{0,0,1}
@@ -146,3 +156,10 @@ ex-am-ple
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}} % for horizontal and vertical alignment with limited column width
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}} % for vertical alignment left with limited column width
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}m{#1}} % for vertical alignment right with limited column width
+
+
+
+% for inline code listings
+\NewDocumentCommand{\codeword}{v}{%
+  \texttt{\textcolor{TUMBlue}{#1}}%
+}

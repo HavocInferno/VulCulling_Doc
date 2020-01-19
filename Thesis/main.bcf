@@ -2182,35 +2182,6 @@
     <bcf:datasource type="file" datatype="bibtex">bibliography_Citavi.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">Anagnostou.2017</bcf:citekey>
-    <bcf:citekey order="2">Barrett.2017</bcf:citekey>
-    <bcf:citekey order="3">gamesindustry.biz.2016</bcf:citekey>
-    <bcf:citekey order="4">Gerlits.2017</bcf:citekey>
-    <bcf:citekey order="5">Hale.2018</bcf:citekey>
-    <bcf:citekey order="6">ITCS.Subramanian</bcf:citekey>
-    <bcf:citekey order="7">CohenOr.2003</bcf:citekey>
-    <bcf:citekey order="8">Hey.2001</bcf:citekey>
-    <bcf:citekey order="9">Rodriguez.2013</bcf:citekey>
-    <bcf:citekey order="10">VisCircleGmbH.</bcf:citekey>
-    <bcf:citekey order="11">Whiting.2017</bcf:citekey>
-    <bcf:citekey order="12">Kubisch.2014</bcf:citekey>
-    <bcf:citekey order="13">sydneyzh.2018</bcf:citekey>
-    <bcf:citekey order="14">Anagnostou.2017</bcf:citekey>
-    <bcf:citekey order="15">Hobson.2019</bcf:citekey>
-    <bcf:citekey order="16">Haines.1999</bcf:citekey>
-    <bcf:citekey order="17">Lighthouse3d.com.2011</bcf:citekey>
-    <bcf:citekey order="18">thebennybox.2018</bcf:citekey>
-    <bcf:citekey order="19">Willems.2016.6</bcf:citekey>
-    <bcf:citekey order="20">Willems.2016.4</bcf:citekey>
-    <bcf:citekey order="21">EpicGamesInc..n.d.</bcf:citekey>
-    <bcf:citekey order="22">Vlachos.2016</bcf:citekey>
-    <bcf:citekey order="23">Vlachos.2016b</bcf:citekey>
-    <bcf:citekey order="24">Ginsburg.2016</bcf:citekey>
-    <bcf:citekey order="25">Answer.2016</bcf:citekey>
-    <bcf:citekey order="26">Everitt.2017</bcf:citekey>
-    <bcf:citekey order="27">DiDonato.01.03.2017</bcf:citekey>
-    <bcf:citekey order="28">EpicGamesInc..2016</bcf:citekey>
-    <bcf:citekey order="29">FacebookTechnologiesLLC..2016</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

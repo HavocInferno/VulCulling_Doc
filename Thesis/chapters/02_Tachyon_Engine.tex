@@ -79,7 +79,7 @@ void VKRenderer::RenderFrame()
 \codeword{VKRenderer::RenderFrame} simply prompts each render target to perform its per-frame rendering operations, be it regular monoscopic output for a traditional viewport or pose tracking and stereoscopic composition for a virtual reality target. 
 
 \subsection{VR render loop}
-As seen in [Listing 3.3], the virtual reality render target's \codeword{RenderFrame} function is rather straight-forward. 
+As seen in [TODO: Listing 3.3], the virtual reality render target's \codeword{RenderFrame} function is rather straight-forward. 
 As long as the target and compositor are active, it updates the OpenVR device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen OpenVR compatible compositor on Windows systems. 
 
 \begin{figure}[htpb]
@@ -120,3 +120,5 @@ void OpenVR::RenderFrame()
   \end{tabular}
   \caption[OpenVR render target's RenderFrame]{Renderer frame render function}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
+
+[TODO: overview illustration]

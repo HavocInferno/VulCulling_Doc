@@ -17,6 +17,7 @@ The basic idea behind Superfrustum culling is to essentially do regular frustum 
 As is easily visible from [Figure X.x] though, the spatial proximity of of these two frusta leads to a large overlap volume, especially as field of view increases with more advanced headsets. One possible strategy to leverage more performance when culling two eyes is a so-called Superfrustum, assuming the frustum is the common six sided trapezoid. Cass Everitt of [Facebook LLC], formerly [Oculus LLC] has suggested this approach at [Oculus Connect 5?] and provided computation sketches at [FB source]. The idea is to combine the left and right eye frusta by taking the respective widest outer FOV tangent - usually the left eye's right side and the right eye's left side - and using these as the new side tangents of the superfrustum. Another way to express these is to take the widest half opening angles of each eye and adding them up to a combined opening angle. Similar is done for the top and bottom tangents, although these will usually be nearly identical for the two eyes. 
 A pitfall of the superfrustum is its necessary depth recession. This is easy to visualize when combining the two frusta by extending aforementioned side tangents backwards until they cross. The meeting point of this step is the new origin of the superfrustum, slightly recessed behind the two separate eyes. 
 [Name Surname?] of Silicon Studios offered a generalized way to compute this recession for un-mirrored eye orientation, while Everitt has extended his sketches by an asymmetry normalization. Both of these are important to consider as virtual reality headsets can have slightly canted and asymmetrical lenses, either by design or by manufacturing tolerance. Ignoring these two corrections may still result in a sufficient superfrustum if computed conservatively, but should be included for fully correct setups. 
+While this superfrustum naturally eliminates all overlap of the naive variant, it in turn includes small false positive regions, notably the triangular void found close to the origin points between the two eye frusta and potential side edge regions in the case of asymmetrical lens orientations. In a typical application, the performance cost of these will be negligible. \\
 
 
 [Figures by Everitt and Silicon]
@@ -30,7 +31,22 @@ In a culling pass, first all \codeword{chunk}s within a certain draw distance ra
 
 
 \section{Round Robin Culling}
-blabla
+Another culling variant specific to stereoscopy uses the round robin principle. The concept again springs from the desire to avoid frusta overlap, but instead of combining the frusta, it exploits a common property of current stereoscopy rendering techniques. As modern headsets use circular lens optics and flat displays distorting the displayed image, the framebuffers commonly need to be warped [distorted?] to compensate so the picture looks undistorted to the user again. As a result a lot of the edge data of the image is either considerably squeezed together or outside of the visible area of the HMD displays.
+This conservative property means a virtual eye frustum can be smaller than the technical frustum of that respective eye and false negative discards in these edge regions would go unseen by the user.
+Assuming both eyes of the headset have similar opening angles and parallel or nearly parallel viewing direction, the overlap of the two frusta would in most cases encompass the entire stereo-visible volume. So it naturally follows that only culling for one of the eye frusta would already give a sufficient representation of the actually visible scene.
+
+However, there is still a possibility of missing a few edge cases with this alone. So the extension of the idea to actual round robin assumes another common property of modern VR headsets, namely high refresh rates. Many of these aim for at least 80Hz (Rift S, WMR) ranging up to 144Hz (Index experimental mode) image refresh to give the user a smooth visual sensation.
+Exactly halving that refresh rate and reprojecting images for two refresh cycles with some pixel interpolation is an established way to still provide an acceptable experience with minor visual artifacting on slower devices as demonstrated by [TODO: Oculus LLC]'s Asynchronous Space Warp [TODO: and/or Time Warp?] and SteamVR's reprojection features. It follows that a conceivable compromise is to alternate which frustum is used for culling in a round robin fashion so that even if edge cases include visible false negatives, they only persist for one frame at a time. In the worst case this would manifest as shimmering or flickering at the outer edges of the visible screen area.
+
+Overall this makes Round Robin Culling a viable candidate on systems with very limited culling performance, but the tight constraints for sufficiently accurate results make it unfit as a general recommendation.
+
+[TODO: small illustration]
 
 \section{Conical Frustum Culling}
-blabla
+This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. [TODO: Student BA dude] attempts to demonstrate the method in [TODO: BA paper] albeit with limited success. That proof of concept does show the validity of the method though. The traditional six sided trapezoid frustum is replaced by a cone encompasses a volumetric projection of the view through each respective lens.
+
+[TODO: more specific calculation approach from paper]
+[TODO: small illustration]
+
+\subsubsection{Merging approaches}
+A convenient side effect of these three presented optimizations is that they can in part be merged. It is conceivable, for example, to do Conical Round Robin Frustum Culling in an effort to slice away as much of the conservative invisible area as possible and reduce the list of drawable objects to an optimistic minimum. It is also possible to construct a Conical Superfrustum aiming to avoid the mentioned edge false positives, albeit only feasible if the display per eye is square-like to avoid adding new false positive volume on other sides.

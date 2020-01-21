@@ -2,11 +2,26 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Stereo Rendering Optimization - Effort reduction}
+This second chapter of optimization approaches targets the efficiency of rendering processes on the graphics chip itself. These approaches have little to no impact on CPU performance and tend to exploit and scale mostly with GPU power. 
 
 \section{Multiview stereo rendering}
 \subsection{Theory}
-blabla
+When rendering a stereo image using the naive method of simply going through the entire rendering pipeline once for each viewport, potentially a lot of computation is done twice with little or no change in data or parameters. 
+With the [TODO: general graphics pipeline, Figure x.x] in mind, it's clear that for example the vertex stage will see very little change in output as geometry and index buffers are largely the same between multiple stereo viewport passes with only minor shifts in the view matrices. Similarly, the geometry stage is commonly not dependent on specific eye data and as such would be a waste to process with the same data twice. [TODO: check again]
+An optimization exploiting this is called multiview stereo rendering, with - in more vendor specific terms - Nvidia calling it single pass stereo, simultaneous multi-projection and multi-view rendering and AMD calling it LiquidVR multiview. The idea behind all these terms is the same, albeit with detail differences between the different flavors. 
+
+The core concept of multiview rendering is to only do those pipeline stages multiple times that actually produce notably different data for each eye, such as the fragment stage, while only running the aforementioned stages with little changes once. The data from stages run only once can then be reused by the multiply run stages with very little extra cost. This technique improves pipeline efficiency and will scale heavily depending on workload. For fragment-heavy applications the benefit will be limited while high vertex or geometry loads will scale optimally. 
+
+[TODO: illustration]
+
+The tradeoff then is that all relevant view data for each viewport has to be handed to the pipeline at once, creating a little higher memory overhead. Additionally certain buffers such as geometry and indices for the vertex stage need to be uniform across all viewports and can't be altered for each eye as they are processed in a single pass. 
+[TODO: is there any warping happening? -> very slight artifacts possible]
+Another noteworthy constraint is that multiview rendering in its current form requires hardware support as it uses additional registers and pipeline shortcuts. Nvidia GPUs support multiview since the Maxwell architecture generation and newer, AMD GPUs support it starting with the GCN [TODO: check] architecture revision 1.0, Intel GPU support begins with [TODO: check], [TODO: check ARM etc]. 
+
 \subsection{Estimated impact}
-blabla
+[TODO]
+
 \subsection{Implementation specifics}
-blabla
+In Vulkan specifically, multiview is enabled through the VK\_KHR\_multiview extension. This extension's availability on the target hardware can be queried and if available, the individual hardware-dependent implementation is abstracted by Vulkan. 
+
+[TODO]

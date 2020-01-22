@@ -10,18 +10,37 @@ When rendering a stereo image using the naive method of simply going through the
 With the [TODO: general graphics pipeline, Figure x.x] in mind, it's clear that for example the vertex stage will see very little change in output as geometry and index buffers are largely the same between multiple stereo viewport passes with only minor shifts in the view matrices. Similarly, the geometry stage is commonly not dependent on specific eye data and as such would be a waste to process with the same data twice. [TODO: check again]
 An optimization exploiting this is called multiview stereo rendering, with - in more vendor specific terms - Nvidia calling it single pass stereo, simultaneous multi-projection and multi-view rendering and AMD calling it LiquidVR multiview. The idea behind all these terms is the same, albeit with detail differences between the different flavors. 
 
-The core concept of multiview rendering is to only do those pipeline stages multiple times that actually produce notably different data for each eye, such as the fragment stage, while only running the aforementioned stages with little changes once. The data from stages run only once can then be reused by the multiply run stages with very little extra cost. This technique improves pipeline efficiency and will scale heavily depending on workload. For fragment-heavy applications the benefit will be limited while high vertex or geometry loads will scale optimally. 
+The core concept of multiview rendering is to only do those pipeline stages multiple times that actually produce notably different data for each eye, such as the rasterizer and pixel shader stages, while only running the aforementioned stages with little changes once. The data from stages run only once can then be reused by the multiply run stages with very little extra cost. This technique improves pipeline efficiency and will scale heavily depending on workload. For fragment-heavy applications the benefit will be limited while high vertex or geometry loads will scale optimally. 
 
 [TODO: illustration]
 
-The tradeoff then is that all relevant view data for each viewport has to be handed to the pipeline at once, creating a little higher memory overhead. Additionally certain buffers such as geometry and indices for the vertex stage need to be uniform across all viewports and can't be altered for each eye as they are processed in a single pass. 
+The small tradeoff then is that all relevant view data for each viewport has to be handed to the pipeline at once, creating a little higher memory overhead. Additionally certain buffers such as geometry and indices for the vertex stage need to be uniform across all viewports and can't be altered for each eye as they are processed in a single pass. 
 [TODO: is there any warping happening? -> very slight artifacts possible]
-Another noteworthy constraint is that multiview rendering in its current form requires hardware support as it uses additional registers and pipeline shortcuts. Nvidia GPUs support multiview since the Maxwell architecture generation and newer, AMD GPUs support it starting with the GCN [TODO: check] architecture revision 1.0, Intel GPU support begins with [TODO: check], [TODO: check ARM etc]. 
+Another noteworthy constraint is that multiview rendering in its current form requires hardware support for proper operation as it uses additional registers and pipeline shortcuts. Technically multiview can be done purely in software too, but then no pipeline stages are skipped and at only a moderate CPU rendering benefit is seen, plus the advantage of avoiding multiple code paths for different levels of hardware support [TODO: Source Nv GDC 2015]. 
+Going by the user-maintained Vulkan Hardware Database [https://vulkan.gpuinfo.org/listreports.php?extensionfeature=multiview]
+The major GPU vendors specify multiview support in their architectures as follows: 
+\begin{itemize}
+\item Nvidia: hardware multiview from the Maxwell generation and newer, software support from Kepler onward
+\item AMD: software support from Graphics Core Next 1.0 onward [TODO: hw support?]
+\item Intel: software support begins with Generation 9.0 (Skylake/Apollo Lake GT) onward under Windows, Generation 7.0 (Ivy Bridge GT) onward under Linux [TODO: hw support?]
+\item Qualcomm: software support from Adreno 500 onward
+\item ARM: software support from Bifrost onward, limited support on Midgard
+\item Imagination: software support from Rogue onward
+\end{itemize}
+Note here while support of the desktop parts is solid and stable, the ARM-based mobile chipsets often have incomplete or unstable drivers [TODO: source]. 
+For all submitted devices (892 at the time of writing) the database shows support coverage of 54\% on Windows systems, 69\% on Linux systems and only 23\% on Android. This statistic is not very reliable, however, as an undetermined portion of the submissions contains incomplete or flawed information such as drivers versioned as 0.0.0 or API versions reported as 0.0.1. 
 
 \subsection{Estimated impact}
 [TODO]
 
 \subsection{Implementation specifics}
 In Vulkan specifically, multiview is enabled through the VK\_KHR\_multiview extension. This extension's availability on the target hardware can be queried and if available, the individual hardware-dependent implementation is abstracted by Vulkan. 
-
-[TODO]
+In the Tachyon implementation of multiview, the following changes to the render loop are introduced: 
+\begin{itemize}
+\item the VR render target adds VK\_KHR\_GET\_PHYSICAL\_DEVICE\_PROPERTIES\_2 to the required instance extensions and VK\_KHR\_MULTIVIEW to the required device extensions during Vulkan instance and device creation at startup
+\item the previously separate per-eye VR render passes are merged into a single render pass
+\item this VR render pass incorporates the multiview pNext extension using a view mask and correlation mask of 0x11, with each of those bits representing one of the eyes
+\item the Frustum Culling pass combines the two frustum checks with an early accept and outputs a merged set of draw call information
+\item the second command buffer recording - previously intended for the second eye - in \codeword{OpenVR::RecordCommandBuffers} is cut out as multiview render passes can only take a single unified set of command buffers
+\end{itemize}
+The VR render target's framebuffer, color attachment and depth attachment are already set up as dual-layered buffers which makes them readily compatible with multiview render passes. With these changes, the Tachyon renderer is fully switched over to single pass stereo rendering. 

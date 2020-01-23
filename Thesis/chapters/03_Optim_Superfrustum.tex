@@ -11,6 +11,12 @@ The following options build on top of the regular frustum culling concept. In th
 Another optional layer of the culling process is to maintain hierarchical container structures for the scene objects so larger numbers can be discarded or included early on. 
 For all those options the goal is the same, to get as result the list or buffer of objects visible by the given camera frustum in the scene. 
 
+\subsubsection{Frustum culling in Tachyon}
+The frustum culling approach in Tachyon is fully CPU-based and utilizes pre-computed hierarchical draw buffers. More specifically, at startup the scene is divided into a coarse grid of \codeword{chunk}s where each grid possesses an octree. Also at startup, a thread pool with the current number of hardware threads is created. At asset load time, these octrees are populated with the loaded objects through optimistic size-aware insertion. Each cell of a tree then precomputes a draw buffer containing a combined draw call for all objects associated with that cell. These buffers can be recomputed at any time, but the operation should be avoided at runtime as it incurs costly CPU to GPU transfers. 
+In a culling pass, first all \codeword{chunk}s within a certain draw distance radius of the camera are chosen, so there is an additional very primitive distance culling taking place. Then each \codeword{chunk} submits a culling call using its tree to the thread pool. Each such call works as follows: 
+
+[TODO: blablabla, Figure etc]
+
 \section{Superfrustum Culling}
 \subsection{Theory}
 The basic idea behind Superfrustum culling is to essentially do regular frustum culling despite rendering into two cameras, one per eye. The naive way of extending the frustum concept to a stereoscopic camera is to add a second frustum so there is one per eye, then perform the culling check for both frusta and merge the results. 
@@ -22,13 +28,16 @@ While this superfrustum naturally eliminates all overlap of the naive variant, i
 [TODO: Figures/illustrations by Everitt and Silicon]
 
 \subsection{Estimated impact}
-[TODO]
+The impact of using a Superfrustum will depend very specifically on the type of frustum culling done and combination with other techniques.
+On its own with a CPU based culling pass only an appreciable benefit in CPU rendering time is to be expected as the number of frustum checks will be reduced by up to 50\% and only a single buffer needs to be transferred to the graphics unit. The GPU itself still needs to render each eye separately though, including all vertex transformations, pixel shading and so forth. The specific impact in the case of Tachyon is elaborated on in [chapter 5]. 
+Superfrustum culling when performed directly on the GPU obviously has great potential to significantly cut down on related compute work, once again to the effect of up to 50\% versus a baseline dual frustum culling. An interesting point to consider is whether any of the culling data needs to be synchronized back to the CPU, as when not, the GPU compute workload will only depend on a single small buffer or pushconstant transfer containing the camera parameters. If, however the resulting culling set is transferred back to the CPU, for example for preprocessing of the next frame, this transfer will of course present another speedup limiter. 
 
 \subsection{Implementation specifics}
-The frustum culling approach in Tachyon is fully CPU-based and utilizes pre-computed hierarchical draw buffers. More specifically, at startup the scene is divided into a coarse grid of \codeword{chunk}s where each grid possesses an octree. Also at startup, a thread pool with the current number of hardware threads is created. At asset load time, these octrees are populated with the loaded objects through optimistic size-aware insertion. Each cell of a tree then precomputes a draw buffer containing a combined draw call for all objects associated with that cell. These buffers can be recomputed at any time, but the operation should be avoided at runtime as it incurs costly CPU to GPU transfers. 
-In a culling pass, first all \codeword{chunk}s within a certain draw distance radius of the camera are chosen, so there is an additional very primitive distance culling taking place. Then each \codeword{chunk} submits a culling call using its tree to the thread pool. Each such call works as follows: 
+To facilitate Superfrustum culling in Tachyon required only straight-forward changes. At creation time of the virtual camera, the superfrustum is computed from the given OpenVR eye parameters following Everitt and Silicon's way. 
+[TODO: pseudo code?]
+The calculated superfrustum recession and new combined field of view angles are saved and used every frame when re-transforming the superfrustum. The frustum transformation uses a simple geometric approach where the camera's world position, forward and up vectors in conjunction with the near and far distance, field of view and aspect ratio are extruded into the six planes of the frustum volume. 
+The per-frame culling pass of Tachyon then naturally only checks against this single frustum and returns a single set of draw commands that are then sent to both eyes. 
 
-[TODO: blablabla, Figure etc]
 
 
 \section{Round Robin Culling}
@@ -43,8 +52,10 @@ Overall this makes Round Robin Culling a viable candidate on systems with very l
 
 [TODO: small illustration]
 
+
+
 \section{Conical Frustum Culling}
-This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. [TODO: Student BA dude] attempts to demonstrate the method in [TODO: BA paper] albeit with limited success. That proof of concept does show the validity of the method though. The traditional six sided trapezoid frustum is replaced by a cone encompasses a volumetric projection of the view through each respective lens.
+This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. [TODO: Student BA dude] attempts to demonstrate the method in [TODO: BA paper] albeit with limited success. That proof of concept does show the validity of the method though. The traditional six sided trapezoid frustum is replaced by a cone encompasses a volumetric projection of the view through each respective lens. For a more geometry-bound GPU, this method will provide a small relief. 
 
 [TODO: more specific calculation approach from paper]
 [TODO: small illustration]

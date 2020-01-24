@@ -8,8 +8,57 @@ One such effort was presented by [TODO: Valve dude] at [TODO: GDC 2015] as a pos
 [TODO]
 
 \subsection{Estimated impact}
-The performance gain then naturally scales with both the fragment shader bias of the per-frame workload as well as with the HMD's blind areas. Valve's [TODO: dude] in his GDC talk showcased gains of 17\% lower GPU frametimes for the company's Aperture Labs VR showcase scene using an HTC Vive headset. [TODO: verify]
+The performance gain then naturally scales well with both increased fragment shader bias of the per-frame workload as well as with the HMD's blind areas. Valve's [TODO: dude] in his GDC talk showcased gains of 17\% lower GPU frametimes for the company's Aperture Labs VR showcase scene using an HTC Vive headset. [TODO: verify]
+Assuming a roughly uniform distribution of objects in the scene and accordingly a roughly constant shader workload during use, the relative improvement in fragment render time is directly proportional to the masked percentage of the total framebuffer. 
 [TODO]
 
 \subsection{Implementation specifics}
-[TODO]
+Outfitting Tachyon for stencil masking required the addition of the entire stencil stack as the engine did not use the feature in any capacity yet. An inherent advantage of this is that it allows to render the stencil mask only once at startup and keep reusing it every frame without additional render load for the mask. \\
+The changes include extending the depth attachment of the OpenVR render pass with the \codeword{VK\_IMAGE\_ASPECT\_STENCIL\_BIT} so the additional buffer layer is created at startup. What's more, the involved Vulkan pipelines need stencil operation states defined in their \codeword{VkPipelineDepthStencilStateCreateInfo}, with the operations set as in [TODO: Figure] so the bits are checked against but not modified. Next, the VR render pass needs its color attachment's \codeword{stencilLoadOp} set to 
+
+\codeword{VK_ATTACHMENT_LOAD_OP_LOAD} so the renderer knows to load the stencil buffer at the start of the color pass, and the \codeword{stencilStoreOp} to \codeword{VK_ATTACHMENT_STORE_OP_DONT_CARE} so it can leave the buffer behind after use without saving anything more to it. This is important to make sure our stencil buffer remains unmodified and expensive writes are avoided. 
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+//stencil op settings for pipelines using the stencil mask for comparison 
+	VkStencilOpState stencilOpState = {};
+	stencilOpState.compareOp = VK_COMPARE_OP_NOT_EQUAL;
+	stencilOpState.failOp = VK_STENCIL_OP_KEEP;
+	stencilOpState.depthFailOp = VK_STENCIL_OP_KEEP;
+	stencilOpState.passOp = VK_STENCIL_OP_KEEP;
+	stencilOpState.compareMask = 0xff;
+	stencilOpState.writeMask = 0xff;
+		[TODO: check what both masks do]
+	stencilOpState.reference = 1;
+	\end{lstlisting}
+  \end{tabular}
+  \caption[Material pipeline stencil operation bits]{Stencil operation bits set for default material Pipeline}\label{fig:lst_StencilOpState_MaterialPipeline}
+\end{figure}
+
+Rendering the stencil mask itself at startup is done as follows: 
+OpenVR by now has some helper functions for masking built in, such as the \codeword{GetHiddenAreaMesh(EVREye eEye)} function that returns as screenspace normalized list of vertices representing the ideal mask mesh for the current HMD as known to OpenVR. [TODO: check "ideal"ity for various HMDs] The obvious benefit of this is the simplicity of getting a fitted mask for most HMDs instead of either approximating with circular masks or going through the trouble of manually creating fitted meshes for existing and coming OpenVR-enabled headsets. Unfortunately, however, OpenVR in a few instances returns empty masks, such as for the Oculus Rift CV1. For those cases a fast circular approximation mask may be an adequate compromise. \\
+Tachyon queries OpenVR for the mesh of each eye, converts the vertex lists into a renderer-compatible vertex format and writes out a vertex and index buffer each. 
+At the end of the VR render pass, an ad-hoc command buffer is recorded and submitted to render the two masks into the VR framebuffer's depth attachment's stencil layer. The \codeword{VK\_IMAGE\_ASPECT\_STENCIL\_BIT} is set to ensure only that layer is written to. \\
+
+Due to Vulkan's verbose nature, rendering these two masks also requires its own pipeline. The default material pipeline, PBR pipeline et cetera only do stencil test compares, no writes, they perform color writes and rasterizer face culling, all things the stencil mask pipeline should do differently. So a separate stencil pipeline is introduced with stencil operation state set like in [TODO: Figure], color writes masked off and rasterizer culling disabled. Should the need to perform per-frame stencil writes arise, merging the material pipelines and the stencil pipeline may prove beneficial to avoid expensive pipeline re-binds, but for the sake of cleaner separation the described setup was used in Tachyon's current implementation. 
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+//stencil op settings for the stencil pipeline 
+	VkStencilOpState stencilOpState = {};
+	stencilOpState.compareOp = VK_COMPARE_OP_ALWAYS;
+	stencilOpState.failOp = VK_STENCIL_OP_REPLACE;
+	stencilOpState.depthFailOp = VK_STENCIL_OP_REPLACE;
+	stencilOpState.passOp = VK_STENCIL_OP_REPLACE;
+	stencilOpState.compareMask = 0xff; 
+	stencilOpState.writeMask = 0xff;
+			[TODO: check what both masks do]
+	stencilOpState.reference = 1;
+		\end{lstlisting}
+  \end{tabular}
+  \caption[Stencil pipeline stencil operation bits]{Stencil operation bits set for stencil mask Pipeline}\label{fig:lst_StencilOpState_StencilPipeline}
+\end{figure}

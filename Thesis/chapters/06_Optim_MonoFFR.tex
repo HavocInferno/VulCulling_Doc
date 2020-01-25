@@ -11,6 +11,13 @@ This approach has caveats unfortunately. For one, the value at which a field spl
 Note here, this thesis will not explore these constraints of MFFR further than approximate values used for testing as time does not allow more. \\
 MFFR has been implemented by Oculus LLC and Epic Games Inc in Unreal Engine 4 at some point and was recommended for example for certain types of mobile VR experiences with very limited GPU power, but curiously has been removed from the engine in update 4.20 without further explanation. An odd decision surely, as Oculus LLC developer blog posts prior to the removal indicated continued optimization efforts such as added compatibility with UE4's multiview path. 
 
+[TODO: illustration]
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pictures/flowchart_mffr}
+  \caption{[TODO: Monoscopic Far-Field rendering flowchart]} \label{fig:flowchart_mffr}
+\end{figure}
+
 \subsection{Estimated impact}
 The makeup of the scene itself will also affect effectiveness of the solution. As cautioned by Oculus LLC in their developer reference on Mono Far-Field Rendering [TODO: src], there is a certain baseline overhead simply for enabling the additional render pass necessary for the monoscopic image and the associated context switches. Furthermore only scenes with a significant of distant geometry beyond the field split distance will benefit from the optimization, as obviously the second view workload can only be saved for objects that would be contained within that second pass. 
 [TODO]

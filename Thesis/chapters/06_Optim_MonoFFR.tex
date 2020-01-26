@@ -23,7 +23,22 @@ The makeup of the scene itself will also affect effectiveness of the solution. A
 [TODO]
 
 \subsection{Implementation specifics}
-[TODO]
+Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that matter - requires care and a number of changes. In this case, the plan was to do MFFR as illustrated in \autoref{fig:flowchart_mffr}, by way of two render passes but only a single framebuffer. In the first step of each VR frame, a monoscopic render pass would render the far clip volume into the index 0 layer of the framebuffer [TODO: ...can Vulkan be set to write pixels into two buffers at the same time?]. The next step would copy that layer to index 1 as well. In the final step then the regular stereoscopic render commands would be executed with reduced near field clip volume. The goal of this approach is to reduce memory operations and locality to a minimum and also avoid more costly compositing methods. While the general approach sounds straight-forward, implementing it in a Vulkan renderer is no trivial task and required the following changes to the renderer: 
+\begin{itemize}
+\item for the virtual camera, a field split distance parameter is introduced and an additional frustum is added - the stereo frusta then cover the volume from near plan to split plane while the far field frustum covers split plane to far plane
+\item the frustum culling procedure is altered to write the far frustum's resulting draw commands into a separate set instead of merging them into one (as would happen for regular multifrustum culling in Tachyon)
+\item at initialization time of the VR render target, an additional render pass is created for monoscopy, with the main difference compared to the VR render pass being that it foregoes the multiview extension
+\item add an additional set of Vulkan \codeword{VkCommandBuffer}s into which the draw commands of the far frustum cull set are to be recorded
+\item add an additional set of \codeword{VkSemaphore}s to synchronize the two render passes and create them in \codeword{CreateSyncObjects()} during initialization
+\item add an additional \codeword{VkCommandBuffer} for the layer copy operation
+\item at initialization time of the VR render target, pre-record this copy command buffer so it can be reused every frame; this recording includes transitioning the layout of both the color and depth image from \codeword{VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL} to \codeword{VK_IMAGE_LAYOUT_GENERAL}, \codeword{vkCmdCopyImage(...)} both images' layer 0 to layer 1 and then transition the layouts in reverse again
+\item in the per-frame recording procedure of the VR render target, \codeword{RecordCommandBuffers(...)}, the entire structure of begin and end of command buffers and render pass and per-pipeline \codeword{RecordDrawCommand(...)} calls is duplicated with the monoscopy render pass and far field command buffers set; after that block the prior regular stereo recording still takes place
+\item in the render target's \codeword{RenderFrame(...)} function the far field command buffer and layer copy command buffer submission is inserted before the regular stereo submits; the mono submit is set to wait on \codeword{mRenderCompleteSemaphores} and signal \codeword{mFarfieldCompleteSemaphores}, the latter of which the stereo submit is set to wait on
+\item in VR render target's camera setup, construct the far field frustum projection matrix as outlined in [TODO: Vulkan Cookbook?] - transposed as Tachyon still retains OpenGL matrix format for a few matrix types
+\item add an additional set of camera data struct and camera index
+\item in the render target's \codeword{UpdateCameras()} call, update the far field volume's view projection matrix by transforming aforementioned projection matrix by the current HMD pose and write that updated matrix to the camera data buffer on the GPU
+\end{itemize}
+[TODO: sort this list a bit better? normal text some of it?]
 
 
 

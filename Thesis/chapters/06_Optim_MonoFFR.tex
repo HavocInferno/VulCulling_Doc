@@ -40,10 +40,17 @@ Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that ma
 \end{itemize}
 [TODO: sort this list a bit better? normal text some of it?]
 
+Some issues with this implementation do prevail and make it unfit for productive deployment, unfortunately. For one, while the lack of pure separation at little to not sideways tilt is acceptable and not easily noticed, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical. 
+[TODO: check whether it works any better with different proj matrices (e.g. more akin to L eye?)]
+[TODO: example picture comparison]
+
 
 
 \section{MFFR Variant: Depth Shift}
-[TODO]
+MFFR in its basic version as described above obviously completely foregoes separation beyond the split distance and as such that split distance has to be set relatively far back to minimize the visual inaccuracy. So naturally it seems profitable to attempt to try and reduce that split distance closer to the camera by artificially increasing that accuracy again. One such way is to use the data already contained in the framebuffer's depth layer during rendering. 
+As stereo separation is mostly dependent on depth given the object itself and its properties are known, it is logical to approximate small amounts of separation based on that depth buffer. 
+Instead of simply copying layer 0 to layer 1 after the far field pass, one can do a sampling pass over layer 1 from layer 0 or a post-processing pass after the copy operation and slightly shift pixels according to the depth value of the respective given fragment. 
+[TODO: some math? illustration]
 
 \section{MFFR Variant: Alternate eye}
 [TODO]

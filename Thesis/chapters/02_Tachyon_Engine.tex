@@ -20,7 +20,7 @@ Whenever any 3D object is to be loaded, rtvklib uses several manager classes to 
 The renderer initialization also encompasses virtual reality through OpenVR. Given a valid OpenVR environment and HMD is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. 
 
 \subsection{Render loop} 
-After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update} and \codeword{RenderFrame} functions back to back. These functions are shown in [Listing 3.1] and [Listing 3.2]. 
+After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. These functions are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}. 
 
 \begin{figure}[htpb]
   \centering
@@ -52,7 +52,7 @@ After all startup and initialization is done, the engine's render loop executes 
   \caption[VKRenderer's Update]{Renderer update function}\label{fig:lst_VKRenderer_Update}
 \end{figure}
 
-\codeword{VKRenderer::Update} first prompts all aforementioned managers to update their databases, buffers and anything else they hold in case they are dirty. Then it prompts each render target to update, which may involve camera transformation updates and buffer synchronization for example. Also for each render target, the loop will then have the instance manager perform a frustum culling pass, which will for this target save a conservative list of draw call information for objects visible by this target's camera viewpoints. 
+\codeword{VKRenderer::Update()} first prompts all aforementioned managers to update their databases, buffers and anything else they hold in case they are dirty. Then it prompts each render target to update, which may involve camera transformation updates and buffer synchronization for example. Also for each render target, the loop will then have the instance manager perform a frustum culling pass, which will for this target save a conservative list of draw call information for objects visible by this target's camera viewpoints. 
 If any of these updates and culling passes set a pipeline or command buffer state invalid, these will be rebuilt accordingly.  
 
 \begin{figure}[htpb]
@@ -76,11 +76,44 @@ void VKRenderer::RenderFrame()
   \caption[VKRenderer's RenderFrame]{Renderer frame render function}\label{fig:lst_VKRenderer_RenderFrame}
 \end{figure}
 
-\codeword{VKRenderer::RenderFrame} simply prompts each render target to perform its per-frame rendering operations, be it regular monoscopic output for a traditional viewport or pose tracking and stereoscopic composition for a virtual reality target. 
+\codeword{VKRenderer::RenderFrame()} simply prompts each render target to perform its per-frame rendering operations, be it regular monoscopic output for a traditional viewport or pose tracking and stereoscopic composition for a virtual reality target. 
 
 \subsection{VR render loop}
-As seen in [TODO: Listing 3.3], the virtual reality render target's \codeword{RenderFrame} function is rather straight-forward. 
-As long as the target and compositor are active, it updates the OpenVR device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen OpenVR compatible compositor on Windows systems. 
+The virtual reality render target's \codeword{RenderFrame()} function is rather straight-forward. 
+As long as the target and compositor are active, it updates the OpenVR device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen OpenVR compatible compositor on Windows systems. \\
+
+As the VR view essentially moves constantly, its render target needs to update its Vulkan \codeword{VkCommandBuffer} every frame. This is done by setting the \codeword{mCommandBuffersInvalid} flag which has the renderer call \codeword{UpdateCommandBuffers()} which in turn prompts each render target to \codeword{RecordCommandBuffers()}. For each of the VR render target's command buffers this is a simple loop through the \codeword{RecordDrawCommand()}s of the pipelines assigned to this render target between the Begin and End commands of the command buffer and render pass. The draw command recording function has the respective pipeline query the \codeword{InstanceManager} for its post-culling draw command set and writes the contained entries as \codeword{vkCmdDrawIndexedIndirect()} draw calls. 
+
+\begin{figure}[htpb]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+  void OpenVR::RecordCommandBuffers(uint32_t passId)
+{
+	for (uint32_t i = 0; i < mCommandBuffers.size(); ++i)
+	{
+		VkCommandBufferBeginInfo beginInfo = {};
+		[...]
+		vkBeginCommandBuffer(mCommandBuffers[i], &beginInfo);
+
+		VkRenderPassBeginInfo renderPassInfo = {};
+		[...]
+		vkCmdBeginRenderPass(mCommandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		for (auto renderPipeline : mRenderPipelines)
+		{
+			renderPipeline->RecordDrawCommand(mCommandBuffers[i], passId);
+		}
+
+		vkCmdEndRenderPass(mCommandBuffers[i]);
+	}
+}
+	\end{lstlisting}
+  \end{tabular}
+  \caption[OpenVR render target's RecordCommandBuffers]{OpenVR command buffer recording function}\label{fig:lst_OpenVR_RecordCommandBuffers}
+\end{figure}
+
+What's more, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, [TODO]
 
 \begin{figure}[htpb]
   \centering
@@ -118,7 +151,7 @@ void OpenVR::RenderFrame()
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[OpenVR render target's RenderFrame]{Renderer frame render function}\label{fig:lst_OpenVR_RenderFrame}
+  \caption[OpenVR render target's RenderFrame]{OpenVR frame render function}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
 
 [TODO: overview illustration]

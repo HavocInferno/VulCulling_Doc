@@ -15,7 +15,7 @@ MFFR has been implemented by Oculus LLC and Epic Games Inc in Unreal Engine 4 at
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/flowchart_mffr}
-  \caption{[TODO: Monoscopic Far-Field rendering flowchart]} \label{fig:flowchart_mffr}
+  \caption{[TODO: Monoscopic Far-Field rendering flowchart]} \label{fig:flowchart_mffr_FarFirst}
 \end{figure}
 
 \subsection{Estimated impact}
@@ -23,7 +23,20 @@ The makeup of the scene itself will also affect effectiveness of the solution. A
 [TODO]
 
 \subsection{Implementation specifics}
-Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that matter - requires care and a number of changes. In this case, the plan was to do MFFR as illustrated in \autoref{fig:flowchart_mffr}, by way of two render passes but only a single framebuffer. In the first step of each VR frame, a monoscopic render pass would render the far clip volume into the index 0 layer of the framebuffer [TODO: ...can Vulkan be set to write pixels into two buffers at the same time?]. The next step would copy that layer to index 1 as well. In the final step then the regular stereoscopic render commands would be executed with reduced near field clip volume. The goal of this approach is to reduce memory operations and locality to a minimum and also avoid more costly compositing methods. While the general approach sounds straight-forward, implementing it in a Vulkan renderer is no trivial task and required the following changes to the renderer: 
+Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that matter - requires care and a number of changes. There are at least two possible ways of doing it, both by way of two render passes but only a single framebuffer and both with their own respective drawbacks and advantages. 
+\subsubsection{Far-first approach}
+One way of implementing MFFR is to do the far pass first in each frame, then followed by a near pass, as illustrated in \autoref{fig:flowchart_mffr_FarFirst}. At the start of the frame, the framebuffer is cleared - only color and depth necessary - after which the far-field command buffers are submitted and executed. This pass can render directly into the buffer of one eye, then copy color and depth buffer to the other eye. Finally the near-field command buffers are submitted and render their values into the buffers already containing the far field information. 
+For this case, one extra step needs to be performed though. As the projection matrix normally projects the world as seen by the camera into a uni-cube with each axis being length 1 going from 0 to 1, and this same uni-cube is used for both depth value calculation \textit{and} projection clipping (triangle discard via clip space evaluation), the two passes can't share the same uni-cube. Ways around this would be to either use regular full-depth projection matrices and clear the depth buffer before the near pass, or to scale both passes' projection matrices by 0.5 and also translate the far projection by 0.5 so the uni-cube is split between the two fields. 
+If neither is done, the depth values of far-pass objects may appear to be closer than those of near-pass objects, effectively leading to some near-field objects being drawn \textit{behind} far ones. 
+The depth buffer clear option has to benefit of utilizing full projection precision and correct triangle clipping. The matrix squashing option avoids an extra clear but will mean vertices otherwise clipped outside of the uni-cube will be pulled into the uni-cube and not skipped. 
+The overall advantage of this far-first approach then is that it yields a full precision far-field depth buffer which may be useful for stereo interpolation as briefly described in the next section \ref{mffr_depthshift}. The disadvantage then is that early Z discard cannot be fully effective as all far geometry is rendered first, even if opaque geometry close to the camera would later obstruct it. Whether the benefits of lower split distance coupled with interpolation can outpace the additional cost of overdraw will heavily depend on the scene and how much geometry is contained within the far volume. 
+The goal of this approach then is to reduce memory operations and locality to a minimum and also avoid more costly compositing methods. 
+\subsubsection{Near-first approach}
+The obvious alternative to rendering the far pass first is of course to render the stereo near volume at the start of each frame [TODO: mffr near first flowchart]. A key difference to the former approach is that for near-first to work correctly, this first pass also needs to flag then stencil buffer pixel when a opaque fragment is within the uni-cube and a color value is written. Then after the stereo pass, each eye will contain a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. The constraint, however, is that the far pass then also needs to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
+The obvious advantage of this approach over far-first is that early Z discard takes full effect, not to mention stencil masking may reduce the leftover areas even more. The downside is that it needs to perform additional stencil writes every frame and potentially costly sampling operations. 
+\subsubsection{rtvklib MFFR}
+In this case, the plan was to do far-first MFFR [TODO: is it still?]. In the first step of each VR frame, a monoscopic render pass would render the far clip volume into the index 0 layer of the framebuffer. The next step would copy that layer to index 1 as well. In the final step then the regular stereoscopic render commands would be executed with reduced near field clip volume. 
+While the general approach sounds mostly straight-forward and both described ways are possible, implementing either in a Vulkan renderer is no trivial task and required the following changes to rtvklib: 
 \begin{itemize}
 \item for the virtual camera, a field split distance parameter is introduced and an additional frustum is added - the stereo frusta then cover the volume from near plan to split plane while the far field frustum covers split plane to far plane
 \item the frustum culling procedure is altered to write the far frustum's resulting draw commands into a separate set instead of merging them into one (as would happen for regular multifrustum culling in Tachyon)
@@ -40,13 +53,13 @@ Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that ma
 \end{itemize}
 [TODO: sort this list a bit better? normal text some of it?]
 
-Some issues with this implementation do prevail and make it unfit for productive deployment, unfortunately. For one, while the lack of pure separation at little to not sideways tilt is acceptable and not easily noticed, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical. 
+Some issues with this implementation do prevail and make it unfit for productive deployment in Tachyon yet, unfortunately. For one, while the lack of pure separation at little to no sideways tilt is acceptable and not easily noticed, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical. 
 [TODO: check whether it works any better with different proj matrices (e.g. more akin to L eye?)]
 [TODO: example picture comparison]
 
 
 
-\section{MFFR Variant: Depth Shift}
+\section{MFFR Variant: Depth Shift}  \label{mffr_depthshift}
 MFFR in its basic version as described above obviously completely foregoes separation beyond the split distance and as such that split distance has to be set relatively far back to minimize the visual inaccuracy. So naturally it seems profitable to attempt to try and reduce that split distance closer to the camera by artificially increasing that accuracy again. One such way is to use the data already contained in the framebuffer's depth layer during rendering. 
 As stereo separation is mostly dependent on depth given the object itself and its properties are known, it is logical to approximate small amounts of separation based on that depth buffer. 
 Instead of simply copying layer 0 to layer 1 after the far field pass, one can do a sampling pass over layer 1 from layer 0 or a post-processing pass after the copy operation and slightly shift pixels according to the depth value of the respective given fragment. \\
@@ -57,5 +70,4 @@ This interpolation should allow pulling the field split distance closer to the c
 Another possible way of pulling in the split distance value while retaining approximated separation comes back to the VR property of high framerate as underlying for earlier chapters like the Round Robin Culling. 
 Assuming high framerate and refresh rate, the mono render pass could be called with the camera parameters not custom calculated as a middle point between the two eyes but alternating between left and right eye parameters each frame. This way each alternating eye would be correctly projected every other frame and incorrect data would likewise also only persist for one frame at a time in each eye. \\
 If this eye-alternating MFFR were to be combined with interpolation of the respective incorrect eye, the perceived inaccuracy (seen as flickering as the visual information is only incorrect every other frame) may be further reduced. Candidates for this are a single frame temporal reconstruction, although a single previous frame may not be enough for good results, or a simple frame interpolation. \\
-Once again this thesis does not encompass this additional option and thus it is unknown how far the split distance could be pulled in and whether related savings would outweigh interpolation cost. 
-[TODO]
+Once again this thesis does not encompass this additional option and thus it is unknown how far the split distance could be pulled in and whether related savings would outweigh interpolation cost. And just as with Round Robin Culling, the same potential artifacts and issues are present here. [TODO]

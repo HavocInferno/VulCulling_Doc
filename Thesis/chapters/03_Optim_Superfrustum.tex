@@ -17,6 +17,14 @@ In a culling pass, first all \codeword{chunk}s within a certain draw distance ra
 
 [TODO: blablabla, Figure etc]
 
+One problematic area remains, however, and that is Z ordering. Modern graphics pipelines will perform early Z discard during the fragment stage. If a fragment fails the depth test for a given draw call, meaning its geometry would be occluded by triangles already written to the fragment, the shader will skip any further calculation for this geometry and fragment. For this to take hold in performance improvement, the draw calls need to be issued in a manner where geometry closer to the camera is drawn first. If draws are done in reverse order, the pipeline will draw distant geometry first and subsequent closer geometry at the same fragment will naturally not fail the depth test and overwrite the fragment. Effectively, all prior writes to any such fragment in that frame would be wasted and go unseen. This issue is called overdraw and can significantly deteriorate GPU render times in extreme cases. 
+One such example would be the following, very dense synthetic test scene: [TODO: chaotic scene with high object density and distance]
+
+If the draw calls for each populated octree cell are issued back to front, the overdraw of many dozens if not hundreds of layers can push frametimes to 300 milliseconds and beyond on the test machine, while issuing the calls front to back results in frametimes of 11 milliseconds or less. 
+This stark contrast in performance highlights the importance of good Z ordering. 
+
+[TODO: At this time, rtvklib does not successfully employ such call reordering. A conservative and thus only moderately beneficial front to back ordering is in the works but due to the nature of the octree cells' pre-recorded command buffers, overdraw cannot be avoided without a significant rewrite of these pre-recordings.]
+
 \section{Superfrustum Culling}
 \subsection{Theory}
 The basic idea behind Superfrustum culling is to essentially do regular frustum culling despite rendering into two cameras, one per eye. The naive way of extending the frustum concept to a stereoscopic camera is to add a second frustum so there is one per eye, then perform the culling check for both frusta and merge the results. 

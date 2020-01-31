@@ -69,6 +69,7 @@ MFFR in its basic version as described above obviously completely foregoes separ
 As stereo separation is mostly dependent on depth given the object itself and its properties are known, it is logical to approximate small amounts of separation based on that depth buffer. 
 Instead of simply copying layer 0 to layer 1 after the far field pass, one can do a sampling pass over layer 1 from layer 0 or a post-processing pass after the copy operation and slightly shift pixels according to the depth value of the respective given fragment. \\
 This interpolation should allow pulling the field split distance closer to the camera and save some stereo render time, however it is unclear whether the savings outweigh the additional processing cost and this thesis did not explore MFFR beyond the base variant. \\
+
 [TODO: shift math or geometric illustration]
 
 \subsection{MFFR Variant: Alternate eye}

@@ -1,32 +1,32 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
-\chapter{The RTG Tachyon Engine} \label{tachyon}
+\chapter{The RTG \textit{Tachyon} Engine} \label{Tachyon}
 
 \section{The Engine}
-Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, Tachyon was chosen, an engine currently in development at RTG Echtzeitgraphik GmbH. Tachyon uses a fully Vulkan based forward renderer (internally called rtvklib) with support for multiple viewports of various types, including an OpenVR based virtual reality path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule for the future. The renderer integrates Vulkan version 1.1.85 and up and OpenVR version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
+Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \textit{Tachyon} was chosen, an engine currently in development at RTG Echtzeitgraphik GmbH. \textit{Tachyon} uses a fully Vulkan based forward renderer (internally called rtvklib) with support for multiple viewports of various types, including an OpenVR based virtual reality path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule for the future. The renderer integrates Vulkan version 1.1.85 and up and OpenVR version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
 
 \subsection{Render setup} 
 As typical for the verbose nature of Vulkan, render initialization starts with the creation of all necessary basic Vulkan resources such as descriptors, descriptor sets, activation of a minimal set of Vulkan extensions and layers and device enumeration. 
-More specific to rtvklib, multiple Vulkan pipelines are active by default:
+More specific to \codeword{rtvklib}, multiple Vulkan pipelines are active by default:
 \begin{itemize}
 \item a material pipeline offering support for a Phong and a PBR shader as well as geometry and index buffers of arbitrary size
 \item a skybox pipeline with a simplified skybox shader
 \item a point cloud pipeline, primarily to allow rendering of LiDAR scan data
 \end{itemize}
-To facilitate rendering into multiple viewports, Tachyon uses the concept of render targets. Each render target can reference an arbitrary subset of pipelines, comes with its own set of Vulkan framebuffers, command buffers and render pass and its own virtual camera. 
-Whenever any 3D object is to be loaded, rtvklib uses several manager classes to keep track of the various resource types needed for an object. There are managers for geometry, materials, textures and instances among other types. When an object is loaded, the former three hold the respective buffers. When an object is to be rendered, it first needs to be instanced, handled by the latter. An instance references the various geometry and materials of the original object again, but also holds data specific to individual objects in the virtual world, such as transforms or bounding geometry. 
+To facilitate rendering into multiple viewports, \textit{Tachyon} uses the concept of render targets. Each render target can reference an arbitrary subset of pipelines, comes with its own set of Vulkan framebuffers, command buffers and render pass and its own virtual camera. 
+Whenever any 3D object is to be loaded, \codeword{rtvklib} uses several manager classes to keep track of the various resource types needed for an object. There are managers for geometry, materials, textures and instances among other types. When an object is loaded, the former three hold the respective buffers. When an object is to be rendered, it first needs to be instanced, handled by the latter. An instance references the various geometry and materials of the original object again, but also holds data specific to individual objects in the virtual world, such as transforms or bounding geometry. 
 
 The renderer initialization also encompasses virtual reality through OpenVR. Given a valid OpenVR environment and HMD is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. 
 
 \subsection{Render loop} 
 After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. These functions are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}. 
 
-\begin{figure}[htpb]
+\begin{figure}[htb]
   \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
-    void VKRenderer::Update()
+void VKRenderer::Update()
 {
 	mRenderMutex.lock();
 	mGeometryManager->Update();
@@ -55,7 +55,7 @@ After all startup and initialization is done, the engine's render loop executes 
 \codeword{VKRenderer::Update()} first prompts all aforementioned managers to update their databases, buffers and anything else they hold in case they are dirty. Then it prompts each render target to update, which may involve camera transformation updates and buffer synchronization for example. Also for each render target, the loop will then have the instance manager perform a frustum culling pass, which will for this target save a conservative list of draw call information for objects visible by this target's camera viewpoints. 
 If any of these updates and culling passes set a pipeline or command buffer state invalid, these will be rebuilt accordingly.  
 
-\begin{figure}[htpb]
+\begin{figure}[htb]
   \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
@@ -84,11 +84,11 @@ As long as the target and compositor are active, it updates the OpenVR device po
 
 As the VR view essentially moves constantly, its render target needs to update its Vulkan \codeword{VkCommandBuffer} every frame. This is done by setting the \codeword{mCommandBuffersInvalid} flag which has the renderer call \codeword{UpdateCommandBuffers()} which in turn prompts each render target to \codeword{RecordCommandBuffers()}. For each of the VR render target's command buffers this is a simple loop through the \codeword{RecordDrawCommand()}s of the pipelines assigned to this render target between the Begin and End commands of the command buffer and render pass. The draw command recording function has the respective pipeline query the \codeword{InstanceManager} for its post-culling draw command set and writes the contained entries as \codeword{vkCmdDrawIndexedIndirect()} draw calls. 
 
-\begin{figure}[htpb]
+\begin{figure}[htb]
   \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
-  void OpenVR::RecordCommandBuffers(uint32_t passId)
+void OpenVR::RecordCommandBuffers(uint32_t passId)
 {
 	for (uint32_t i = 0; i < mCommandBuffers.size(); ++i)
 	{
@@ -98,11 +98,13 @@ As the VR view essentially moves constantly, its render target needs to update i
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		[...]
-		vkCmdBeginRenderPass(mCommandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBeginRenderPass(mCommandBuffers[i], &renderPassInfo, 
+		VK_SUBPASS_CONTENTS_INLINE);
 
 		for (auto renderPipeline : mRenderPipelines)
 		{
-			renderPipeline->RecordDrawCommand(mCommandBuffers[i], passId);
+			renderPipeline->RecordDrawCommand(mCommandBuffers[i], 
+			passId);
 		}
 
 		vkCmdEndRenderPass(mCommandBuffers[i]);
@@ -113,9 +115,9 @@ As the VR view essentially moves constantly, its render target needs to update i
   \caption[OpenVR render target's RecordCommandBuffers]{OpenVR command buffer recording function}\label{fig:lst_OpenVR_RecordCommandBuffers}
 \end{figure}
 
-What's more, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, [TODO: briefly describe \codeword{OpenVR::RenderFrame}]. \\
+What's more, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, \textcolor{red}{[TODO: briefly describe OpenVR::RenderFrame}. \\
 
-\begin{figure}[htpb]
+\begin{figure}[htb]
   \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
@@ -154,4 +156,4 @@ void OpenVR::RenderFrame()
   \caption[OpenVR render target's RenderFrame]{OpenVR frame render function}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
 
-[TODO: overview illustration aka flowchart?]
+\textcolor{red}{[TODO: overview illustration aka flowchart?]}

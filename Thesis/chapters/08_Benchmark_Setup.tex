@@ -2,6 +2,26 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Performance impact}
+As can be gathered from the previous chapters, the optimizations implemented in Tachyon for this thesis are 
+\begin{itemize}
+\item Superfrustum Culling
+\item (vendor agnostic) Multiview Stereo Rendering
+\item HMD-matched Stencil Mask
+\item Monoscopic Far-Field Rendering
+\end{itemize}
+
+While expectations for the first three items were optimistic, it shall be noted again that MFFR unfortunately turned out unsuccessful, which will reflect in this following chapter. 
+
+In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. [TODO: conduct a few short tests with a lower workload just to get an idea of scaling?] \\
+This test scene is built as follows: the scene dimensions are set up as 32 by 32 \codeword{chunk}s, each \codeword{chunk} sized 80 units on each axis. This gives an overall scene volume of 2560 by 80 by 2560 units. This seems strongly skewed towards lateral expansion rather than vertical, chosen primarily due to the expected productive use being industrial scenes covering large factory floors but not necessarily very vertical setups. Another reason is that the Tachyon scene \codeword{chunk} system currently does not allow stacking of \codeword{chunk}s and as such an adequate compromise between scene scale and octree scale had to be chosen. 
+Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is the [TODO: check this again; sine of x+z for x?, Cosine of y-z for y?, Sine of cosine of z for z?]. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable. 
+By default the placed object is a primitive cube, but at every intersection of x+z, y-z and z counts valued 11 [TODO: oh crap I switched y and z], one high polycount instance is placed, with the chosen type being modulo-index-incremented over the available high polycount types. 
+This placement setup is done with target counts of 711 for the X and Z and 22 for the Y axis. This utilizes the scene height as much as possible and results in a total instance count of 11.121.462, a respectable number even for detailed industrial applications. \\
+Still in the interest of repeatability, the head-tracked headset pose had to be disabled for these tests in favor of a scripted on-rails camera pose that follows a simple circular pattern for its virtual position and another one for rotation, both based on the sine and cosine of the time elapsed since the first rendered frame. This gives a simple and arbitrarily repeatable pattern resulting in the same camera position and angle at the same time for each run, obviously making it much easier to match measurements. \\
+
+[TODO: which metrics are we measuring, how is resource info provided, which tools are we using] 
+[TODO: which permutations are we measuring] 
+[TODO: which systems are we testing on, which HMDs are we testing with (generally for functionality verification but specifically if stencil mask testing is done for multiple HMDs)] 
 \section{Explanation - Performance measurements}
 \subsection{Compilation parameters, system specifications}
 [TODO: compiler settings, test machines, HMDs]

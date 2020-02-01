@@ -2012,6 +2012,17 @@
     <bcf:citekey order="15">Hale.2018</bcf:citekey>
     <bcf:citekey order="16">Vondrus.30.10.2019</bcf:citekey>
     <bcf:citekey order="17">VhiteRabbit.08.01.2020</bcf:citekey>
+    <bcf:citekey order="18">Lindholm.2008</bcf:citekey>
+    <bcf:citekey order="19">Sommefeldt.2007</bcf:citekey>
+    <bcf:citekey order="20">Cantlay.2016</bcf:citekey>
+    <bcf:citekey order="21">Smith.2016</bcf:citekey>
+    <bcf:citekey order="22">Bhonde.2018</bcf:citekey>
+    <bcf:citekey order="23">Gallagher.2016</bcf:citekey>
+    <bcf:citekey order="24">Jez.2017</bcf:citekey>
+    <bcf:citekey order="25">Bhonde.2018</bcf:citekey>
+    <bcf:citekey order="26">Willems.2020</bcf:citekey>
+    <bcf:citekey order="27">Willems.2019</bcf:citekey>
+    <bcf:citekey order="28">JMC47.2018</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

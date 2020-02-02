@@ -2,6 +2,7 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Performance impact}
+\section{Benchmark setup}
 As can be gathered from the previous chapters, the optimizations implemented in Tachyon for this thesis are 
 \begin{itemize}
 \item Superfrustum Culling
@@ -12,18 +13,60 @@ As can be gathered from the previous chapters, the optimizations implemented in 
 
 While expectations for the first three items were optimistic, it shall be noted again that MFFR unfortunately turned out unsuccessful, which will reflect in this following chapter. 
 
-In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. [TODO: conduct a few short tests with a lower workload just to get an idea of scaling?] \\
+\subsection{Test scene}
+In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. \textcolor{red}{[TODO: conduct a few short tests with a lower workload just to get an idea of scaling?]} \\
 This test scene is built as follows: the scene dimensions are set up as 32 by 32 \codeword{chunk}s, each \codeword{chunk} sized 80 units on each axis. This gives an overall scene volume of 2560 by 80 by 2560 units. This seems strongly skewed towards lateral expansion rather than vertical, chosen primarily due to the expected productive use being industrial scenes covering large factory floors but not necessarily very vertical setups. Another reason is that the Tachyon scene \codeword{chunk} system currently does not allow stacking of \codeword{chunk}s and as such an adequate compromise between scene scale and octree scale had to be chosen. 
-Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is the [TODO: check this again; sine of x+z for x?, Cosine of y-z for y?, Sine of cosine of z for z?]. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable. 
-By default the placed object is a primitive cube, but at every intersection of x+z, y-z and z counts valued 11 [TODO: oh crap I switched y and z], one high polycount instance is placed, with the chosen type being modulo-index-incremented over the available high polycount types. 
-This placement setup is done with target counts of 711 for the X and Z and 22 for the Y axis. This utilizes the scene height as much as possible and results in a total instance count of 11.121.462, a respectable number even for detailed industrial applications. \\
-Still in the interest of repeatability, the head-tracked headset pose had to be disabled for these tests in favor of a scripted on-rails camera pose that follows a simple circular pattern for its virtual position and another one for rotation, both based on the sine and cosine of the time elapsed since the first rendered frame. This gives a simple and arbitrarily repeatable pattern resulting in the same camera position and angle at the same time for each run, obviously making it much easier to match measurements. \\
+Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is combined as \codeword{x = sinf(sinf(x) + cosf(y) + tanf(z)), y = cosf(sinf(y) + cosf(z) + tanf(x)), z = sinf(cosf(sinf(z) + cosf(x) + tanf(y)))}. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable.
+By default the placed object is a primitive cube, but at every intersection of x+z, y-z and z counts valued 11, one high polycount instance is placed, with the chosen type being modulo-index-incremented over the available high polycount types. 
+This placement setup is done with target counts of 711 for the X and Z and 22 for the Y axis respectively. This utilizes the scene height as much as possible and results in a total instance count of 11.121.462, a respectable number even for detailed industrial applications. \\
+Still in the interest of repeatability, the head-tracked headset pose had to be disabled for these tests in favor of a scripted on-rails camera pose that follows a simple circular pattern for its virtual position and another one for rotation, both based on the sine and cosine of the number of frames completed since the first rendered frame. This gives a simple and arbitrarily repeatable pattern resulting in the same camera position and angle at the same frame count for each run, obviously making it much easier to match measurements. \\
 
-[TODO: which metrics are we measuring, how is resource info provided, which tools are we using] 
-[TODO: which permutations are we measuring] 
-[TODO: which systems are we testing on, which HMDs are we testing with (generally for functionality verification but specifically if stencil mask testing is done for multiple HMDs)] 
-\section{Explanation - Performance measurements}
-\subsection{Compilation parameters, system specifications}
-[TODO: compiler settings, test machines, HMDs]
-\subsection{Measured metrics}
-[TODO: Framerate, frametimes, framepacing?, resource usage cpu threads, gpu, memory, cull cells count, polycount, overdraw estimate??, frame count, timestamp, virtual camera rails pos/rot, etc]
+\subsection{Timing code \& metrics}
+To get an accurate idea of how the computational effort within a frame changes and is split up over its several steps, \codeword{STL::chrono high_resolution_clock} timings calls were used in strategic places. For each frame, the measured metrics are: \begin{itemize}
+\item total frame-time (microseconds)
+\item CPU-only time (microseconds)
+\item Culling-only time (microseconds)
+\item GPU-only time (microseconds)
+\item \textcolor{red}{[TODO: number of draw calls?]}
+\item number of objects submitted through draw calls
+\item number of triangles submitted through draw calls
+\item \textcolor{red}{[TODO: Framerate, frametimes, framepacing?, resource usage cpu threads, gpu, memory, cull cells count, polycount, overdraw estimate??, frame count, timestamp?, virtual camera rails pos/rot, etc]}
+\end{itemize}
+Times are measured by calculating elapsed counts between start and end time points of the respective function call. GPU-only time is measured by artificially placing a \codeword{VkQueueWaitIdle(graphicsQueue)} at the end of the \codeword{VKRenderer::RenderFrame} procedure. At first glance this seems counter-productive as it prevents frames from overlapping resource usage, but this is where synthetic repeatability becomes relevant. \\
+To guarantee runs with different optimizations enabled can be compared to each other, the render loop is modified to follow aforementioned camera pattern and and save the current frame number with each data point. This obviously flies in the face of desired real-world decoupling of motion from framerate and overlapping execution, but it ensures identical workload per frame for each tested configuration. Additionally, the camera pattern and timings loops are tuned to run exactly twice in exactly 5400 frames each for 10 loops. The resulting 54000 samples of frame data for each configuration are then filtered to exclude the worst outliers and the 10 loops are averaged into one representative set of 5400 data points. \\
+However in the interest of real-world scaling, a later section will also briefly explore average frametimes for a selection of configurations without these limits in place. 
+
+\subsection{Compilation parameters}
+Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode. 
+To further eliminate potential slowdown from branching or data tracking, each of the 16 permutations of enabled optimizations is not done simply through \codeword{if} statements or \codeword{switch} cases, but through preprocessor defines. These defines are \codeword{SUPERFRUSTUM_ON}, \codeword{MULTIVIEW_ON}, \codeword{STENCILMASK_ON}, \codeword{MFFR_ON}. Similarly, benchmark timing code is enabled via the \codeword{BENCHMARK_MEASURE}, \codeword{BENCHMARK_CHUNKINFO} and \codeword{BENCHMARK_CAMRAILS} flags. \\
+As a sidenote here, \textit{all} configurations were tested with distance culling (\codeword{DISTANCECULLING_ON}, draw distance 256 units \textcolor{red}{[TODO: confirm]}) and frustum culling (\codeword{FRUSTUMCULLING_ON}) enabled as running the massive 11.1 million instance scene without these in place would realistically bring any test machine near a grinding halt. It also seems unrealistic to run any scene with advanced VR optimizations enabled but leave such simple measures disabled. 
+Demonstrably, these culling methods are also not posing as dangerous bottlenecks to the tested configurations as the baseline measurement details will show. 
+
+\subsection{System specifications}
+Two test machines were used to perform measurements on. Each graph and table will denote which system it is based on, respectively. \\
+The first machine, further titled \textbf{WS-Big}, is specified as:
+\begin{itemize}
+\item CPU: Intel Core i7 6700 (4c8t, 4x3.4GHz base, 4.0GHz boost)
+\item RAM: 2x16GB DDR4-2133/15
+\item GPU: Nvidia GeForce RTX 2080 Founders Edition (2944 cores at 1800MHz core, 8GB at 1750MHz)
+\item Storage: Samsung SSD 840 Evo 500GB
+\item OS: Microsoft Windows 10 Pro x64 1903
+\end{itemize} 
+The second machine, further titled \textbf{WS-Small}, is specified as:
+\begin{itemize}
+\item CPU: AMD Ryzen 5 1600 \textit{12nm} (6c12t, 6x3.2GHz base, 3.7GHz boost)
+\item RAM: 2x8GB DDR4-3066/14
+\item GPU: Hewlett-Packard Radeon RX 580 (2304 cores at 1200MHz, 4GB at 1750MHz)
+\item Storage: ADATA SSD SX6000 Pro 500GB
+\item OS: Microsoft Windows 10 Pro x64 1909
+\end{itemize} 
+Furthermore, the following virtual reality headsets were available in the respective capacity:
+\begin{itemize}
+\item Valve Index - \textbf{WS-Big} performance measurements, functionality verification
+\item HTC Vive - \textbf{WS-Big} functionality verification
+\item HTC Vive Pro - \textbf{WS-Big} functionality verification
+\item Oculus Rift CV1 - \textbf{WS-Big} functionality verification
+\item Samsung Odyssey - \textbf{WS-Small} performance measurements, functionality verification
+\end{itemize} 
+
+\textcolor{red}{[TODO: which permutations are we measuring]}

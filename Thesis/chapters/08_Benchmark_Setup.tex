@@ -34,7 +34,15 @@ To get an accurate idea of how the computational effort within a frame changes a
 \end{itemize}
 Times are measured by calculating elapsed counts between start and end time points of the respective function call. GPU-only time is measured by artificially placing a \codeword{VkQueueWaitIdle(graphicsQueue)} at the end of the \codeword{VKRenderer::RenderFrame} procedure. At first glance this seems counter-productive as it prevents frames from overlapping resource usage, but this is where synthetic repeatability becomes relevant. \\
 To guarantee runs with different optimizations enabled can be compared to each other, the render loop is modified to follow aforementioned camera pattern and and save the current frame number with each data point. This obviously flies in the face of desired real-world decoupling of motion from framerate and overlapping execution, but it ensures identical workload per frame for each tested configuration. Additionally, the camera pattern and timings loops are tuned to run exactly twice in exactly 5400 frames each for 10 loops. The resulting 54000 samples of frame data for each configuration are then filtered to exclude the worst outliers and the 10 loops are averaged into one representative set of 5400 data points. \\
-However in the interest of real-world scaling, a later section will also briefly explore average frametimes for a selection of configurations without these limits in place. 
+However in the interest of real-world scaling, a later section will also briefly explore average frametimes for a selection of configurations without these limits in place. \\
+Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are disabled for the testing runs as these calls otherwise force vertical refresh synchronization (\autoref{fig:VR_VSync}), completely distorting actual performance numbers. While this means during benchmarking there is no output to the connected HMD, the internal rendering loop still uses all of the HMD's rendering parameters and more importantly renders as many frames as it can without a framerate cap or refresh synchronization, exactly the behavior we need for accurate measurements. 
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pictures/Nvidia_FCAT}
+  \caption{Virtual Reality Pipeline as imagined by Nvidia\cite{Cleveland.2017}} \label{fig:VR_VSync}
+\end{figure} 
+
 
 \subsection{Compilation parameters}
 Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode. 

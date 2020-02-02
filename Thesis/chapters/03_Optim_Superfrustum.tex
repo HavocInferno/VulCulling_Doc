@@ -32,13 +32,19 @@ This stark contrast in performance highlights the importance of good Z ordering.
 The basic idea behind Superfrustum culling is to essentially do regular frustum culling despite rendering into two cameras, one per eye. The naive way of extending the frustum concept to a stereoscopic camera is to add a second frustum so there is one per eye, then perform the culling check for both frusta and merge the results. \\
 As is easily visible from \textcolor{red}{[TODO: illustration of stereo frusta]} though, the spatial proximity of of these two frusta leads to a large overlap volume, especially as field of view increases with more advanced headsets. One possible strategy to leverage more performance when culling two eyes is a so-called Superfrustum, assuming the frustum is the common six sided trapezoid. Cass Everitt of Facebook LLC, formerly Oculus LLC \textcolor{red}{[TODO: check correct corp names]} has suggested this approach and provided computation sketches on his social media back in 2015 \cite{Everitt.2015}(\autoref{fig:Everitt_Superfrustum}), and Nick Whiting at Oculus Connect 4 teased it as a future addition to Unreal Engine 4 \cite{Whiting.2017}. The idea is to combine the left and right eye frusta by taking the respective widest outer FOV tangent - usually the left eye's right side and the right eye's left side - and using these as the new side tangents of the superfrustum. Another way to express these is to take the widest half opening angles of each eye and adding them up to a combined opening angle. Similar is done for the top and bottom tangents, although these will usually be nearly identical for the two eyes. \\
 A pitfall of the superfrustum is its necessary depth recession. This is easy to visualize when combining the two frusta by extending aforementioned side tangents backwards until they cross. The meeting point of this step is the new origin of the superfrustum, slightly recessed behind the two separate eyes. 
-Vivien Oddou of Silicon Studios offered a generalized way to compute this recession for non-mirrored eye orientation\cite{Oddou.23.05.2017}, while Everitt has extended his sketches by an asymmetry normalization\cite{Everitt.2015b}. Both of these are important to consider as virtual reality headsets can have slightly canted and asymmetrical lenses, either by design or by manufacturing tolerance. Ignoring these two corrections may still result in a sufficient superfrustum if computed conservatively, but should be included for fully correct setups. 
+Vivien Oddou of Silicon Studios offered a generalized way to compute this recession for non-mirrored eye orientation \cite{Oddou.23.05.2017}(\autoref{fig:Oddou_Asymmetry}), while Everitt has extended his sketches by an asymmetry normalization\cite{Everitt.2015b}. Both of these are important to consider as virtual reality headsets can have slightly canted and asymmetrical lenses, either by design or by manufacturing tolerance. Ignoring these two corrections may still result in a sufficient superfrustum if computed conservatively, but should be included for fully correct setups. 
 While this superfrustum naturally eliminates all overlap of the naive variant, it in turn includes small false positive regions, notably the triangular void found close to the origin points between the two eye frusta and potential side edge regions in the case of asymmetrical lens orientations. In a typical application, the performance cost of these will be negligible. \\
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.7\textwidth]{pictures/Everitt_Superfrustum_Crop}
   \caption{Symmetric Superfrustum (cropped to geometric construction)\cite{Everitt.2015}} \label{fig:Everitt_Superfrustum}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pictures/Oddou_Asymmetry}
+  \caption{Non-mirrored superfrustum recession\cite{Oddou.23.05.2017}} \label{fig:Oddou_Asymmetry}
 \end{figure}
 
 \subsection{Estimated impact}

@@ -16,7 +16,7 @@ While expectations for the first three items were optimistic, it shall be noted 
 \subsection{Test scene}
 In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. \textcolor{red}{[TODO: conduct a few short tests with a lower workload just to get an idea of scaling?]} \\
 This test scene is built as follows: the scene dimensions are set up as 32 by 32 \codeword{chunk}s, each \codeword{chunk} sized 80 units on each axis. This gives an overall scene volume of 2560 by 80 by 2560 units. This seems strongly skewed towards lateral expansion rather than vertical, chosen primarily due to the expected productive use being industrial scenes covering large factory floors but not necessarily very vertical setups. Another reason is that the Tachyon scene \codeword{chunk} system currently does not allow stacking of \codeword{chunk}s and as such an adequate compromise between scene scale and octree scale had to be chosen. 
-Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is combined as \codeword{x = sinf(sinf(x) + cosf(y) + tanf(z)), y = cosf(sinf(y) + cosf(z) + tanf(x)), z = sinf(cosf(sinf(z) + cosf(x) + tanf(y)))}. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable.
+Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is combined as \codeword{x = sinf(sinf(x) + cosf(y) + tanf(z))}, \codeword{y = cosf(sinf(y) + cosf(z) + tanf(x))}, \codeword{z = sinf(cosf(sinf(z) + cosf(x) + tanf(y)))}. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable.
 By default the placed object is a primitive cube, but at every intersection of x+z, y-z and z counts valued 11, one high polycount instance is placed, with the chosen type being modulo-index-incremented over the available high polycount types. 
 This placement setup is done with target counts of 711 for the X and Z and 22 for the Y axis respectively. This utilizes the scene height as much as possible and results in a total instance count of 11.121.462, a respectable number even for detailed industrial applications. \\
 Still in the interest of repeatability, the head-tracked headset pose had to be disabled for these tests in favor of a scripted on-rails camera pose that follows a simple circular pattern for its virtual position and another one for rotation, both based on the sine and cosine of the number of frames completed since the first rendered frame. This gives a simple and arbitrarily repeatable pattern resulting in the same camera position and angle at the same frame count for each run, obviously making it much easier to match measurements. \\
@@ -46,17 +46,17 @@ Demonstrably, these culling methods are also not posing as dangerous bottlenecks
 Two test machines were used to perform measurements on. Each graph and table will denote which system it is based on, respectively. \\
 The first machine, further titled \textbf{WS-Big}, is specified as:
 \begin{itemize}
-\item CPU: Intel Core i7 6700 (4c8t, 4x3.4GHz base, 4.0GHz boost)
+\item CPU: Intel Core i7 6700 (4c8t Skylake, 4x3.4GHz base, 4.0GHz boost)
 \item RAM: 2x16GB DDR4-2133/15
-\item GPU: Nvidia GeForce RTX 2080 Founders Edition (2944 cores at 1800MHz core, 8GB at 1750MHz)
+\item GPU: Nvidia GeForce RTX 2080 Founders Edition (2944 Turing cores at 1800MHz core, 8GB GDDR6 at 1750MHz)
 \item Storage: Samsung SSD 840 Evo 500GB
 \item OS: Microsoft Windows 10 Pro x64 1903
 \end{itemize} 
 The second machine, further titled \textbf{WS-Small}, is specified as:
 \begin{itemize}
-\item CPU: AMD Ryzen 5 1600 \textit{12nm} (6c12t, 6x3.2GHz base, 3.7GHz boost)
+\item CPU: AMD Ryzen 5 1600 \textit{12nm} (6c12t Zen+, 6x3.2GHz base, 3.7GHz boost)
 \item RAM: 2x8GB DDR4-3066/14
-\item GPU: Hewlett-Packard Radeon RX 580 (2304 cores at 1200MHz, 4GB at 1750MHz)
+\item GPU: Hewlett-Packard Radeon RX 580 (2304 Polaris cores at 1200MHz, 4GB GDDR5 at 1750MHz)
 \item Storage: ADATA SSD SX6000 Pro 500GB
 \item OS: Microsoft Windows 10 Pro x64 1909
 \end{itemize} 

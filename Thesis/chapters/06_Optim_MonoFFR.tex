@@ -3,8 +3,8 @@
 
 \section{Monoscopic Far-Field Rendering}
 \subsection{Theory}
-Monoscopic Far-Field Rendering (MFFR) is a curious approach strongly aligning with an inherent property of many optimizations in the field of rendering and real-time computing in general, which is the property of trading accuracy for speed. MFFR is a topic brought up again in the early days of Rift CV1's retail launch by [TODO: Oculus? Epic? check timeframe] at developer keynotes. \\
-Understanding the concept requires some explanation of the technical and visual background. Proper depth perception of the human eye relies on the slight spatial distance between both eyes as each eye sees a slightly different angle of a given object. This difference in perceived angle is called stereo separation [TODO: word this more scientifically?] and without it, the brain has a hard to impossible time determining the depth of and at which a certain object or surface lies. Regular stereo rendering obviously recreates this separation correctly when rendering the two virtual eyes at their respective spatial offset from the HMD center - given correct projection and view matrices and accurate world scale at least. 
+Monoscopic Far-Field Rendering (MFFR) is a curious approach strongly aligning with an inherent property of many optimizations in the field of rendering and real-time computing in general, which is the property of trading accuracy for speed. MFFR is a topic brought up again in the early days of Rift CV1's retail launch by \textcolor{red}{[TODO: Oculus? Epic? check timeframe]} at developer keynotes. \\
+Understanding the concept requires some explanation of the technical and visual background. Proper depth perception of the human eye relies on the slight spatial distance between both eyes as each eye sees a slightly different angle of a given object. This difference in perceived angle is called stereo separation \textcolor{red}{[TODO: word this more scientifically?]} and without it, the brain has a hard to impossible time determining the depth of and at which a certain object or surface lies. Regular stereo rendering obviously recreates this separation correctly when rendering the two virtual eyes at their respective spatial offset from the HMD center - given correct projection and view matrices and accurate world scale at least. 
 However, and that's one aspect MFFR exploits, as distance grows, stereo separation shrinks. In infinity, separation would be infinitely small, but even at more reasonable distances separation becomes so small that even with good vision it becomes hard to properly judge depth unless the object is large. This of course also holds true for rendered stereoscopy, but an additional limit is the pixel density of the output displays. What this means is that at a certain distance from the virtual camera, stereo separation will shrink to less than a full screen space pixel once projected. Obviously if the difference can physically not be displayed by the HMD, it seems a waste of resources to still render both eyes. \\
 Mono Far-Field Rendering thus opts to skip the second view during rendering of the name-giving far field of objects. The hope here is that only rendering a single view past a certain distance reduces rendering load without the user noticing the theoretical loss in accuracy. 
 This approach has caveats unfortunately. For one, the value at which a field split - the distance at which the stereo rendering is cut off and followed by only mono rendering - will depend on the individual user, their quality of vision and spatial recognition. It will also potentially depend on the resolution of the used headset given the user's vision is good enough to not deteriorate before that point. \\
@@ -14,13 +14,13 @@ MFFR has been implemented by Oculus LLC and Epic Games Inc in Unreal Engine 4 at
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/flowchart_mffr}
-  \caption{Far-First MFFR flowchart [TODO: redo properly]} \label{fig:flowchart_mffr_FarFirst}
+  \caption{Far-First MFFR flowchart \textcolor{red}{[TODO: redo flowchart properly]}} \label{fig:flowchart_mffr_FarFirst}
 \end{figure}
 
 \subsection{Estimated impact}
 The makeup of the scene itself will also affect effectiveness of the solution. As cautioned by Oculus LLC in their developer reference on Mono Far-Field Rendering [SRC: MFFR dev entry], there is a certain baseline overhead simply for enabling the additional render pass necessary for the monoscopic image and the associated context switches. Furthermore only scenes with a significant of distant geometry beyond the field split distance will benefit from the optimization, as obviously the second view workload can only be saved for objects that would be contained within that second pass. \\
 
-[TODO]
+\textcolor{red}{[TODO]}
 
 \subsection{Implementation specifics}
 Implementing Mono Far-Field Rendering into Tachyon - or any renderer for that matter - requires care and a number of changes. There are at least two possible ways of doing it, both by way of two render passes and with their own respective drawbacks and advantages. 
@@ -32,7 +32,7 @@ The depth buffer clear option has to benefit of utilizing full projection precis
 The overall advantage of this far-first approach then is that it yields a full precision far-field depth buffer which may be useful for stereo interpolation as briefly described in the next section \ref{mffr_depthshift}. The disadvantage then is that early Z discard cannot be fully effective as all far geometry is rendered first, even if opaque geometry close to the camera would later obstruct it. Whether the benefits of lower split distance coupled with interpolation can outpace the additional cost of overdraw will heavily depend on the scene and how much geometry is contained within the far volume. 
 The goal of this approach is to reduce memory operations and locality to a minimum and also avoid more costly compositing methods. 
 \subsubsection{Near-first approach}
-The obvious alternative to rendering the far pass first is of course to render the stereo near volume at the start of each frame [TODO: mffr near first flowchart]. A key difference to the former approach is that for near-first to work correctly, this first pass also needs to flag then stencil buffer pixel when a opaque fragment is within the uni-cube and a color value is written. Then after the stereo pass, each eye will contain a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. The constraint, however, is that the far pass then also needs to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
+The obvious alternative to rendering the far pass first is of course to render the stereo near volume at the start of each frame \textcolor{red}{[TODO: mffr near first flowchart]}. A key difference to the former approach is that for near-first to work correctly, this first pass also needs to flag then stencil buffer pixel when a opaque fragment is within the uni-cube and a color value is written. Then after the stereo pass, each eye will contain a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. The constraint, however, is that the far pass then also needs to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
 The obvious advantage of this approach over far-first is that early Z discard takes full effect, not to mention stencil masking may reduce the leftover areas even more. The downside is that it needs to perform additional stencil writes every frame and potentially costly sampling operations. 
 \subsubsection{rtvklib MFFR}
 In this case, the plan was to do far-first MFFR. It eventually became evident that for the given test scenario, this approach proved unsuccessful for various reasons. 
@@ -52,7 +52,7 @@ While the general approach sounds mostly straight-forward and both described way
 \item add an additional set of camera data struct and camera index
 \item in the render target's \codeword{UpdateCameras()} call, update the far field volume's view projection matrix by transforming aforementioned projection matrix by the current HMD pose and write that updated matrix to the camera data buffer on the GPU
 \end{itemize}
-[TODO: sort this list a bit better? normal text some of it?] \\
+\textcolor{red}{[TODO: sort this list a bit better? normal text some of it?] \\}
 
 Some issues with this implementation do prevail and make it unfit for productive deployment in Tachyon yet, unfortunately. 
 For one, the projection and view matrices used for the far field remain incorrect and sufficiently accurate projection math could not be determined in time, so head rotation leads to incorrect separation effects on the horizontal axis. And while the lack of pure separation at little to no sideways tilt may be acceptable and not easily noticed, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical. \\
@@ -60,7 +60,7 @@ Another issue is that Vulkan render passes by default discard fragments at the t
 Lastly, and most importantly, performance simply was not up to par. On the i7 and RTX2080 test system, \textit{enabling} MFFR with a sufficiently far split distance yielded a 34\% performance \textit{loss}. The culprit for this most likely two-fold. One factor is the detrimental Z ordering of the submitted draw commands, as much of the far field color buffer is overwritten by the near pass and thus counts as wasted effort. The other factor is the lack of parallelism due to the use of a shared framebuffer. The two render passes need to be synchronized to run in order and cannot be scheduled on parallel warps to increase GPU utilization and thus performance. \\
 As such, the rtvklib MFFR implementation as presented here remains beneficial only in theory and will require further work - if not a complete overhaul to near-first approach - to result in real performance gain. \\
 
-[TODO: example picture comparison]
+\textcolor{red}{[TODO: example picture comparison]}
 
 
 
@@ -70,7 +70,7 @@ As stereo separation is mostly dependent on depth given the object itself and it
 Instead of simply copying layer 0 to layer 1 after the far field pass, one can do a sampling pass over layer 1 from layer 0 or a post-processing pass after the copy operation and slightly shift pixels according to the depth value of the respective given fragment. \\
 This interpolation should allow pulling the field split distance closer to the camera and save some stereo render time, however it is unclear whether the savings outweigh the additional processing cost and this thesis did not explore MFFR beyond the base variant. \\
 
-[TODO: shift math or geometric illustration]
+\textcolor{red}{[TODO: shift math or geometric illustration]}
 
 \subsection{MFFR Variant: Alternate eye}
 Another possible way of pulling in the split distance value while retaining approximated separation comes back to the VR property of high framerate as underlying for earlier chapters like the Round Robin Culling. 

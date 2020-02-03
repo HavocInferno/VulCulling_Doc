@@ -3,10 +3,9 @@
 
 \chapter{The RTG \textit{Tachyon} Engine} \label{Tachyon}
 
-\section{The Engine}
 Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \textit{Tachyon} was chosen, an engine currently in development at RTG Echtzeitgraphik GmbH. \textit{Tachyon} uses a fully Vulkan based forward renderer (internally called rtvklib) with support for multiple viewports of various types, including an OpenVR based virtual reality path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule for the future. The renderer integrates Vulkan version 1.1.85 and up and OpenVR version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
 
-\subsection{Render setup} 
+\section{Render setup} 
 As typical for the verbose nature of Vulkan, render initialization starts with the creation of all necessary basic Vulkan resources such as descriptors, descriptor sets, activation of a minimal set of Vulkan extensions and layers and device enumeration. 
 More specific to \codeword{rtvklib}, multiple Vulkan pipelines are active by default:
 \begin{itemize}
@@ -19,7 +18,7 @@ Whenever any 3D object is to be loaded, \codeword{rtvklib} uses several manager 
 
 The renderer initialization also encompasses virtual reality through OpenVR. Given a valid OpenVR environment and HMD is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. 
 
-\subsection{Render loop} 
+\section{Render loop} 
 After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. These functions are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}. 
 
 \begin{figure}[htb]
@@ -49,7 +48,7 @@ void VKRenderer::Update()
 }
   \end{lstlisting}
   \end{tabular}
-  \caption[VKRenderer's Update]{Renderer update function}\label{fig:lst_VKRenderer_Update}
+  \caption[VKRenderer's Update]{Renderer update function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart?]}}\label{fig:lst_VKRenderer_Update}
 \end{figure}
 
 \codeword{VKRenderer::Update()} first prompts all aforementioned managers to update their databases, buffers and anything else they hold in case they are dirty. Then it prompts each render target to update, which may involve camera transformation updates and buffer synchronization for example. Also for each render target, the loop will then have the instance manager perform a frustum culling pass, which will for this target save a conservative list of draw call information for objects visible by this target's camera viewpoints. 
@@ -73,7 +72,7 @@ void VKRenderer::RenderFrame()
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[VKRenderer's RenderFrame]{Renderer frame render function}\label{fig:lst_VKRenderer_RenderFrame}
+  \caption[VKRenderer's RenderFrame]{Renderer frame render function\textcolor{red}{[TODO: move to appendix, replace with compact flowchart?]}}\label{fig:lst_VKRenderer_RenderFrame}
 \end{figure}
 
 \codeword{VKRenderer::RenderFrame()} simply prompts each render target to perform its per-frame rendering operations, be it regular monoscopic output for a traditional viewport or pose tracking and stereoscopic composition for a virtual reality target. 
@@ -112,7 +111,7 @@ void OpenVR::RecordCommandBuffers(uint32_t passId)
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[OpenVR render target's RecordCommandBuffers]{OpenVR command buffer recording function}\label{fig:lst_OpenVR_RecordCommandBuffers}
+  \caption[OpenVR render target's RecordCommandBuffers]{OpenVR command buffer recording function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart?]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
 \end{figure}
 
 What's more, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, \textcolor{red}{[TODO: briefly describe OpenVR::RenderFrame]}. \\
@@ -153,7 +152,7 @@ void OpenVR::RenderFrame()
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[OpenVR render target's RenderFrame]{OpenVR frame render function}\label{fig:lst_OpenVR_RenderFrame}
+  \caption[OpenVR render target's RenderFrame]{OpenVR frame render function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart?]}}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
 
 \textcolor{red}{[TODO: overview illustration aka flowchart?]}

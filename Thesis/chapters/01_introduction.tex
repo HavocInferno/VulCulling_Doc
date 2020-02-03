@@ -23,6 +23,12 @@ To this end, what follows is first an explanation of the software and technical 
 This thesis is created in collaboration with RTG Echtzeitgraphik GmbH, an engineering and consulting office based in Garching bei München. RTG offers engineering services related to real-time visualization, virtual reality applications and hardware prototyping to enterprise clients from a variety of industry branches such as automotive and industrial logistics\cite{HansiVollmer.2020}. \\
 At this point it needs to be disclaimed that the author of this thesis was employed at RTG Echtzeitgraphik GmbH at the time of making. This allowed the use of company assets like workstations, a range of VR headsets and relevant literature as well as expertise with regard to related technologies and enterprise requirements for a rendering engine. The thesis, accompanied research efforts and all material created for the purpose of this thesis, however, are the author's own work. 
 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{pictures/placeholder}
+  \caption{\textcolor{red}{[TODO: RTG logo?]}}
+\end{figure} 
+
 \section{Technical foundation}
 From this industry collaboration follow influences when choosing the technical foundations of the thesis. In an effort to represent a realistic use case, an engine with actual production usage target was chosen as opposed to a purely synthetic "test vehicle", namely RTG's own \textit{Tachyon}. The engine and its structure is further explained in \autoref{Tachyon}. \\
 The graphics API and library of choice for this thesis then is the Khronos Group's Vulkan. Vulkan is a low level graphics API officially created in 2014 and formally released in early 2016 with the promise of increased flexibility and reduced overhead compared to prior graphics APIs as well as compatibility with a wide range of hardware architectures and operating systems\cite{TheKhronosGroupInc..2016}. On the flipside, the verbose and low level nature of the API brings increased development effort and means that these promised improvements can only be leveraged with sufficient care and caution by developers. \\

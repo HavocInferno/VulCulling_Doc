@@ -26,10 +26,8 @@ To get an accurate idea of how the computational effort within a frame changes a
 \item CPU-only time (microseconds)
 \item Culling-only time (microseconds)
 \item GPU-only time (microseconds)
-\item \textcolor{red}{[TODO: number of draw calls?]}
-\item number of objects submitted through draw calls
+\item number of draw calls submitted
 \item number of triangles submitted through draw calls
-\item \textcolor{red}{[TODO: Framerate, frametimes, framepacing?, resource usage cpu threads, gpu, memory, cull cells count, polycount, overdraw estimate??, frame count, timestamp?, virtual camera rails pos/rot, etc]}
 \end{itemize}
 Times are measured by calculating elapsed counts between start and end time points of the respective function call. GPU-only time is measured by artificially placing a \codeword{VkQueueWaitIdle(graphicsQueue)} at the end of the \codeword{VKRenderer::RenderFrame} procedure. At first glance this seems counter-productive as it prevents frames from overlapping resource usage, but this is where synthetic repeatability becomes relevant. \\
 To guarantee runs with different optimizations enabled can be compared to each other, the render loop is modified to follow aforementioned camera pattern and and save the current frame number with each data point. This obviously flies in the face of desired real-world decoupling of motion from framerate and overlapping execution, but it ensures identical workload per frame for each tested configuration. Additionally, the camera pattern and timings loops are tuned to run exactly twice in exactly 5400 frames each for 10 loops. The resulting 54000 samples of frame data for each configuration are then filtered to exclude the worst outliers and the 10 loops are averaged into one representative set of 5400 data points. \\
@@ -39,8 +37,10 @@ Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are d
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/Nvidia_FCAT}
-  \caption{Virtual Reality Pipeline as imagined by Nvidia\cite{Cleveland.2017}} \label{fig:VR_VSync}
+  \caption{Virtual Reality Pipeline as imagined by Nvidia\cite{Cleveland.2017} \textcolor{red}{[TODO: footnote of page in slides]}} \label{fig:VR_VSync}
 \end{figure} 
+
+\textcolor{red}{[TODO: resource usage aka memory per frame for relevant configurations, grabbed e.g. from representative NSight Frame]}
 
 \section{Compilation parameters}
 Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode. 

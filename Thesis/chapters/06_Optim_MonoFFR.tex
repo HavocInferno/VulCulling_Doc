@@ -13,8 +13,9 @@ MFFR has been implemented by Oculus LLC and Epic Games Inc in Unreal Engine 4 at
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/flowchart_mffr}
-  \caption{Far-First MFFR flowchart \textcolor{red}{[TODO: redo flowchart properly]}} \label{fig:flowchart_mffr_FarFirst}
+  \includegraphics[width=0.9\textwidth]{pictures/MFFR_farfirst}
+  \caption{Per-frame render pass flow of far-first MFFR; \\
+  Each row represents one image buffer, each column represents the process steps the respective buffer is subjected to} \label{fig:flowchart_mffr_FarFirst}
 \end{figure}
 
 \subsection{Estimated impact}
@@ -32,13 +33,14 @@ The depth buffer clear option has to benefit of utilizing full projection precis
 The overall advantage of this far-first approach then is that it yields a full precision far-field depth buffer which may be useful for stereo interpolation as briefly described in the next section \autoref{mffr_depthshift}. The disadvantage then is that early Z discard cannot be fully effective as all far geometry is rendered first, even if opaque geometry close to the camera would later obstruct it. Whether the benefits of lower split distance coupled with interpolation can outpace the additional cost of overdraw will heavily depend on the scene and how much geometry is contained within the far volume. 
 The goal of this approach is to reduce memory operations and locality to a minimum and also avoid more costly compositing methods. 
 \subsubsection{Near-first approach}
-The obvious alternative to rendering the far pass first is of course to render the stereo near volume at the start of each frame. A key difference to the former approach is that for near-first to work correctly, this first pass also needs to flag then stencil buffer pixel when a opaque fragment is within the uni-cube and a color value is written. Then after the stereo pass, each eye will contain a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. The constraint, however, is that the far pass then also needs to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
+The obvious alternative to rendering the far pass first is of course to render the stereo near volume at the start of each frame as illustrated in \autoref{fig:flowchart_mffr_NearFirst}. A key difference to the former approach is that for near-first to work correctly, this first pass also needs to flag the stencil buffer pixel when an opaque fragment is within the uni-cube and a color value is written. Then after the stereo pass, each eye will contain a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. The constraint, however, is that the far pass then also needs to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
 The obvious advantage of this approach over far-first is that early Z discard takes full effect, not to mention stencil masking may reduce the leftover areas even more. The downside is that it needs to perform additional stencil writes every frame and potentially costly sampling operations.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: MFFR near-first flowchart]}} \label{fig:blob}
+  \includegraphics[width=0.9\textwidth]{pictures/MFFR_nearfirst}
+  \caption{Per-frame render pass flow of near-first MFFR; \\
+  Each row represents one image buffer, each column represents the process steps the respective buffer is subjected to} \label{fig:flowchart_mffr_NearFirst}
 \end{figure}
  
 \subsubsection{rtvklib MFFR}
@@ -59,7 +61,7 @@ While the general approach sounds mostly straight-forward and both described way
 \item add an additional set of camera data struct and camera index
 \item in the render target's \codeword{UpdateCameras()} call, update the far field volume's view projection matrix by transforming aforementioned projection matrix by the current HMD pose and write that updated matrix to the camera data buffer on the GPU
 \end{itemize}
-\textcolor{red}{[TODO: sort this list a bit better? normal text some of it?] \\}
+\textcolor{red}{[TODO: sort this list a bit better? normal text some of it?]}
 
 \subsubsection{rtvklib MFFR failure}
 Some issues with this implementation do prevail and make it unfit for productive deployment in Tachyon yet, unfortunately. 
@@ -69,7 +71,7 @@ Vitally, this visual distortion does \textit{not} affect performance measurement
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{Draw submission and render pass timeline of a typical \textit{rtvklib} MFFR frame} \label{fig:Nsight_MFFR}
+  \caption{\textcolor{red}{[TODO: Draw submission and render pass timeline of a typical \textit{rtvklib} MFFR frame (from Nsight)]}} \label{fig:Nsight_MFFR}
 \end{figure}
 
 Another issue is that Vulkan render passes by default discard fragments at the their end if depth testing is enabled and the depth value of said fragment equals 1.0 (and is thus on the far plane). This means any color values written by the far pass and not overwritten by the near pass would be discarded right at the end of the stereo pass and before presentation. A workaround for this is to clear the depth buffer at the start of the stereo pass not to 1.0 but to 0.999999 (22 of 23 mantissa bits set to 1), the closest value a IEEE-754 float can reach below 1.0. With this tweak, color values were correctly composited together without any visible loss at the near field's split plane. \\

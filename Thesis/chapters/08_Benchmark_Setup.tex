@@ -20,7 +20,7 @@ By default the placed object is a primitive cube, but at every intersection of x
 This placement setup is done with target counts of 711 for the X and Z and 22 for the Y axis respectively. This utilizes the scene height as much as possible and results in a total instance count of 11.121.462, a respectable number even for detailed industrial applications. \\
 Still in the interest of repeatability, the head-tracked headset pose had to be disabled for these tests in favor of a scripted on-rails camera pose that follows a simple circular pattern for its virtual position and another one for rotation, both based on the sine and cosine of the number of frames completed since the first rendered frame. This gives a simple and arbitrarily repeatable pattern resulting in the same camera position and angle at the same frame count for each run, obviously making it much easier to match measurements. 
 
-\section{Timing code \& metrics}
+\section{Timing code \& metrics} \label{bmark_metrics}
 To get an accurate idea of how the computational effort within a frame changes and is split up over its several steps, \codeword{STL::chrono high_resolution_clock} timings calls were used in strategic places. For each frame, the measured metrics are: \begin{itemize}
 \item total frame-time (microseconds)
 \item CPU-only time (microseconds)
@@ -74,5 +74,4 @@ Furthermore, the following virtual reality headsets were available in the respec
 \item Oculus Rift CV1 - \textbf{WS-Big} functionality verification
 \item Samsung Odyssey - \textbf{WS-Small} performance measurements, functionality verification
 \end{itemize} 
-
-\textcolor{red}{[TODO: which permutations are we measuring]}
+To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 99\% which effectively disables turbo boost and speedshift and fixates the frequency at the base multiplier of 34x for 3.4GHz allcore\textcolor{red}{[TODO: or is that 3.6?]}. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. 

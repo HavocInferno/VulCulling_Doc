@@ -7,8 +7,8 @@ One such effort was presented by Alex Vlachos at GDC 2015 \cite{Vlachos.2015} as
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: Index stencil buffer from Nsight as illustration]}} \label{fig:blob}
+  \includegraphics[width=0.9\textwidth]{pictures/stencilmask_Index_crop}
+  \caption{Nsight VS capture of stencil buffer as rendered for Valve Index HMD} \label{fig:stencil_index}
 \end{figure}
 
 \subsection{Estimated impact}
@@ -18,7 +18,7 @@ Assuming a roughly uniform distribution of objects in the scene and accordingly 
 \textcolor{red}{[TODO]}
 
 \subsection{Implementation specifics}
-The \textit{rtvklib} stencil masking feature is designed to query the require fitted meshes from OpenVR and render them to the respective eye at startup so the render loop can keep reusing it every frame without additional render load for the mask (see \autoref{fig:StencilMask}). \\
+The \textit{rtvklib} stencil masking feature is designed to query the require fitted meshes from OpenVR and render them to the respective eye at startup so the render loop can keep reusing it every frame without additional render load for the mask (see \autoref{fig:StencilMask}). An example of the rendered mask is shown in \autoref{fig:stencil_index}, displaying the Nsight stencil buffer capture when using a Valve Index headset. \\
 Outfitting Tachyon for stencil masking required the addition of the entire stencil stack as the engine did not use the feature in any capacity yet. The changes include extending the depth attachment of the OpenVR render pass with the \codeword{VK_IMAGE_ASPECT_STENCIL_BIT} so the additional buffer layer is created at startup. What's more, the involved Vulkan pipelines need stencil operation states defined in their \codeword{VkPipelineDepthStencilStateCreateInfo}, with the operations set as in \autoref{fig:lst_StencilOpState_MaterialPipeline} so the bits are checked against but not modified. Next, the VR render pass needs its color attachment's \codeword{stencilLoadOp} set to \codeword{VK_ATTACHMENT_LOAD_OP_LOAD} so the renderer knows to load the stencil buffer at the start of the color pass, and the \codeword{stencilStoreOp} to \codeword{VK_ATTACHMENT_STORE_OP_DONT_CARE} so it can leave the buffer behind after use without saving anything more to it. This is important to make sure our stencil buffer remains unmodified and expensive writes are avoided. 
 
 \begin{figure}[htb]

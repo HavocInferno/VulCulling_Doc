@@ -43,9 +43,9 @@ Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are d
 \textcolor{red}{[TODO: resource usage aka memory per frame for relevant configurations, grabbed e.g. from representative NSight Frame]}
 
 \section{Compilation parameters}
-Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode. 
+Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode using Microsoft Visual Studio 2015 and its v140 MSVC toolset. 
 To further eliminate potential slowdown from branching or data tracking, each of the 16 permutations of enabled optimizations is not done simply through \codeword{if} statements or \codeword{switch} cases, but through preprocessor defines. These defines are \codeword{SUPERFRUSTUM_ON}, \codeword{MULTIVIEW_ON}, \codeword{STENCILMASK_ON}, \codeword{MFFR_ON}. Similarly, benchmark timing code is enabled via the \codeword{BENCHMARK_MEASURE}, \codeword{BENCHMARK_CHUNKINFO} and \codeword{BENCHMARK_CAMRAILS} flags. \\
-As a sidenote here, \textit{all} configurations were tested with distance culling (\codeword{DISTANCECULLING_ON}, draw distance 256 units \textcolor{red}{[TODO: confirm]}) and frustum culling (\codeword{FRUSTUMCULLING_ON}) enabled as running the massive 11.1 million instance scene without these in place would realistically bring any test machine near a grinding halt. It also seems unrealistic to run any scene with advanced VR optimizations enabled but leave such simple measures disabled. 
+As a sidenote here, \textit{all} configurations were tested with distance culling (\codeword{DISTANCECULLING_ON}, draw distance 320 units) and frustum culling (\codeword{FRUSTUMCULLING_ON}) enabled as running the massive 11.1 million instance scene without these in place would realistically bring any test machine near a grinding halt. It also seems unrealistic to run any scene with advanced VR optimizations enabled but leave such simple measures disabled. 
 Demonstrably, these culling methods are also not posing as dangerous bottlenecks to the tested configurations as the baseline measurement details will show. 
 
 \section{System specifications}
@@ -53,16 +53,16 @@ Two test machines were used to perform measurements on. Each graph and table wil
 The first machine, further titled \textbf{WS-Big}, is specified as:
 \begin{itemize}
 \item CPU: Intel Core i7 6700 (4c8t Skylake, 4x3.4GHz base, 4.0GHz boost)
-\item RAM: 2x16GB DDR4-2133/15
-\item GPU: Nvidia GeForce RTX 2080 Founders Edition (2944 Turing cores at 1800MHz core, 8GB GDDR6 at 1750MHz)
+\item RAM: 2x16GB DDR4-2400/15
+\item GPU: Nvidia GeForce RTX 2080 Founders Edition (2944 Turing cores at 1800MHz core, 8GB GDDR6 at 1750MHz) - driver version 432.00
 \item Storage: Samsung SSD 840 Evo 500GB
-\item OS: Microsoft Windows 10 Pro x64 1903
+\item OS: Microsoft Windows 10 Pro x64 1809
 \end{itemize} 
 The second machine, further titled \textbf{WS-Small}, is specified as:
 \begin{itemize}
 \item CPU: AMD Ryzen 5 1600 \textit{12nm} (6c12t Zen+, 6x3.2GHz base, 3.7GHz boost)
 \item RAM: 2x8GB DDR4-3066/14
-\item GPU: Hewlett-Packard Radeon RX 580 (2304 Polaris cores at 1200MHz, 4GB GDDR5 at 1750MHz)
+\item GPU: Hewlett-Packard Radeon RX 580 (2304 Polaris cores at 1200MHz, 4GB GDDR5 at 1750MHz) - driver version 19.12.3
 \item Storage: ADATA SSD SX6000 Pro 500GB
 \item OS: Microsoft Windows 10 Pro x64 1909
 \end{itemize} 
@@ -74,4 +74,6 @@ Furthermore, the following virtual reality headsets were available in the respec
 \item Oculus Rift CV1 - \textbf{WS-Big} functionality verification
 \item Samsung Odyssey - \textbf{WS-Small} performance measurements, functionality verification
 \end{itemize} 
-To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 99\% which effectively disables turbo boost and speedshift and fixates the frequency at the base multiplier of 34x for 3.4GHz allcore\textcolor{red}{[TODO: or is that 3.6?]}. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. 
+To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 100 and 99\% respectively, which effectively disables singlecore turbo boost and speedshift and fixates the frequency at the allcore boost multiplier of 37x for 3.7GHz allcore. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. \\
+Keeping GPU clock speeds at the same level for all test runs is harder to achieve as all modern graphics cards employ some version of dynamic boosting algorithms based on temperature, power target, voltage target and usage. The Radeon RX 580 is set to target a maximum of 1200MHz boost frequency via a VBIOS modification that disables higher automatic boost, and during core load it maintains this target stable unless the power target of 100 Watts is exceeded. 
+For Nvidia graphics cards later than 2014's Maxwell 2 architecture, such a firmware mod is unfortunately not possible. There is, however, one way of reaching a mostly stable core frequency. To achieve this, the card needs to be pre-heated using any application generating GPU load. To prime \textbf{WS-Big}'s RTX 2080, SteamVR Home is idled for 30 minutes before any test runs are performed, resulting in an equilibrium of \ang{70}C at 1905MHz core frequency. This temperature and frequency is maintained for the entirety of each test run as the 210 Watts power target of the card is never exceeded. 

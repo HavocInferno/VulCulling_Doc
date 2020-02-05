@@ -70,8 +70,8 @@ Vitally, this visual distortion does \textit{not} affect performance measurement
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: Draw submission and render pass timeline of a typical \textit{rtvklib} MFFR frame (from Nsight)]}} \label{fig:Nsight_MFFR}
+  \includegraphics[width=0.9\textwidth]{pictures/mffr_timeline_stacked_delimited}
+  \caption{Draw submission and render pass binding timeline of a typical \textit{rtvklib} MFFR frame, captured in Nsight VS. (Split after far-field render pass and stacked vertically for better page fit) \\On the "Render Pass" row, the blue pass denotes the far-field pass, orange is the left eye and green is the right eye. Far and near are each synchronized by a VkSemaphore.} \label{fig:Nsight_MFFR}
 \end{figure}
 
 Another issue is that Vulkan render passes by default discard fragments at the their end if depth testing is enabled and the depth value of said fragment equals 1.0 (and is thus on the far plane). This means any color values written by the far pass and not overwritten by the near pass would be discarded right at the end of the stereo pass and before presentation. A workaround for this is to clear the depth buffer at the start of the stereo pass not to 1.0 but to 0.999999 (22 of 23 mantissa bits set to 1), the closest value a IEEE-754 float can reach below 1.0. With this tweak, color values were correctly composited together without any visible loss at the near field's split plane. \\

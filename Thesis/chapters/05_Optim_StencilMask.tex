@@ -3,7 +3,22 @@
 
 \section{HMD Stencil Mask} \label{stencilmask}
 Introduced to the mass market with 3Dlabs' Permedia II in 1997 and widely adopted since then, all modern graphics chips support a nifty feature called the stencil buffer. This buffer uses low bit integer values - commonly 8 bits per pixel for a depth of 256 \cite{deVries.2014} - that can be read from and written to during the fragment stage, with stencil testing happening after alpha and before depth testing. Sometimes used for certain shadowing operations, the stencil buffer is primarily used for cheap masking efforts. \\
-One such effort was presented by Alex Vlachos at GDC 2015 \cite{Vlachos.2015} as a possibility to improve performance in VR applications. Once again pointing at the significant areas of invisible screen space wasted outside the HMD lenses' warping reach, the idea here is to write into a per-eye pixel matched stencil buffer a mask corresponding to the shape of the visible screen area. Then during the fragment stage of a frame render, the stencil test can early discard all masked fragments and thus avoid pixel shader work for all these areas. The operation can essentially be imagined exactly as the classic idea of stencil mask when painting surfaces, where paint will only hit the surface within the cutouts of the stencil. Similarly the graphics chip will only write color and depth values to unmasked fragments. 
+One such effort was presented by Alex Vlachos at GDC 2015 \cite{Vlachos.2015} as a possibility to improve performance in VR applications. Once again pointing at the significant areas of invisible screen space wasted outside the HMD lenses' warping reach (such as in \autoref{fig:stencil_wastecomparison}), the idea here is to write into a per-eye pixel matched stencil buffer a mask corresponding to the shape of the visible screen area. Then during the fragment stage of a frame render, the stencil test can early discard all masked fragments and thus avoid pixel shader work for all these areas. The operation can essentially be imagined exactly as the classic idea of stencil mask when painting surfaces, where paint will only hit the surface within the cutouts of the stencil. Similarly the graphics chip will only write color and depth values to unmasked fragments. 
+
+\begin{figure}[h]
+  \centering
+  \hspace*{\fill}
+     \subfloat[HTC Vive full render after warp\label{fig:stencil_allpixels}]{%
+       \includegraphics[width=0.4\textwidth]{pictures/vlachos_allpixels}
+     }
+  \hfill
+     \subfloat[HTC Vive pixels wasted by lens cutout marked in red \label{fig:stencil_wastedpixels}]{%
+       \includegraphics[width=0.4\textwidth]{pictures/vlachos_wastedpixels}
+     }
+  \hspace*{\fill}
+     \caption{Comparison of rendered rectangular right eye frame after warp versus pixels wasted by lens distortion (\cite{Vlachos.2015}, pp. 52-54)}
+     \label{fig:stencil_wastecomparison}
+\end{figure}
 
 \begin{figure}[htb]
   \centering

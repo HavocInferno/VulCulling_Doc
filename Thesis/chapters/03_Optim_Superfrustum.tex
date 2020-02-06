@@ -11,11 +11,45 @@ The following options build on top of the regular frustum culling concept. In th
 Another optional layer of the culling process is to maintain hierarchical container structures for the scene objects so larger numbers can be discarded or included early on. 
 For all those options the goal is the same, to get as result the list or buffer of objects visible by the given camera frustum in the scene. 
 
-\section{Frustum culling in Tachyon}
-The frustum culling approach in Tachyon is fully CPU-based and utilizes pre-computed hierarchical draw buffers. More specifically, at startup the scene is divided into a coarse grid of \codeword{chunk}s where each grid possesses an octree. Also at startup, a thread pool with the current number of hardware threads is created. At asset load time, these octrees are populated with the loaded objects through optimistic size-aware insertion. Each cell of a tree then precomputes a draw buffer containing a combined draw call for all objects associated with that cell. These buffers can be recomputed at any time, but the operation should be avoided at runtime as it incurs costly CPU to GPU transfers. 
+\section{Frustum culling in \textit{Tachyon}}
+The frustum culling approach in \textit{Tachyon} is fully CPU-based and utilizes pre-computed hierarchical draw buffers. More specifically, at startup the scene is divided into a coarse grid of \codeword{chunk}s where each grid possesses an octree. Also at startup, a thread pool with the current number of hardware threads is created. At asset load time, these octrees are populated with the loaded objects through optimistic size-aware insertion. Each cell of a tree then precomputes a draw buffer containing a combined draw call for all objects associated with that cell. These buffers can be recomputed at any time, but the operation should be avoided at runtime as it incurs costly CPU to GPU transfers. 
 In a culling pass, first all \codeword{chunk}s within a certain draw distance radius of the camera are chosen, so there is an additional very primitive distance culling taking place. Then each \codeword{chunk} submits a culling call using its tree to the thread pool. Each such call works as follows: \\
 
-\textcolor{red}{[TODO: brief rundown of SceneChunk::FrustumCull] \\}
+\begin{figure}[h]
+  \centering
+  \begin{tabular}{c}
+  \begin{lstlisting}[language=C++]
+pseudo SceneChunk::FrustumCull()
+{
+	out	draw-calls[camfrusta.size]; 
+	for all leftover octree cells
+	{
+		for all camera frusta
+		{
+			if cell is valid
+			var checkResult = frustumCheck(frustum, cell);
+			if checkResult == INSIDE
+			{
+				add overall cell draw-call to draw-call list; 
+			} else if checkResult == INTERSECT
+			{
+				add 8 child cells to leftover list; 
+				add local cell draw-call to draw-call list; 
+			}
+		}
+	}
+	
+	for all camera frusta
+	{
+		unique_lock(cullMutex); 
+		sort and aggregate draw-call list; 
+		add draw-call list to per-pipeline draw-call collection; 
+	}
+}
+  \end{lstlisting}
+  \end{tabular}
+  \caption[SceneChunk's FrustumCull()]{per scene chunk frustum culling procedure (shortened pseudo code)}\label{fig:lst_SceneChunk_FrustumCull}
+\end{figure}
 
 One problematic area remains, however, and that is Z ordering. Modern graphics pipelines will perform early Z discard during the fragment stage. If a fragment fails the depth test for a given draw call, meaning its geometry would be occluded by triangles already written to the fragment, the shader will skip any further calculation for this geometry and fragment. For this to take hold in performance improvement, the draw calls need to be issued in a manner where geometry closer to the camera is drawn first. If draws are done in reverse order, the pipeline will draw distant geometry first and subsequent closer geometry at the same fragment will naturally not fail the depth test and overwrite the fragment. Effectively, all prior writes to any such fragment in that frame would be wasted and go unseen. This issue is called overdraw and can significantly deteriorate GPU render times in extreme cases. 
 One such example would be the following, very dense synthetic test scene: 
@@ -58,7 +92,7 @@ Superfrustum culling when performed directly on the GPU obviously has great pote
 \subsection{Implementation specifics}
 To facilitate Superfrustum culling in Tachyon required only straight-forward changes. At creation time of the virtual camera, the superfrustum is computed from the given OpenVR eye parameters following Everitt and Oddou's way. 
 Assuming the two eye projections are asymmetric, they need to be symmetricized. For this, after grabbing each eye's projection matrix from OpenVR for the desired near and far clip distances, the M[0][0] and M[0][2] values of each matrix are of interest. These two values represent the OpenGL clipping space's X coordinate's scalars. OpenVR through SteamVR uses the same coordinate layout. At a Z depth of -1, these two scalar terms are entirely dependent on center point and width of the projection cube. Solving them for center and width then gives $center = \frac{M[0][2]}{M[0][0]}$ and $width = \frac{2}{M[0][0]}$. 
-A new symmetric projection then obviously would be constructed from this center and width. The new \textit{right}, or \textit{r} value, for example, will be $\textit{r}_{sym} = abs(center) + \frac{width}{2}$, which if substituted by the matrix dependent fractions comes out to $abs(\frac{M[0][2]}{M[0][0]}) + \frac{1}{M[0][0]}$. This can be solved for a new $M_{sym}[0][0] = \frac{M[0][0]}{abs(M[0][2])+1}$ and $M_{sym}[0][2] = 0$ (see \cite{Everitt.2015b}).
+A new symmetric projection then obviously could be constructed from this center and width by taking the center point and stepping "sideways" by half width. The new \textit{right}, or \textit{r} value, for example, will be $\textit{r}_{sym} = abs(center) + \frac{width}{2}$, which if substituted by the matrix dependent fractions comes out to $abs(\frac{M[0][2]}{M[0][0]}) + \frac{1}{M[0][0]}$. This can be solved for a new $M_{sym}[0][0] = \frac{M[0][0]}{abs(M[0][2])+1}$ and $M_{sym}[0][2] = 0$ (see \cite{Everitt.2015b}).
 In the next step, these new M\textsubscript{sym}[0][0] values for both eyes are inserted into the recession math by Oddou\cite{Oddou.23.05.2017}. For non-mirrored and asymmetric eyes, a superfrustum recession is simply calculated as $\frac{ipd}{tan\theta _{0} + tan\theta _{1}}$ with $\theta \textsubscript{i}$ being the respective center-to-outside opening angle of each eye. Conveniently with the previously calculated M\textsubscript{sym} values, these tangents of angles are equal to the reciprocal of the respective M\textsubscript{sym}[0][0]. As such for the recession we get $\frac{ipd}{\frac{1}{M_{sym}[0][0]_{l}}+\frac{1}{M_{sym}[0][0]_{r}}}$. 
 The calculated superfrustum recession and new combined field of view angles are saved and used every frame when re-transforming the superfrustum. The frustum transformation uses a simple geometric approach where the camera's world position, forward and up vectors in conjunction with the near and far distance, field of view and aspect ratio are extruded into the six planes of the frustum volume. 
 The per-frame culling pass of \textit{Tachyon} then naturally only checks against this single frustum and returns a single set of draw commands that are then sent to both eyes. 
@@ -79,13 +113,15 @@ Overall this makes Round Robin Culling a viable candidate on systems with very l
 \end{figure}
 
 \section{Conical Frustum Culling}
-This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. Jonathan Hale attempts to demonstrate the method in his thesis \cite{Hale.2018} as both a contribution to the graphics middleware \textit{Magnum}\cite{Vondrus.30.10.2019} and a UE4 extension at Vhite Rabbit\cite{VhiteRabbit.08.01.2020} - albeit with limited success. That proof of concept does show the validity of the method though. The traditional six sided trapezoid frustum is replaced by a cone encompasses a volumetric projection of the view through each respective lens. For a more geometry-bound GPU, this method will provide a small relief. \\
-\textcolor{red}{[TODO: more specific description of approach from paper]}
+This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. Jonathan Hale attempts to demonstrate the method in his thesis \cite{Hale.2018} as both a contribution to the graphics middleware \textit{Magnum}\cite{Vondrus.30.10.2019} and a UE4 extension at Vhite Rabbit\cite{VhiteRabbit.08.01.2020} - albeit with limited success. That proof of concept does show the validity of the method though. The traditional six sided trapezoid frustum is replaced by a cone encompassing a volumetric projection of the view through each respective lens as visualized in \autoref{fig:hale_cone}. \\
+Hale examined various types of cone intersection math, including AABB and bounding sphere object checks against a spatially transformed frustum cone and the same checks for spatially inverse-transformed objects against an origin oriented frustum cone. While his results showed cone culling performing worse than traditional frustum culling, he notes optimization was not fully refined and all calculation was done on the CPU. 
+Another note by Hale cautions that depending on the used HMD, a cone frustum may prove \textit{less} accurate than a trapezoid, such as for the Oculus Rift CV1. As some headsets show not a fully circular image through their lenses but rather the entire distorted frame, it may not be possible to fit a cone frustum within the traditional frustum and instead that cone may actually exceed the traditional dimensions and thus cull fewer objects. 
+For appropriate headsets and more geometry-bound GPUs, this method may provide a small relief if using even faster cone intersection math. 
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: small illustration from paper]}} \label{fig:blob}
+  \includegraphics[height=6cm]{pictures/hale_cone}
+  \caption{Point-cone intersection illustration by Hale (\cite{Hale.2018}, p. 21)} \label{fig:hale_cone}
 \end{figure}
 
 \section{Merging approaches}

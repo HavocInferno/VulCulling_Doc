@@ -21,8 +21,15 @@ The renderer initialization also encompasses virtual reality through OpenVR. Giv
 All run-time relevant vector and matrix math in the renderer and the presented optimization implementations use the free MPL2 licenses Eigen 3.3 math library. Eigen was chosen for its extensive feature set and its special focus on high performance using SIMD vectorization including all current forms of SSE and AVX among others\cite{Guennebaud.2010}.
 
 \section{Render loop} 
-After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. These functions are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}. 
+After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. The flows of these are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}, respectively. 
 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pictures/Tachyon_VKRenderer_Update}
+  \caption[VKRenderer's Update]{Renderer update function \textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_VKRenderer_Update}
+\end{figure} 
+
+\iffalse
 \begin{figure}[htb]
   \centering
   \begin{tabular}{c}
@@ -52,6 +59,7 @@ void VKRenderer::Update()
   \end{tabular}
   \caption[VKRenderer's Update]{Renderer update function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart?]}}\label{fig:lst_VKRenderer_Update}
 \end{figure}
+\fi
 
 \codeword{VKRenderer::Update()} first prompts all aforementioned managers to update their databases, buffers and anything else they hold in case they are dirty. Then it prompts each render target to update, which may involve camera transformation updates and buffer synchronization for example. Also for each render target, the loop will then have the instance manager perform a frustum culling pass, which will for this target save a conservative list of draw call information for objects visible by this target's camera viewpoints. 
 If any of these updates and culling passes set a pipeline or command buffer state invalid, these will be rebuilt accordingly.  

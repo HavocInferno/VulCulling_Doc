@@ -61,7 +61,6 @@ While the general approach sounds mostly straight-forward and both described way
 \item add an additional set of camera data struct and camera index
 \item in the render target's \codeword{UpdateCameras()} call, update the far field volume's view projection matrix by transforming aforementioned projection matrix by the current HMD pose and write that updated matrix to the camera data buffer on the GPU
 \end{itemize}
-\textcolor{red}{[TODO: sort this list a bit better? normal text some of it?]}
 
 \subsubsection{rtvklib MFFR failure}
 Some issues with this implementation do prevail and make it unfit for productive deployment in Tachyon yet, unfortunately. 

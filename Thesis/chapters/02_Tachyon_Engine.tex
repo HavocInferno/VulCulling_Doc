@@ -18,6 +18,8 @@ Whenever any 3D object is to be loaded, \codeword{rtvklib} uses several manager 
 
 The renderer initialization also encompasses virtual reality through OpenVR. Given a valid OpenVR environment and HMD is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. Resources include a framebuffer with one layer for each eye, created with the rendering resolution returned by OpenVR after querying \codeword{IVRSystem::GetRecommendedRenderTargetSize()} and using 4x multisampling as is often recommended for virtual reality applications to minimize aliasing without obscene cost (see for example \cite{Porter.2017}\cite{Carmack.2016}\cite{VisCircleGmbH.2018}\cite{Pettit.2017}). 
 
+All run-time relevant vector and matrix math in the renderer and the presented optimization implementations use the free MPL2 licenses Eigen 3.3 math library. Eigen was chosen for its extensive feature set and its special focus on high performance using SIMD vectorization including all current forms of SSE and AVX among others\cite{Guennebaud.2010}.
+
 \section{Render loop} 
 After all startup and initialization is done, the engine's render loop executes \codeword{VKRenderer}'s \codeword{Update()} and \codeword{RenderFrame()} functions back to back. These functions are shown in \autoref{fig:lst_VKRenderer_Update} and \autoref{fig:lst_VKRenderer_RenderFrame}. 
 

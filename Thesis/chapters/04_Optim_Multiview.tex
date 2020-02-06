@@ -10,8 +10,8 @@ With the general graphics pipeline (\autoref{fig:Gfx_pipeline}) in mind, it's cl
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: gfx pipeline]}} \label{fig:Gfx_pipeline}
+  \includegraphics[height=7cm]{pictures/vulkan_simplified_pipeline}
+  \caption{Simplified graphics pipeline of a modern GPU\cite{Overvoorde.}} \label{fig:Gfx_pipeline}
 \end{figure}
 
 An optimization exploiting this is called multiview stereo rendering, and very quickly surfaced as an idea after the introduction of the Nvidia Geforce 8 and ATi Radeon HD 2000 series in 2006 brought unified shader architectures to the market \cite{Lindholm.2008}\cite{Sommefeldt.2007}. Prior architectures relied on separate vertex and pixel shader units with relatively fixed capabilities and few ways to share data. Fully programmable shader units then allowed more customizable and efficient pipeline usage necessary for multiview to show any benefit. 
@@ -49,8 +49,11 @@ For all submitted devices (892 at the time of writing) the database shows suppor
 
 \subsection{Estimated impact}
 Impact of this extension is highly dependent on the specific workload, the used graphics hardware and renderer structure. \\
+Independent benchmark numbers are rare to find. In benchmarking the online racing simulation iRacing, Wolfgang Andermahr of ComputerBase GmbH attests a performance increase of between 14-21\% when testing on a Nvidia GTX 1060 and GTX 1080 at 5760 by 1080 pixels. While this is not a VR application, it gives a first impression of potential gains when rendering multiple viewports using hardware-accelerated multiview as is the case on these Pascal-based GPUs \cite{Andermahr.2016}.
+Similarly, Croteam's Karlo Jez shows significant CPU performance gains for software multiview using AMD's LiquidVR suite, reducing CPU frame time in Serious Sam VR from 9ms down to 7ms \cite{Jez.2017}. He specifically notes that this includes all stages of CPU rendering, even ones that are not connected to multiview, and adds that render command processing itself is halved from 4ms to 2ms by using software multiview. 
+Going further from traditional desktop rendering, Mozilla Corp. reports performance improvement of up to 40\% when using the multiview extension for WebGL in a CPU-bound test application \cite{Serrano.2019}. 
 
-\textcolor{red}{[TODO: AMD LiquidVR numbers, Anand SMP tests, Nv MV dev blog]}
+Overall this gives inconsistent performance expectations, but it does provide a trend. It stands to reason that with rising CPU load and increasing number of virtual viewports, multiview rendering offers significant performance improvement in the double digit range. 
 
 \subsection{Implementation specifics}
 In Vulkan specifically, multiview is enabled through the \codeword{VK_KHR_multiview} extension. This extension's availability on the target hardware can be queried and if available, the individual hardware-dependent implementation is abstracted by Vulkan. \\

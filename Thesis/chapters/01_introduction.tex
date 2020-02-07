@@ -2,11 +2,11 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}
-Real-time rendering is by no means a new research topic. Naturally developers and researchers have devised shortcuts and optimizations in both hardware and software as far back as the first applications in video games, visualization - scientific or otherwise - and simulation. There are methods and algorithms for almost any type of hardware, rendering technique and application scope. 
-One more recently resurged trend is virtual reality (VR). The realization of comparably affordable, comfortable and hassle-free virtual reality headsets like the Oculus Rift series, the HTC Vive, Windows Mixed Reality design or the recently launched Valve Index led to a newfound vigor for the technology among consumers. Similarly, businesses as well as scientists are increasingly looking to VR for various fields of research, marketing opportunities, engineering support and more. \\
-However, virtual reality poses challenges and requirements not commonly seen with traditional real-time applications on monoscopic screens. And while goals such as stable motion tracking and low latency, high performance rendering are as old as early VR HMDs, this recent resurgence has prompted much more active search for possible solutions. Among these requirements is the need for high framerates to give the user a better feeling of visual fluidity and to avoid motion sickness. VR applications need not only render at high framerate, they also need to do so at higher resolutions than common flat screens. As the much lower viewing distance and added lens distortion means pixels appear much larger to the user, the only way to combat visual aliasing and the so called screen door effect is to significantly increase pixel count and density. \\
+Real-time rendering is not a new research topic. Naturally,  developers and researchers have devised shortcuts and optimizations in hardware and software since the first applications in video games, visualization and simulation. There are methods and algorithms for almost any type of hardware, rendering technique and application scope. 
+One more recently resurged trend is \gls{VR}. The realization of  affordable, comfortable and hassle-free \gls{VR} headsets like the Oculus Rift series, the HTC Vive, Windows Mixed Reality design or the recently launched Valve Index led to a newfound vigor for the technology among consumers. Similarly, businesses as well as scientists are increasingly looking to \gls{VR} for various fields of research, marketing opportunities and engineering support and more. \\
+However, \gls{VR} poses challenges and requirements not commonly seen with traditional real-time applications on monoscopic screens.  While goals such as stable motion tracking, low latency and high performance rendering are as old as early \gls{VR} \glspl{HMD}, this recent resurgence has prompted more active search for possible solutions. Among these requirements is the need for high framerates to give the user a feeling of increased visual fluidity and to avoid motion sickness. \gls{VR} applications not only need to render at a high framerate, they also need to do so at higher resolutions than common flat screens since the shorter viewing distance and added lens distortion means pixels appear larger to the user. The only way to combat resulting visual aliasing and the so called \textit{\gls{SDE}} is to significantly increase pixel count and density. \\
 
-Similarly to the opening example of \cite{InigoQuilez.2017}, let's assume a traditional console video game running at Full HD resolution and 60 frames per second, a common sight for 8th generation consoles. Meanwhile the same game running in a VR headset may require resolutions and framerate ranging from 1200 pixels per axis per eye (\autoref{fig:VR_HMD_res}) at 90 frames per second for entry level headsets up to or even exceeding 2000 pixels per axis per eye at 120 frames per second for high end devices like the Pimax 4K - not to mention image warp commonly requires an even higher internal rendering resolution by a factor of around 20\% or more. In the entry level case that means a resolution increase of roughly 1.6x and a framerate increase of 1.5x for a combined 2.4x power requirement compared to the console baseline, while in the high end case it is roughly 4.6x resolution and 4x framerate uptick for a combined 9.2x power requirement in comparison. \\
+Similarly to the opening example of \cite{InigoQuilez.2017}, let us assume a traditional console video game running at Full HD resolution and 60 frames per second, which is a common for 8th generation consoles. Meanwhile, the same game running in a VR headset may require resolutions and framerate ranging from 1200 pixels per axis per eye (\autoref{fig:VR_HMD_res}) at 90 frames per second for entry level headsets and up to or even exceeding 2000 pixels per axis per eye at 120 frames per second for high end devices like the Pimax 4K. Image warp will commonly require an even higher internal rendering resolution by a factor of around 20\% or more. For the entry level headset, this means a resolution increase of roughly 1.6x and a framerate increase of 1.5x for a combined 2.4x power requirement compared to the console baseline, while in the high end case it is roughly a 4.6x resolution and 4x framerate uptick for a combined 9.2x power requirement in comparison. \\
 
 \begin{figure}[htb]
   \centering
@@ -15,13 +15,14 @@ Similarly to the opening example of \cite{InigoQuilez.2017}, let's assume a trad
 \end{figure} 
 
 \section{The goal}
-While this is very rough napkin math and real applications scale differently to a degree due to a multitude of factors, it paints a clear picture: real-time virtual reality rendering necessitates vastly faster rendering than traditional screens. It obviously follows that VR rendering should take advantage of as much optimization as possible to attain that goal. There are many established options that are known to improve performance for various if not most application types, with some of these options being de-facto standard features in popular rendering engines.  There is also, however, a range of optimizations specific to virtual reality or more generally stereoscopic rendering, and often there is less research and documentation available yet, due in part to aforementioned recent rise in popularity and prior lack of interest. \\
-Thus, this paper aims to collect several of these VR optimizations, implement a subset of them in a real engine and then benchmark and analyse the impact each has on performance. The goal is to have a better collection and understanding of the various methods to use and how much effort may be warranted for each. 
-To this end, what follows is first an explanation of the software and technical foundation used to implement practical samples, a chapter on optimizations aiming to reduce render \textit{input}, succeeded by a chapter on optimizations aiming to reduce render \textit{effort} and finally an analysis of the performance impact of each implemented approach. Note here that only a subset of the listed methods was implemented due to time constraints. 
+While this is very rough napkin math and real applications scale differently due to a multitude of factors, it paints a clear picture: real-time \gls{VR} rendering necessitates vastly faster rendering than traditional screens. Consequentially, \gls{VR} rendering should take advantage of as much optimization as possible to attain that goal. There are many established options known to improve performance for various application types, with some of these options being de-facto standard features in popular rendering engines.  However, there are a range of optimizations specific to \gls{VR} or more generally stereoscopic rendering. There is less research and documentation available as of now, due in part to the aforementioned recent rise in popularity and prior lack of interest. \\
+Thus, this paper aims to collect several \gls{VR} optimizations, implement a subset of them in a real engine and subsequently benchmark and analyse the impact each has on performance. The goal is to have a better collection and understanding of the various possible methods and how much effort may be warranted for each. 
+Firstly an explanation of the software and technical foundation used to implement practical samples is given, following this, optimizations aiming to reduce render \textit{input} will be shown, succeeded by a chapter on optimizations aiming to reduce render \textit{effort}. Finally, an analysis of the performance impact of each implemented approach. 
+For the practical aspect of this thesis, the goal is to enable fast rendering of complex scenes with very large object counts, all while driving \gls{VR} headsets at high resolution and framerate. 
 
 \section{Industry collaboration}
-This thesis is created in collaboration with \gls{RTG}, an engineering and consulting office based in Garching bei München. RTG offers engineering services related to real-time visualization, virtual reality applications and hardware prototyping to enterprise clients from a variety of industry branches such as automotive and industrial logistics\cite{HansiVollmer.2020}. \\
-At this point it needs to be disclaimed that the author of this thesis was employed at RTG Echtzeitgraphik GmbH at the time of making. This allowed the use of company assets like workstations, a range of VR headsets and relevant literature as well as expertise with regard to related technologies and enterprise requirements for a rendering engine. The thesis, accompanied research efforts and all material created for the purpose of this thesis, however, are the author's own work. 
+This thesis is created in collaboration with \gls{RTG}, an engineering and consulting office based in Garching bei München. \gls{RTG} offers engineering services related to real-time visualization, \gls{VR} applications and hardware prototyping to enterprise clients from a variety of industry branches such as automotive and industrial logistics\cite{HansiVollmer.2020}. \\
+The author of this thesis was employed at RTG Echtzeitgraphik GmbH at the time of writing. This allowed the use of company assets like workstations, a range of \gls{VR} headsets and relevant literature as well as expertise with regard to related technologies and enterprise requirements for a rendering engine. The thesis, accompanied research efforts and all material created for the purpose of this thesis, however, are the author's own work. 
 
 \begin{figure}[htb]
   \centering
@@ -29,10 +30,10 @@ At this point it needs to be disclaimed that the author of this thesis was emplo
 \end{figure} 
 
 \section{Technical foundation}
-From this industry collaboration follow influences when choosing the technical foundations of the thesis. In an effort to represent a realistic use case, an engine with actual production usage target was chosen as opposed to a purely synthetic "test vehicle", namely RTG's own \textit{Tachyon}. The engine and its structure is further explained in \autoref{Tachyon}. \\
-The graphics API and library of choice for this thesis then is the Khronos Group's Vulkan. Vulkan is a low level graphics API officially created in 2014 and formally released in early 2016 with the promise of increased flexibility and reduced overhead compared to prior graphics APIs as well as compatibility with a wide range of hardware architectures and operating systems\cite{TheKhronosGroupInc..2016}. On the flipside, the verbose and low level nature of the API brings increased development effort and means that these promised improvements can only be leveraged with sufficient care and caution by developers. \\
-More specifically for \textit{Tachyon} and this thesis, the goal is to enable fast rendering of complex scenes with very large object counts, all while driving virtual reality headsets at high resolution and framerate. Vulkan promises a good fit for this purpose. Furthermore Vulkan is seeing a steady growth in developer interest and industry adoption, but with documentation, resources and API-specific research still being lackluster in some ways. This thesis hopes to add useful insights to this pool. \\
-Lastly - as a sort of tease to the future - both Vulkan and the VR optimizations presented here are not just compatible with powerful x86 desktop machines, but also with many ARM-based SoCs running Google's Android as well as Apple's iOS, promising prospects for the category of standalone low power VR headsets which are seeing increasing popularity\cite{AntonyVitillo.2018}\cite{IDCCorporateUSA.2020}. 
+In an effort to represent a realistic use case, an engine with actual production usage target was chosen as opposed to a purely synthetic test vehicle, namely \gls{RTG}'s own \textit{\gls{Tachyon}}. The engine and its structure is further explained in \autoref{Tachyon}. \\
+The graphics API and library of choice for this thesis then is the Khronos Group's Vulkan. Vulkan is a low level graphics API officially created in 2014 and formally released in early 2016. It promises increased flexibility and reduced overhead compared to prior graphics APIs as well as compatibility with a wide range of hardware architectures and operating systems\cite{TheKhronosGroupInc..2016}. On the flipside, the verbose and low level nature of the API brings increased development effort and means that these promised improvements can only be leveraged with sufficient care and caution by developers. \\
+For the practical goal of this thesis Vulkan promises a good fit. Furthermore, Vulkan is seeing a steady growth in developer interest and industry adoption. But with documentation, resources and API-specific research still being lackluster. This thesis hopes to add useful insights to this pool. \\
+Lastly both Vulkan and the \gls{VR} optimizations presented here are not just compatible with powerful x86 desktop machines but also with many ARM-based SoCs running Google's Android as well as Apple's iOS, promising prospects for the category of standalone low power \gls{VR} headsets which are seeing increasing popularity\cite{AntonyVitillo.2018}\cite{IDCCorporateUSA.2020}. 
 
 
 
@@ -55,7 +56,7 @@ Still, precomputed visibility sets for weak devices are brought up, low res HI-Z
 4. Frustum Culling \cite{Gerlits.2017}: \\
 tldr code samples and brief performance numbers for bounding sphere, AABB, OBB based culling, SSE support, MT support, somewhat simple GPU culling. Sphere or AABB with SSE + MT support quite fast, 0.1-0.2ms for 100k objects on unspecified i5 quadcore.\\
 
-5. Dual-Cone View Culling for Virtual Reality Applications \cite{Hale.2018}: \\
+5. Dual-Cone View Culling for \gls{VR} Applications \cite{Hale.2018}: \\
 tldr not discernibly faster than frustum pyramid culling plus stencil mesh. Needs careful tuning for each HMD to avoid performing worse when a larger image is rendered and warped to view. With SIMD, more accurate cones etc may be more efficient.\\
 
 6. Culling Techniques \cite{ITCS.Subramanian}: \\
@@ -94,11 +95,11 @@ More:\\
 20. Visibility and Occlusion Culling \cite{EpicGamesInc..n.d.}.\\
 
 \subsection{Other conference talks}
-21. Advanced VR Rendering with Valve's Alex Vlachos (GDC'15) \cite{Vlachos.2016}.\\
-22. Advanced VR Rendering (GDC'16) \cite{Vlachos.2016b}.\\
+21. Advanced \gls{VR} Rendering with Valve's Alex Vlachos (GDC'15) \cite{Vlachos.2016}.\\
+22. Advanced \gls{VR} Rendering (GDC'16) \cite{Vlachos.2016b}.\\
 23. Practical Development for Vulkan (GDC'16) \cite{Ginsburg.2016}.\\
 24. Fast and Flexible: Technical Art and Rendering for The Unknown (VRDC'16) \cite{Answer.2016}.\\
-25. Bringing Vulkan to VR (DevU'17) \cite{Everitt.2017}.\\
+25. Bringing Vulkan to \gls{VR} (DevU'17) \cite{Everitt.2017}.\\
 
 \subsection{Culling aspects worth looking at}
 \textbf{Thus, things up in the air: }\\
@@ -131,7 +132,7 @@ Intel Software, Masked Occlusion Culling\\
 \item so far tested successfully with Valve Index, HTC Vive and Vive Pro, Samsung Odyssey 
 \item rendering features to be ported from discontinued Valkun project: 
 \begin{itemize}
-\item VR stencil mesh mask
+\item \gls{VR} stencil mesh mask
 \item OpenVR rendermodel readout 
 \end{itemize}
 \end{itemize}

@@ -3,6 +3,7 @@
 
 \chapter{Stereo Rendering Optimization - Effort reduction}
 This second chapter of optimization approaches targets the efficiency of rendering processes on the graphics chip itself. These approaches have little to no impact on CPU performance and tend to exploit and scale mostly with GPU power. 
+Note again that only a subset of the listed methods was implemented due to time constraints. 
 
 \section{Multiview stereo rendering}
 When rendering a stereo image using the naive method of simply going through the entire rendering pipeline once for each viewport, potentially a lot of computation is done twice with little or no change in data or parameters. 

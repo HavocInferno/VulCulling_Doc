@@ -3,14 +3,145 @@
 
 \chapter{Performance benchmark results} \label{results}
 Testing each combination of \textit{ON} and \textit{OFF} states of the four optimizations logically yields 16 permutations. This chapter aims to show the metrics declared in \autoref{bmark_metrics} for each permutation and explore causes and implications for those permutations that would reasonably be employed in an application. 
-To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} looks as follows: \\
+To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} looks as follows (\autoref{fig:bmark_baseline}): 
 
-\textcolor{red}{[TODO: baseline plot (tikz?)]}
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Baseline performance (all OFF, 10 run average)} \label{fig:bmark_baseline}
+  \end{center}
+\end{figure}
 
 While these performance numbers were recorded, the sensors of the RTX 2080 and i7 6700 were monitored using the tool \textit{HWiNFO64}. For the duration of the test, this tool attests utilization averages of 80\% for the GPU core, 37\% memory capacity, 32\% for the GPU memory controller and 20\% for the PCIe bus link. 
 For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
 
 \section{Individual impact}
 \textcolor{red}{[TODO]}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{MFFR ON performance (10 run average)} \label{fig:bmark_MFFR-ON}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{SMASK ON performance (10 run average)} \label{fig:bmark_SMASK-ON}
+  \end{center}
+\end{figure}
+
 \section{Combined and partially combined impact}
 \textcolor{red}{[TODO]}

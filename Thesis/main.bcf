@@ -2062,8 +2062,12 @@
     <bcf:citekey order="65">Vlachos.2016c</bcf:citekey>
     <bcf:citekey order="66">Vlachos.2016c</bcf:citekey>
     <bcf:citekey order="67">Vlachos.2016c</bcf:citekey>
-    <bcf:citekey order="68">Cleveland.2017</bcf:citekey>
-    <bcf:citekey order="69">Cleveland.2017</bcf:citekey>
+    <bcf:citekey order="68">NvidiaCorporation.2016</bcf:citekey>
+    <bcf:citekey order="69">Gallagher.2016</bcf:citekey>
+    <bcf:citekey order="70">Cleveland.2017</bcf:citekey>
+    <bcf:citekey order="71">Cleveland.2017</bcf:citekey>
+    <bcf:citekey order="80">NvidiaCorporation.2013</bcf:citekey>
+    <bcf:citekey order="81">NvidiaCorporation.2018</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

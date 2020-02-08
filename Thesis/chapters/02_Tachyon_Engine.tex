@@ -3,17 +3,17 @@
 
 \chapter{The \gls{RTG} \gls{Tachyon} Engine} \label{Tachyon}
 
-Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \textit{\gls{Tachyon}} was chosen. \textit{\gls{Tachyon}} uses a fully Vulkan based forward renderer (internally \gls{rtvklib}) with support for multiple viewports of various types, including an \gls{OpenVR}-based \gls{VR} path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule. The renderer integrates Vulkan version 1.1.85 and up and \gls{OpenVR} version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
+Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \gls{Tachyon} was chosen. \gls{Tachyon} uses a fully Vulkan based forward renderer (internally \gls{rtvklib}) with support for multiple viewports of various types, including an \gls{OpenVR}-based \gls{VR} path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule. The renderer integrates Vulkan version 1.1.85 and up and \gls{OpenVR} version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
 
 \section{Render setup} 
 As typical for the verbose nature of Vulkan, render initialization starts with the creation of all necessary basic Vulkan resources such as descriptors, descriptor sets, activation of a minimal set of Vulkan extensions and layers and device enumeration. 
-More specific to \codeword{\gls{rtvklib}}, multiple Vulkan pipelines are active by default:
+More specific to \gls{rtvklib}, multiple Vulkan pipelines are active by default:
 \begin{itemize}
 \item a material pipeline offering support for a Phong and a PBR shader as well as geometry and index buffers of arbitrary size
 \item a skybox pipeline with a simplified skybox shader
 \item a point cloud pipeline, primarily to allow rendering of LiDAR scan data
 \end{itemize}
-To facilitate rendering into multiple viewports, \textit{\gls{Tachyon}} uses the concept of render targets. Each render target can reference an arbitrary subset of pipelines and comes with its own set of Vulkan framebuffers, command buffers and render pass and its own virtual camera. 
+To facilitate rendering into multiple viewports, \gls{Tachyon} uses the concept of render targets. Each render target can reference an arbitrary subset of pipelines and comes with its own set of Vulkan framebuffers, command buffers and render pass and its own virtual camera. 
 Whenever any 3D object is to be loaded, \codeword{rtvklib} uses several manager classes to keep track of the various resource types needed for an object. There are managers for geometry, materials, textures and instances among other types. When an object is loaded, the former three hold the respective buffers. When an object is to be rendered, it first needs to be instanced, handled by the latter. An instance references the various geometry and materials of the original object again, but also holds data specific to individual objects in the virtual world, such as transforms or bounding geometry. 
 
 The renderer initialization also encompasses \gls{VR} through \gls{OpenVR}. Given a valid \gls{OpenVR} environment and \gls{HMD} is detected, a special render target is created with a Vulkan renderpass for multiple views and the respective resources. Resources include a framebuffer with one layer for each eye, created with the rendering resolution returned by \gls{OpenVR} after querying \codeword{IVRSystem::GetRecommendedRenderTargetSize()} and using 4x multisampling as is often recommended for \gls{VR} applications to minimize aliasing without obscene cost (see for example \cite{Vlachos.2015} p. 25f, \cite{Porter.2017}, \cite{Carmack.2016}, \cite{VisCircleGmbH.2018}, \cite{Pettit.2017}). 
@@ -28,7 +28,6 @@ After all startup and initialization is done, the engine's render loop executes 
   \includegraphics[width=0.9\textwidth]{pictures/Tachyon_VKRenderer_Update}
   \caption[VKRenderer's Update]{Renderer update function \textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_VKRenderer_Update}
 \end{figure} 
-
 \iffalse
 \begin{figure}[htb]
   \centering
@@ -66,6 +65,12 @@ If any of these updates and culling passes set a pipeline or command buffer stat
 
 \begin{figure}[htb]
   \centering
+  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
+  \caption[VKRenderer's RenderFrame]{Renderer frame render function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_VKRenderer_RenderFrame}
+\end{figure} 
+\iffalse
+\begin{figure}[htb]
+  \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
 void VKRenderer::RenderFrame()
@@ -84,20 +89,27 @@ void VKRenderer::RenderFrame()
   \end{tabular}
   \caption[VKRenderer's RenderFrame]{Renderer frame render function\textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_VKRenderer_RenderFrame}
 \end{figure}
+\fi
 
 \codeword{VKRenderer::RenderFrame()} prompts each render target to perform its per-frame rendering operations, be it regular monoscopic output for a traditional viewport or pose tracking and stereoscopic composition for a \gls{VR} target. 
 
 \subsection{VR render loop}
 The \gls{VR} render target's \codeword{RenderFrame()} function is rather straight-forward. 
-As long as the target and compositor are active, it updates the \gls{OpenVR} device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen \gls{OpenVR} compatible compositor on Windows systems. \\
+As long as the target and compositor are active, it updates the \gls{OpenVR} device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen \gls{OpenVR} compatible compositor on Windows systems. Note here, \gls{rtvklib}'s internal \gls{VR} render target class is also called \codeword{OpenVR} unfortunately but is not equivalent to the external \gls{OpenVR} library. Which of the two is meant in a given sentence is indicated by the formatting as showcased here. \\
 
 As the \gls{VR} view essentially moves constantly, its render target needs to update its Vulkan \codeword{VkCommandBuffer} every frame. This is done by setting the \codeword{mCommandBuffersInvalid} flag which has the renderer call \codeword{UpdateCommandBuffers()} which in turn prompts each render target to \codeword{RecordCommandBuffers()}. For each of the \gls{VR} render target's command buffers this is a simple loop through the \codeword{RecordDrawCommand()}s of the pipelines assigned to this render target between the Begin and End commands of the command buffer and render pass. The draw command recording function has the respective pipeline query the \codeword{InstanceManager} for its post-culling draw command set and writes the contained entries as \codeword{vkCmdDrawIndexedIndirect()} draw calls. 
 
 \begin{figure}[htb]
   \centering
+  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
+  \caption[VR render target's RecordCommandBuffers]{VR command buffer recording function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
+\end{figure} 
+\iffalse
+\begin{figure}[htb]
+  \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
-void \gls{OpenVR}::RecordCommandBuffers(uint32_t passId)
+void OpenVR::RecordCommandBuffers(uint32_t passId)
 {
 	for (uint32_t i = 0; i < mCommandBuffers.size(); ++i)
 	{
@@ -121,16 +133,23 @@ void \gls{OpenVR}::RecordCommandBuffers(uint32_t passId)
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[\gls{OpenVR} render target's RecordCommandBuffers]{\gls{OpenVR} command buffer recording function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
+  \caption[\codeword{OpenVR} render target's RecordCommandBuffers]{VR command buffer recording function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
 \end{figure}
+\fi
 
-Moreover, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, the \gls{VR} render target's \codeword{\gls{OpenVR}::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the \codeword{VR compositor} for presentation inside the headset. \\
+Moreover, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, the \gls{VR} render target's \codeword{OpenVR::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the VR compositor for presentation inside the headset. \\
 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
+  \caption[VR render target's RenderFrame]{VR frame render function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_OpenVR_RenderFrame}
+\end{figure} 
+\iffalse
 \begin{figure}[htb]
   \centering
   \begin{tabular}{c}
   \begin{lstlisting}[language=C++]
-void \gls{OpenVR}::RenderFrame()
+void OpenVR::RenderFrame()
 {
 	if (!mIsActive || !vr::VRCompositor())
 	{
@@ -162,7 +181,8 @@ void \gls{OpenVR}::RenderFrame()
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[\gls{OpenVR} render target's RenderFrame]{\gls{OpenVR} frame render function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RenderFrame}
+  \caption[\codeword{OpenVR} render target's RenderFrame]{VR frame render function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
+\fi
 
 \textcolor{red}{[TODO: overview illustration aka flowchart]}

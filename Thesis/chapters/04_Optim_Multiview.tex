@@ -51,20 +51,20 @@ For all submitted devices (892 at the time of writing) the database shows suppor
 \subsection{Estimated impact}
 Impact of this extension is highly dependent on the specific workload, the used graphics hardware and the renderer structure. \\
 Independent benchmark numbers are rare to find. In benchmarking the online racing simulation iRacing, Wolfgang Andermahr of ComputerBase GmbH attests a performance increase of between 14-21\% when testing on a Nvidia GTX 1060 and GTX 1080 at 5760 by 1080 pixels. While this is not a VR application, it gives a first impression of potential gains when rendering multiple viewports using hardware-accelerated multiview as is the case on these Pascal-based GPUs \cite{Andermahr.2016}.
-Similarly, Croteam's Karlo Jez shows significant CPU performance gains for software multiview using AMD's LiquidVR suite, reducing CPU frame time in Serious Sam VR from 9ms down to 7ms \cite{Jez.2017}. He specifically notes that this includes all stages of CPU rendering, even ones that are not connected to multiview, and adds that render command processing itself is halved from 4ms to 2ms by using software multiview. 
+Similarly, Croteam's Karlo Jez shows significant CPU performance gains for software multiview using AMD's LiquidVR suite, reducing CPU frame time in Serious Sam \gls{VR} from 9ms down to 7ms \cite{Jez.2017}. He specifically notes that this includes all stages of CPU rendering, even ones that are not connected to multiview, and adds that render command processing itself is halved from 4ms to 2ms by using software multiview. 
 Going further from traditional desktop rendering, Mozilla Corp. reports performance improvement of up to 40\% when using the multiview extension for WebGL in a CPU-bound test application \cite{Serrano.2019}. 
 
 Overall this gives inconsistent performance expectations, but it does provide a trend. It stands to reason that with rising CPU load and increasing number of virtual viewports, multiview rendering offers significant performance improvement in the double digit range. 
 
 \subsection{Implementation specifics}
 In Vulkan specifically, multiview is enabled through the \codeword{VK_KHR_multiview} extension. This extension's availability on the target hardware can be queried and if available, the individual hardware-dependent implementation is abstracted by Vulkan. \\
-In the \textit{\gls{Tachyon}} implementation of multiview, the following changes to the render loop are introduced: 
+In the \gls{Tachyon} implementation of multiview, the following changes to the render loop are introduced: 
 \begin{itemize}
-\item The VR render target adds \codeword{VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2} to the required instance extensions and \codeword{VK_KHR_MULTIVIEW} to the required device extensions during Vulkan instance and device creation at startup
-\item the previously separate per-eye VR render passes are merged into a single render pass
-\item this VR render pass incorporates the multiview pNext extension using a view mask and correlation mask of 0x11, with each of those bits representing one of the eyes
+\item The \gls{VR} render target adds \codeword{VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2} to the required instance extensions and \codeword{VK_KHR_MULTIVIEW} to the required device extensions during Vulkan instance and device creation at startup
+\item the previously separate per-eye \gls{VR} render passes are merged into a single render pass
+\item this \gls{VR} render pass incorporates the multiview pNext extension using a view mask and correlation mask of 0x11, with each of those bits representing one of the eyes
 \item the Frustum Culling pass combines the two frustum checks with an early accept and outputs a merged set of draw call information
 \item the second command buffer recording - previously intended for the second eye - in \codeword{OpenVR::RecordCommandBuffers()} is cut out as multiview render passes can only take a single unified set of command buffers
 \item the underlying GLSL shader is modified to pick camera parameters based not only on a given camera index, but also the implicit \codeword{gl_viewIndex} as Vulkan multiview uses this integer to index the current viewport
 \end{itemize}
-The VR render target's framebuffer, color attachment and depth attachment are already set up as dual-layered buffers which makes them readily compatible with multiview render passes. With these changes, the \textit{\gls{Tachyon}} renderer is fully switched over to single pass stereo rendering. 
+The \gls{VR} render target's framebuffer, color attachment and depth attachment are already set up as dual-layered buffers which makes them readily compatible with multiview render passes. With these changes, the \gls{Tachyon} renderer is fully switched over to single pass stereo rendering. 

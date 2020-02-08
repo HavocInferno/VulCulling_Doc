@@ -31,23 +31,23 @@ To get a frame of reference for any potential performance improvement - or degra
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
                 
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{Baseline performance (all OFF, 10 run average)} \label{fig:bmark_baseline}
+    \caption{baseline/all OFF performance (10 run average)} \label{fig:bmark_baseline}
   \end{center}
 \end{figure}
 
@@ -83,19 +83,19 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
@@ -129,23 +129,115 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
               
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
     \caption{SMASK ON performance (10 run average)} \label{fig:bmark_SMASK-ON}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{SFRUST ON performance (10 run average)} \label{fig:bmark_SFRUST-ON}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{MVIEW ON performance (10 run average)} \label{fig:bmark_MVIEW-ON}
   \end{center}
 \end{figure}
 

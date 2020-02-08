@@ -5,7 +5,7 @@
 The following chapter of optimization approaches targets the efficiency of rendering processes on the graphics chip itself. These approaches have little to no impact on CPU performance and tend to exploit and scale mostly with GPU power. 
 Note again that only a subset of the listed methods was implemented due to time constraints. 
 
-\section{Multiview stereo rendering}
+\section{Multiview stereo rendering} \label{MV_Stereo}
 When rendering a stereo image using the naive method of simply going through the entire rendering pipeline once for each viewport, potentially a lot of computation is done twice with little or no change in data or parameters. 
 With the general graphics pipeline (\autoref{fig:Gfx_pipeline}) in mind, it is clear that for example the vertex stage will see very little change in output as geometry and index buffers are largely the same between multiple stereo viewport passes with only minor shifts in the view matrices. Similarly, the geometry stage is commonly not dependent on specific eye data and as such it would be a waste to process with the same data twice. Once the rasterizer stage of the pipeline is reached, the situation changes as stereo separation means the two images have notably different content and work from one can not realistically be recycled in the other. 
 

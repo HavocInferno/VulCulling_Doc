@@ -3,7 +3,7 @@
 
 \chapter{The \gls{RTG} \gls{Tachyon} Engine} \label{Tachyon}
 
-Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \textit{\gls{Tachyon}} was chosen. \textit{\gls{Tachyon}} uses a fully Vulkan based forward renderer (internally called \codeword{\gls{rtvklib}}) with support for multiple viewports of various types, including an \gls{OpenVR}-based \gls{VR} path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule. The renderer integrates Vulkan version 1.1.85 and up and \gls{OpenVR} version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
+Rendering optimizations can only be implemented if there actually is a renderer at hand. In order to see how the chosen approaches would perform in an engine intended for productive use and industrial applications, rather than an ad hoc renderer only built for some specific tests, \textit{\gls{Tachyon}} was chosen. \textit{\gls{Tachyon}} uses a fully Vulkan based forward renderer (internally \gls{rtvklib}) with support for multiple viewports of various types, including an \gls{OpenVR}-based \gls{VR} path, an optional physically-based shader pipeline, a user interface module, a network module and a physics module with more extensions on the development schedule. The renderer integrates Vulkan version 1.1.85 and up and \gls{OpenVR} version 1.4.18 and up with support for all major SteamVR headsets at the time of writing, including roomscale tracking of the Valve Index, HTC Vive and Vive Pro, the Windows Mixed Reality series and Oculus Rift series. 
 
 \section{Render setup} 
 As typical for the verbose nature of Vulkan, render initialization starts with the creation of all necessary basic Vulkan resources such as descriptors, descriptor sets, activation of a minimal set of Vulkan extensions and layers and device enumeration. 
@@ -121,10 +121,10 @@ void \gls{OpenVR}::RecordCommandBuffers(uint32_t passId)
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[\gls{OpenVR} render target's RecordCommandBuffers]{\gls{OpenVR} command buffer recording function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_\gls{OpenVR}_RecordCommandBuffers}
+  \caption[\gls{OpenVR} render target's RecordCommandBuffers]{\gls{OpenVR} command buffer recording function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
 \end{figure}
 
-Moreover, as seen in \autoref{fig:lst_\gls{OpenVR}_RenderFrame}, the \gls{VR} render target's \codeword{\gls{OpenVR}::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the \codeword{VR compositor} for presentation inside the headset. \\
+Moreover, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, the \gls{VR} render target's \codeword{\gls{OpenVR}::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the \codeword{VR compositor} for presentation inside the headset. \\
 
 \begin{figure}[htb]
   \centering
@@ -162,7 +162,7 @@ void \gls{OpenVR}::RenderFrame()
 }
 	\end{lstlisting}
   \end{tabular}
-  \caption[\gls{OpenVR} render target's RenderFrame]{\gls{OpenVR} frame render function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR}_RenderFrame}
+  \caption[\gls{OpenVR} render target's RenderFrame]{\gls{OpenVR} frame render function \textcolor{red}{[TODO: move to appendix, replace with compact flowchart]}}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure}
 
 \textcolor{red}{[TODO: overview illustration aka flowchart]}

@@ -1,5 +1,38 @@
 % refer to https://en.wikibooks.org/wiki/LaTeX/Glossary for acronyms and glossary entries
 
+\newglossaryentry{VR}
+{
+  name=VR,
+  text=VR,
+  description={Yeet VR dab}, 
+  sort=V
+}
+
+\newglossaryentry{HMD}
+{
+  name=HMD,
+  text=HMD,
+  description={head mounted display}, 
+  plural=HMDs, 
+  sort=H
+}
+
+\newglossaryentry{SDE}
+{
+  name=SDE,
+  text=SDE,
+  description={screen door effect}, 
+  sort=S
+}
+
+\newglossaryentry{WMR}
+{
+  name=WMR,
+  text=WMR,
+  description={Windows Mixed Reality, a moniker for \gls{VR} headset specifications coined by Microsoft Corporation}, 
+  sort=W
+}
+
 \newglossaryentry{RTG}
 {
   name=RTG,
@@ -21,7 +54,7 @@
   name=rtvklib,
   text=rtvk library,
   description={\gls{RTG} Vulkan library}, 
-  sort=R
+  sort=r
 }
 
 \newglossaryentry{OpenVR}
@@ -32,22 +65,15 @@
   sort=O
 }
 
-\newacronym[shortplural={VR}]{VRa}{VR}
-{virtual reality}
-
-\newacronym[shortplural={HMDs}, longplural={head mounted displays}]{HMDa}{HMD}
-{head mounted display}
-
-\newacronym[shortplural={SDE}]{SDEa}{SDE}
-{screen door effect}
-
-\newacronym[shortplural={VR}]{WMRa}{WMR}
-{Windows Mixed Reality, a moniker for \gls{VR} headset specifications coined by Microsoft Corporation}
 
 
 
 
 
+
+
+
+\iffalse
 \newacronym[shortplural={D$_{\text{dye}}$}, longplural={donor dye, ex. Alexa 488}]{ddye}{D$_{\text{dye}}$}{donor dye, ex. Alexa 488}
 
 \newacronym[description={\glslink{r0}{F\"{o}rster distance}}]{R0}{$R_{0}$}{F\"{o}rster distance}
@@ -85,3 +111,4 @@
                stores and manipulates data, and provides
                output in a useful format}
 }
+\fi

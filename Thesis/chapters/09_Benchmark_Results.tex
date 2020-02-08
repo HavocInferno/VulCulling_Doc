@@ -33,18 +33,18 @@ To get a frame of reference for any potential performance improvement - or degra
         % the .csv file (on top)
         table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
+                
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
         table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
-        
-        \addplot 
-        % add a plot from table; you select the columns by using the actual name in
-        % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{GPU only}
       \end{axis}
     \end{tikzpicture}
     \caption{Baseline performance (all OFF, 10 run average)} \label{fig:bmark_baseline}
@@ -89,17 +89,17 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        \addlegendentry{Culling only}
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        \addlegendentry{GPU only}
+        table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{MFFR ON performance (10 run average)} \label{fig:bmark_MFFR-ON}
+    \caption{\gls{MFFR} ON performance (10 run average)} \label{fig:bmark_MFFR-ON}
   \end{center}
 \end{figure}
 
@@ -131,18 +131,18 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         % the .csv file (on top)
         table[x=frameindex,y=frametime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
         table[x=frameindex,y=culltime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
-        
-        \addplot 
-        % add a plot from table; you select the columns by using the actual name in
-        % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{GPU only}
       \end{axis}
     \end{tikzpicture}
     \caption{SMASK ON performance (10 run average)} \label{fig:bmark_SMASK-ON}

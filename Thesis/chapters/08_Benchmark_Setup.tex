@@ -6,7 +6,7 @@ As can be gathered from the previous chapters, the optimizations implemented in 
 \begin{itemize}
 \item Superfrustum Culling
 \item (vendor agnostic) Multiview Stereo Rendering
-\item HMD-matched Stencil Mask
+\item \gls{HMD}-matched Stencil Mask
 \item Monoscopic Far-Field Rendering
 \end{itemize}
 
@@ -66,13 +66,13 @@ The second machine, further titled \textbf{WS-Small}, is specified as:
 \item Storage: ADATA SSD SX6000 Pro 500GB
 \item OS: Microsoft Windows 10 Pro x64 1909
 \end{itemize} 
-Furthermore, the following virtual reality headsets were available in the respective capacity:
+Furthermore, the following virtual reality headsets were available with the respective resolution setting and in the respective capacity:
 \begin{itemize}
-\item Valve Index - \textbf{WS-Big} performance measurements, functionality verification
-\item HTC Vive - \textbf{WS-Big} functionality verification
-\item HTC Vive Pro - \textbf{WS-Big} functionality verification
-\item Oculus Rift CV1 - \textbf{WS-Big} functionality verification
-\item Samsung Odyssey - \textbf{WS-Small} performance measurements, functionality verification
+\item Valve Index (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} performance measurements, functionality verification
+\item HTC Vive (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} functionality verification
+\item HTC Vive Pro (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} functionality verification
+\item Oculus Rift CV1 (1344x1600 pixels) - \textbf{WS-Big} functionality verification
+\item Samsung Odyssey (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Small} performance measurements, functionality verification
 \end{itemize} 
 To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 100 and 99\% respectively, which effectively disables singlecore turbo boost and speedshift and fixates the frequency at the allcore boost multiplier of 37x for 3.7GHz allcore. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. \\
 Keeping GPU clock speeds at the same level for all test runs is harder to achieve as all modern graphics cards employ some version of dynamic boosting algorithms based on temperature, power target, voltage target and usage. The Radeon RX 580 is set to target a maximum of 1200MHz boost frequency via a VBIOS modification that disables higher automatic boost, and during core load it maintains this target stable unless the power target of 100 Watts is exceeded. 

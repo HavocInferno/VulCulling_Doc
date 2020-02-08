@@ -55,9 +55,9 @@ While these performance numbers were recorded, the sensors of the RTX 2080 and i
 For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
 
 \section{Individual impact}
-\textcolor{red}{[TODO]}
+\textcolor{red}{[TODO: discussion of each, also why I omit MFFR for remaining permutations]}
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -103,7 +103,7 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
   \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -149,7 +149,7 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
   \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -195,7 +195,7 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
   \end{center}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -242,7 +242,7 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
 \end{figure}
 
 \subsubsection{Comparison of optimizations (individual use)}
-\begin{figure}[h!]
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -293,6 +293,168 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
       \end{axis}
     \end{tikzpicture}
     \caption{comparison (Whole frame time)} \label{fig:bmark_singles_comp}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=500,
+          ymax=3500,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        %                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (CPU time)} \label{fig:bmark_singles_comp}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=500,
+          ymax=3500,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        %                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (Cull time)} \label{fig:bmark_singles_comp}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=4000,
+          ymax=14000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        %                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+                \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (GPU time)} \label{fig:bmark_singles_comp}
   \end{center}
 \end{figure}
 

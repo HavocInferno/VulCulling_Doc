@@ -7,7 +7,12 @@ The following results are measured on \textbf{WS-Big} unless otherwise specified
 
 The plot of draw call count submissions during the test run looks as \autoref{fig:bmark_drawcalls} and is identical for every subsequent test using the respective optimization due to the synthetic construction of the benchmark. Thus any otherwise observed performance impact barring error margins stems from changes in execution approach owing to active optimizations. Draw call lists in \gls{rtvklib} are built during frustum culling and as such should only change with the number of frusta used, meaning there are differences in draw call count expected between Superfrustum \textit{ON} and \textit{OFF} and MFFR \textit{ON} and \textit{OFF}. Superfrustum roughly halves draw call count compared to baseline which is expected considering each eye uses the same draw call list instead of separate and slightly different lists. MFFR differences are explored in \autoref{individual_impact} as they do not follow expectations. 
 
-\begin{figure}[h!]
+\subsubsection{Baseline}
+To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} is shown in \autoref{fig:bmark_baseline}). 
+While these performance numbers were recorded, the sensors of the RTX 2080 and i7 6700 were monitored using the tool \textit{HWiNFO64}. For the duration of the baseline test, this tool attests utilization averages of 80\% for the GPU core, 37\% memory capacity, 32\% for the GPU memory controller and 20\% for the PCIe bus link. 
+For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
+
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -53,10 +58,8 @@ The plot of draw call count submissions during the test run looks as \autoref{fi
   \end{center}
 \end{figure}
 
-\subsubsection{Baseline}
-To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} looks as follows (\autoref{fig:bmark_baseline}): 
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -101,9 +104,6 @@ To get a frame of reference for any potential performance improvement - or degra
     \caption{baseline/all OFF performance (10 run average)} \label{fig:bmark_baseline}
   \end{center}
 \end{figure}
-
-While these performance numbers were recorded, the sensors of the RTX 2080 and i7 6700 were monitored using the tool \textit{HWiNFO64}. For the duration of the test, this tool attests utilization averages of 80\% for the GPU core, 37\% memory capacity, 32\% for the GPU memory controller and 20\% for the PCIe bus link. 
-For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
 
 \section{Individual impact} \label{individual_impact}
 Looking at the performance of each individual optimization by itself gives an idea of potential bottlenecks and a good reference for each metric to refer back to in the comparisons and more detailed discussion in \autoref{singles_comp}. \\

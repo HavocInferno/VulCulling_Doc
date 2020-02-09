@@ -197,12 +197,13 @@ As such, the configuration of Stereo Multiview \textit{ON}, Stencil Masking \tex
 
 Considering all these results, the most viable optimizations to employ are as follows: 
 \begin{itemize}
-\item SMASK: 
-\item MVIEW: 
-\item SMASK \& MVIEW: 
-\item SFRUST \& MVIEW: 
-\item SMASK \& SFRUST \& MVIEW: 
+\item Stencil Masking (SMASK) lends itself as a quickly implemented and lightweight way of gaining a moderate pixel shader performance boost, only requiring a single 8 bit framebuffer layer per eye at most
+\item Stereo Multiview (MVIEW), while reliant on GPU and API support and thus only available on more recent architectures - and only accelerated in hardware on very modern chipsets such as the RTX 2080 used here - , can yield significant gains with little to no other significant tradeoff
+\item Stereo Multiview and Stencil Masking naturally promises to be a synergetic combination of approaches with no major downside
+\item Stereo Multiview and Superfrustum (SFRUST) Culling can be combined for good results, but may only scale favorably if the target system is constrained in culling performance so the savings afforded by the Superfrustum outweigh the slight increase in GPU load
+\item Combining all three of these optimizations is subject to the same restriction as Multiview plus Superfrustum but the addition of Stencil Masking in this case can regain if not overcome the Superfrustum GPU performance loss
 \end{itemize}
+Other optimization combinations presented up to this point are either non-sensical such as Superfrustum Culling without Multiview acceleration which results in too high a loss in GPU performance or are functionally defective in the case of \gls{MFFR} combinations in the state implemented for this thesis. However, further work and improvement on the latter is expected to return positive gains given adequate virtual environments. 
 
 \begin{table}[H]
   \caption[Median/avg timings for frame/gpu/cull for baseline and combined optimizations]{Median and average (arithmetic mean) timings for frametime, gpu-time and cull-time for baseline and combined optimizations (rounded to two decimal places)}\label{tab:combined_medians}

@@ -62,7 +62,7 @@ Outfitting \gls{Tachyon} for stencil masking required the addition of the entire
 Rendering the stencil mask itself at startup is done as follows: 
 OpenVR by now has some helper functions for masking built in, such as the \codeword{GetHiddenAreaMesh(EVREye eEye)} function that returns a screenspace-normalized list of vertices representing the ideal mask mesh for the current HMD if available to OpenVR. Exceptions apply, as the API does not contain mask definitions for all headsets. As an example, the mesh query returns an empty list for the Oculus Rift CV1 as seen in \autoref{fig:empty_mask}. With this in mind, the main benefit is the simplicity of getting a fitted mask for most HMDs instead of either approximating with circular masks or going through the trouble of manually creating fitted meshes for existing and upcoming OpenVR-enabled headsets. For exception cases a fast circular approximation mask may be an adequate compromise. \\
 \gls{Tachyon} queries OpenVR for the mesh of each eye, converts the vertex lists into a renderer-compatible vertex format and writes out a vertex and index buffer each. 
-At the end of the \gls{VR} render pass, an ad-hoc command buffer is recorded and submitted to render the two masks into the \gls{VR} framebuffer's depth attachment's stencil layer. The \codeword{VK_IMAGE_ASPECT_STENCIL_BIT} is set to ensure only that layer is written to. \\
+At the end of the \gls{VR} render pass, an ad-hoc command buffer is recorded and submitted to render the two masks into the \gls{VR} framebuffer's depth attachment's stencil layer. The \codeword{VK_IMAGE_ASPECT_STENCIL_BIT} is set to ensure only that layer is written to. 
 
 \begin{figure}[h]
   \centering

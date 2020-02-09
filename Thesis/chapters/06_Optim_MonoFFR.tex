@@ -80,7 +80,7 @@ As such, the \gls{rtvklib} \gls{MFFR} implementation as presented here remains b
 
 \subsection{\gls{MFFR} Variant: Depth Shift}  \label{MFFR_depthshift}
 In its basic version \gls{MFFR} as described in \autoref{MFFR} completely foregoes separation beyond the split distance and as such the split distance has to be set relatively far back to minimize the visual inaccuracy. Naturally, an attempt to try and reduce that split distance closer to the camera is by artificially and cheaply increasing that accuracy again. One such way is to use the data already contained in the framebuffer's depth layer during rendering. As stereo separation is mostly dependent on depth, given the object itself and its properties are known, an improvement is to approximate small amounts of separation based on that depth buffer. Instead of simply copying or sampling the far image to both eyes after the far field pass, one can do an additional sampling or post-processing pass which includes slightly shifting pixels according to the depth value of the respective given fragment. \\
-This interpolation should allow pulling the field split distance closer to the camera and save some stereo render time, but it is unclear whether the savings outweigh the additional processing cost and this thesis does not explore \gls{MFFR} beyond the base variant. \\
+This interpolation should allow pulling the field split distance closer to the camera and save some stereo render time, but it is unclear whether the savings outweigh the additional processing cost and this thesis does not explore \gls{MFFR} beyond the base variant. 
 
 \iffalse
 \textcolor{red}{[TODO: shift math or geometric illustration]}

@@ -193,7 +193,16 @@ To get an even better understanding of how each of these four configurations sta
 Due to the established negative impact on GPU times of Superfrustum use without Multiview rendering, the combination of Stencil Masking and Superfrustum just barely outperforms the baseline overall (\autoref{fig:bmark_combined_whole}), by a lower margin (median 4.3\% and avg 3.8\% vs 4.5\% and 4.3\%) than Stencil Masking on its own. Any combination involving Stereo Multiview leads to significant improvement as expected. Interestingly, however, combining Multiview with the Superfrustum performs worse compared to just Multiview on its own by a small margin (\autoref{fig:bmark_MVIEW_vs_MVIEWSFRUST}). \\
 When it comes to best overall performance, the combinations of Multiview with Stencil Masking and of Multiview with Stencil Masking and Superfrustum are close together, but the former surprisingly comes out ahead by a small margin. It appears the small amount of blind volume of the Superfrustum compared to the separata frusta affords a small advantage in cull time but trades it for a minor increase in GPU rendering load. 
 CPU time benchmarks in \autoref{fig:bmark_combined_CPU} mirror the results already seen for the individual impacts with Superfrustum improving on the baseline by a noticeable margin and any Multiview configuration extending this lead even more. Cull time also shows a similar story to \autoref{singles_comp} with Superfrustum and Multiview configurations being effectively on par, underlined by the near-identical cull time medians/averages in \autoref{tab:combined_medians}. The combination of Superfrustum with Multiview yields another miniscule cull time improvement but once more trades it for increased GPU rendering load as seen in \autoref{fig:bmark_combined_GPU}. \\
-As such, the configuration of Stereo Multiview \textit{ON}, Stencil Masking \textit{ON}, Superfrustum \textit{OFF} and \gls{MFFR} \textit{OFF} performs the best on the used machine with a median frametime reduction of 23.7\% and average reduction of 24.4\%. Expressed inversely as framerate, this equals a boost from 88.57fps median and 85.11fps average to 116.14fps (+31.1\%) and 112.61fps (+32.3\%) respectively. 
+As such, the configuration of Stereo Multiview \textit{ON}, Stencil Masking \textit{ON}, Superfrustum \textit{OFF} and \gls{MFFR} \textit{OFF} performs the best on the used machine with a median frametime reduction of 23.7\% and average reduction of 24.4\%. Expressed inversely as framerate, this equals a boost from 88.57fps median and 85.11fps average to 116.14fps (+31.1\%) and 112.61fps (+32.3\%) respectively. \\
+
+Considering all these results, the most viable optimizations to employ are as follows: 
+\begin{itemize}
+\item SMASK: 
+\item MVIEW: 
+\item SMASK \& MVIEW: 
+\item SFRUST \& MVIEW: 
+\item SMASK \& SFRUST \& MVIEW: 
+\end{itemize}
 
 \begin{table}[H]
   \caption[Median/avg timings for frame/gpu/cull for baseline and combined optimizations]{Median and average (arithmetic mean) timings for frametime, gpu-time and cull-time for baseline and combined optimizations (rounded to two decimal places)}\label{tab:combined_medians}

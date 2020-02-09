@@ -12,7 +12,7 @@ With the general graphics pipeline (\autoref{fig:Gfx_pipeline}) in mind, it is c
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/vulkan_simplified_pipeline_L}
-  \caption{Simplified graphics pipeline of a modern GPU\cite{Overvoorde.}} \label{fig:Gfx_pipeline}
+  \caption{Simplified graphics pipeline of a modern GPU (from \cite{Overvoorde.}, A. Overvoorde)} \label{fig:Gfx_pipeline}
 \end{figure}
 
 An optimization exploiting this is called multiview stereo rendering. It very quickly surfaced as an idea after the introduction of the Nvidia Geforce 8 and ATi Radeon HD 2000 series in 2006 and 2007 brought unified shader architectures to the mass market \cite{Lindholm.2008}\cite{Sommefeldt.2007}. Prior architectures relied on separate vertex and pixel shader units with relatively fixed capabilities and few ways to share data. Fully programmable shader units then allowed more customizable and efficient pipeline usage necessary for multiview to show any benefit. 

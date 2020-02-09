@@ -1,0 +1,84 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+
+
+\begin{landscape}
+\section{All-Combinations Comparison}
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=4000,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+        
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& MVIEW}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST \& MVIEW}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (Whole frame time)} \label{fig:bmark_combined_whole}
+  \end{center}
+\end{figure}
+\end{landscape}

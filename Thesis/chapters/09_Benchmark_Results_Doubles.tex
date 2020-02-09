@@ -1,11 +1,10 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
-\chapter{Performance benchmark results} \label{results}
-Testing each combination of \textit{ON} and \textit{OFF} states of the four optimizations logically yields 16 permutations. This chapter aims to show the metrics declared in \autoref{bmark_metrics} for each permutation and explore causes and implications for those permutations that would reasonably be employed in an application. 
-To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} looks as follows (\autoref{fig:bmark_baseline}): 
+\section{Combined impact}
+Next, the possible combination of multiple optimizations is examined. Similar to the individual benchmarks, Stencil Masking tightens framepacing by a small margin (\autoref{fig:bmark_SMASK_SFRUST} \& \autoref{fig:bmark_SMASK_MVIEW}) while Superfrustum use cancels out its CPU gains. Unless, that is, the Superfrustum is combined with Multiview rendering in \autoref{fig:bmark_SFRUST_MVIEW}, in which case it results in a minor reduction in cull time barely beating Multiview's own multi-frustum optimization. The two configurations of Stereo Multiview with Stencil Masking and either Superfrustum \textit{ON} or \textit{OFF} (\autoref{fig:bmark_SMASK_MVIEW} \& \autoref{fig:bmark_SMASK_SFRUST_MVIEW}) showcase the greatest promise in overall frame time and GPU render time. 
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -31,79 +30,27 @@ To get a frame of reference for any potential performance improvement - or degra
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
                 
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{baseline/all OFF performance (10 run average)} \label{fig:bmark_baseline}
+    \caption{SMASK \& SFRUST ON performance (10 run average)} \label{fig:bmark_SMASK_SFRUST}
   \end{center}
 \end{figure}
 
-While these performance numbers were recorded, the sensors of the RTX 2080 and i7 6700 were monitored using the tool \textit{HWiNFO64}. For the duration of the test, this tool attests utilization averages of 80\% for the GPU core, 37\% memory capacity, 32\% for the GPU memory controller and 20\% for the PCIe bus link. 
-For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
-
-\section{Individual impact}
-\textcolor{red}{[TODO: discussion of each, also why I omit MFFR for remaining permutations]}
-
-\begin{figure}[h]
-  \begin{center}
-    \begin{tikzpicture}
-      \begin{axis}[
-          width=\linewidth, % Scale the plot to \linewidth
-          height=0.5\linewidth,
-          grid=major, 
-          grid style={dashed,gray!30},
-          %legend style={at={(0.5,-0.2)},anchor=north},
-          legend cell align={left},
-          legend columns=3,
-          legend style={at={(1,1.11)},anchor=north east},
-          xmin=0,
-          xmax=5400,
-          xlabel=Frame Index, % Set the labels
-          x tick label style={rotate=90,anchor=east},
-          ymin=0,
-          ymax=30000, %16000
-          ylabel=time in milliseconds,
-          ylabel near ticks,
-          scaled y ticks={real:1000},
-          ytick scale label code/.code={}
-        ]
-        \addplot 
-        % add a plot from table; you select the columns by using the actual name in
-        % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        \addlegendentry{Whole frame}
-        
-        \addplot 
-        % add a plot from table; you select the columns by using the actual name in
-        % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        \addlegendentry{GPU only}
-        
-        \addplot 
-        % add a plot from table; you select the columns by using the actual name in
-        % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        \addlegendentry{Culling only}
-      \end{axis}
-    \end{tikzpicture}
-    \caption{\gls{MFFR} ON performance (10 run average)} \label{fig:bmark_MFFR-ON}
-  \end{center}
-\end{figure}
-
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -129,27 +76,27 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
-              
+                
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{SMASK ON performance (10 run average)} \label{fig:bmark_SMASK-ON}
+    \caption{SMASK \& MVIEW ON performance (10 run average)} \label{fig:bmark_SMASK_MVIEW}
   \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -175,27 +122,27 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
-              
+                
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{SFRUST ON performance (10 run average)} \label{fig:bmark_SFRUST-ON}
+    \caption{SFRUST \& MVIEW ON performance (10 run average)} \label{fig:bmark_SFRUST_MVIEW}
   \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -221,28 +168,54 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Whole frame}
-              
+                
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{GPU only}
         
         \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{Culling only}
       \end{axis}
     \end{tikzpicture}
-    \caption{MVIEW ON performance (10 run average)} \label{fig:bmark_MVIEW-ON}
+    \caption{SMASK \& SFRUST \& MVIEW ON performance (10 run average)} \label{fig:bmark_SMASK_SFRUST_MVIEW}
   \end{center}
 \end{figure}
 
-\subsubsection{Comparison of optimizations (individual use)}
-\begin{figure}[h]
+\subsection{Comparison of combined optimizations}
+To get an even better understanding of how each of these four configurations stack up against each other and against the baseline, another set of comparison plots is examined. 
+Due to the established negative impact on GPU times of Superfrustum use without Multiview rendering, the combination of Stencil Masking and Superfrustum just barely outperforms the baseline overall (\autoref{fig:bmark_combined_whole}), by a lower margin (median 4.3\% and avg 3.8\% vs 4.5\% and 4.3\%) than Stencil Masking on its own. Any combination involving Stereo Multiview leads to significant improvement as expected. Interestingly, however, combining Multiview with the Superfrustum performs worse compared to just Multiview on its own by a small margin (\autoref{fig:bmark_MVIEW_vs_MVIEWSFRUST}). \\
+When it comes to best overall performance, the combinations of Multiview with Stencil Masking and of Multiview with Stencil Masking and Superfrustum are close together, but the former surprisingly comes out ahead by a small margin. It appears the small amount of blind volume of the Superfrustum compared to the separata frusta affords a small advantage in cull time but trades it for a minor increase in GPU rendering load. 
+CPU time benchmarks in \autoref{fig:bmark_combined_CPU} mirror the results already seen for the individual impacts with Superfrustum improving on the baseline by a noticeable margin and any Multiview configuration extending this lead even more. Cull time also shows a similar story to \autoref{singles_comp} with Superfrustum and Multiview configurations being effectively on par, underlined by the near-identical cull time medians/averages in \autoref{tab:combined_medians}. The combination of Superfrustum with Multiview yields another miniscule cull time improvement but once more trades it for increased GPU rendering load as seen in \autoref{fig:bmark_combined_GPU}. \\
+As such, the configuration of Stereo Multiview \textit{ON}, Stencil Masking \textit{ON}, Superfrustum \textit{OFF} and \gls{MFFR} \textit{OFF} performs the best on the used machine with a median frametime reduction of 23.7\% and average reduction of 24.4\%. Expressed inversely as framerate, this equals a boost from 88.57fps median and 85.11fps average to 116.14fps (+31.1\%) and 112.61fps (+32.3\%) respectively. 
+
+\begin{table}[H]
+  \caption[Median/avg timings for frame/gpu/cull for baseline and combined optimizations]{Median and average (arithmetic mean) timings for frametime, gpu-time and cull-time for baseline and combined optimizations (rounded to two decimal places)}\label{tab:combined_medians}
+  \centering
+  \begin{tabular}{l || S S | S S | S S}
+    \toprule
+  	\multirow{2}{*}{Config} & 
+  		\multicolumn{2}{c}{frame} & 
+  		\multicolumn{2}{c}{gpu} & 
+  		\multicolumn{2}{c}{cull} \\
+       & {median} & {avg} & {median} & {avg} & {median} & {avg} \\
+    \midrule
+      baseline 	& 11.29 & 11.75 & 9.06 & 9.36 & 1.97 & 2.04 \\
+      SMASK \& SFRUST 	& 10.80 & 11.30 & 8.93 & 9.25 & 1.66 & 1.72 \\
+      SMASK \& MVIEW 	& 8.61 & 8.88 & 6.84 & 6.95 & 1.65 & 1.70 \\
+      SFRUST \& MVIEW	& 9.30 & 9.62 & 7.54 & 7.72 & 1.60 & 1.66 \\
+      SMASK \& SFRUST \& MVIEW 	& 8.80 & 9.07 & 7.05 & 7.15 & 1.62 & 1.69 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -258,7 +231,7 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
           xmax=5400,
           xlabel=Frame Index, % Set the labels
           x tick label style={rotate=90,anchor=east},
-          ymin=6000,
+          ymin=4000,
           ymax=16000,
           ylabel=time in milliseconds,
           ylabel near ticks,
@@ -270,33 +243,37 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         % the .csv file (on top)
         table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{all OFF}
-        %                \addplot 
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        %\addlegendentry{MFFR ON}
-                \addplot 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SFRUST only}
-                \addplot 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SMASK only}
-                \addplot 
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{MVIEW only}
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST \& MVIEW}
       \end{axis}
     \end{tikzpicture}
-    \caption{comparison (Whole frame time)} \label{fig:bmark_singles_comp}
+    \caption{comparison (Whole frame time)} \label{fig:bmark_combined_whole}
   \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -312,8 +289,8 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
           xmax=5400,
           xlabel=Frame Index, % Set the labels
           x tick label style={rotate=90,anchor=east},
-          ymin=500,
-          ymax=3500,
+          ymin=1000,
+          ymax=4000,
           ylabel=time in milliseconds,
           ylabel near ticks,
           scaled y ticks={real:1000},
@@ -324,33 +301,37 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         % the .csv file (on top)
         table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{all OFF}
-        %                \addplot 
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        %\addlegendentry{MFFR ON}
-                \addplot 
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SFRUST only}
-                \addplot 
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SMASK only}
-                \addplot 
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{MVIEW only}
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST \& MVIEW}
       \end{axis}
     \end{tikzpicture}
-    \caption{comparison (CPU time)} \label{fig:bmark_singles_comp}
+    \caption{comparison (CPU time)} \label{fig:bmark_combined_CPU}
   \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -378,33 +359,37 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         % the .csv file (on top)
         table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{all OFF}
-        %                \addplot 
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        %\addlegendentry{MFFR ON}
-                \addplot 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SFRUST only}
-                \addplot 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SMASK only}
-                \addplot 
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{MVIEW only}
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST \& MVIEW}
       \end{axis}
     \end{tikzpicture}
-    \caption{comparison (Cull time)} \label{fig:bmark_singles_comp}
+    \caption{comparison (Cull time)} \label{fig:bmark_combined_cull}
   \end{center}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \begin{center}
     \begin{tikzpicture}
       \begin{axis}[
@@ -432,31 +417,72 @@ For the CPU an overall average utilization of 49\% with each of the 8 threads av
         % the .csv file (on top)
         table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
         \addlegendentry{all OFF}
-        %                \addplot 
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
-        %\addlegendentry{MFFR ON}
-                \addplot 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SFRUST only}
-                \addplot 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{SMASK only}
-                \addplot 
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+        
+        \addplot 
         % add a plot from table; you select the columns by using the actual name in
         % the .csv file (on top)
-        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
-        \addlegendentry{MVIEW only}
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK \& SFRUST \& MVIEW}
       \end{axis}
     \end{tikzpicture}
-    \caption{comparison (GPU time)} \label{fig:bmark_singles_comp}
+    \caption{comparison (GPU time)} \label{fig:bmark_combined_GPU}
   \end{center}
 \end{figure}
 
-\section{Combined and partially combined impact}
-\textcolor{red}{[TODO]}
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=7000,
+          ymax=13000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST \& MVIEW}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{MVIEW only vs SFRUST \& MVIEW (Whole frame time)} \label{fig:bmark_MVIEW_vs_MVIEWSFRUST}
+  \end{center}
+\end{figure}

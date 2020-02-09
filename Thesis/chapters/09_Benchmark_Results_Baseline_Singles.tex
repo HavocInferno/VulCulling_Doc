@@ -1,0 +1,631 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+
+\chapter{Performance benchmark results} \label{results}
+Testing each combination of \textit{ON} and \textit{OFF} states of the four optimizations logically yields 16 permutations. This chapter aims to show the metrics declared in \autoref{bmark_metrics} for each permutation and explore causes and implications for those permutations that would reasonably be employed in an application. 
+The plot of draw call count submissions during the test run looks as \autoref{fig:bmark_drawcalls} and is identical for every subsequent test using the respective optimization due to the synthetic construction of the benchmark. Thus any otherwise observed performance impact barring error margins stems from changes in execution approach owing to active optimizations. Draw call lists in \gls{rtvklib} are built during frustum culling and as such should only change with the number of frusta used, meaning there are differences in draw call count expected between Superfrustum \textit{ON} and \textit{OFF} and MFFR \textit{ON} and \textit{OFF}. Superfrustum roughly halves draw call count compared to baseline which is expected considering each eye uses the same draw call list instead of separate and slightly different lists. MFFR differences are explored in \autoref{individual_impact} as they do not follow expectations. \\
+The following results are measured on \textbf{WS-Big} unless otherwise specified. 
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0000,
+          ymax=5500,
+          ylabel=call count in thousand,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=draws,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST OFF}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=draws,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST ON}
+                
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=tris,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        %\addlegendentry{GPU only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{draw call count per frame} \label{fig:bmark_drawcalls}
+  \end{center}
+\end{figure}
+
+\subsubsection{Baseline}
+To get a frame of reference for any potential performance improvement - or degradation - a baseline measurement is necessary, meaning a set of data points with all four optimizations set to \textit{OFF}. This baseline as measured on \textbf{WS-Big} looks as follows (\autoref{fig:bmark_baseline}): 
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+                
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{baseline/all OFF performance (10 run average)} \label{fig:bmark_baseline}
+  \end{center}
+\end{figure}
+
+While these performance numbers were recorded, the sensors of the RTX 2080 and i7 6700 were monitored using the tool \textit{HWiNFO64}. For the duration of the test, this tool attests utilization averages of 80\% for the GPU core, 37\% memory capacity, 32\% for the GPU memory controller and 20\% for the PCIe bus link. 
+For the CPU an overall average utilization of 49\% with each of the 8 threads averaging between 30-40\% was seen. RAM usage from asset load at program start up until termination reported 5.4GB for the application by itself. 
+
+\section{Individual impact} \label{individual_impact}
+Looking at the performance of each individual optimization by itself gives an idea of potential bottlenecks and a good reference for each metric to refer back to in the comparisons and more detailed discussion in \autoref{singles_comp}. \\
+Starting with Stencil Mask performance in \autoref{fig:bmark_SMASK}, no particular outliers can be noticed. On the contrary, the GPU- and frametime lines appear even a little smoother, specifically around frames 2100-2300 and 5300 onward, suggesting the worst frametimes of the baseline plot are primarily pixel shader bound. \\
+Continuing with Superfrustum performance in \autoref{fig:bmark_SFRUST}, no particular outliers can be noticed again. \\
+Stereo Multiview performance in \autoref{fig:bmark_MVIEW} hints at significant performance savings as overall frametimes are noticeably lower and framepacing tighter than in the baseline. \\
+Finally Monoscopic Far-Field Rendering returns the problematic numbers in \autoref{fig:bmark_MFFR} as already hinted at in \autoref{MFFR_failure}. It is immediately evident that \gls{MFFR} has severe issues with both overall performance and framepacing alike. In regular intervals of about 700 frames, GPU times rapidly fluctuate between 7 and 20 milliseconds for about 700 frames and then remain at high levels around 15 to 20 milliseconds again. The brief dips down below 10 milliseconds would be the expected performance of MFFR given the large number of far-field geometry in the test scene. This would suggest much higher shader load than the baseline configuration and is in line with the discussed overdraw issue, but does not explain the observed fluctuations completely. 
+Unexpectedly, even culling time irregularly spikes upward over the time of the benchmark loop. This comes as a surprise and indicates the \gls{rtvklib} frustum culling implementation suffers from a yet unexplored difficulty when handling that additional frustum. 
+Once draw call count for MFFR is included as a comparison (\autoref{fig:bmark_MFFR_draws}), it is clear that the steep variation directly correlates with the number of draw calls issued in a given frame. The only feasible explanation at this time is that the culling procedure incorrectly constructs the result sets leading to significant changes in per-frame load in these ranges. This does not, however, explain the higher overall frametimes outside of these fluctuations, which instead are most likely attributed to the enforced sequential synchronization of the used far-first MFFR approach. This hypothesis is supported by power draw sensor monitoring in \textit{HWiNFO64} during \gls{MFFR} runs, which saw the figure at only around 140-150 Watts compared to the 170-180 Watts observed in all other tests despite all tests consistently reporting back with 80-81\% GPU core usage. 
+Considering these performance issues persist in every configuration including \gls{MFFR} \textit{ON} and negates any otherwise gained savings in these cases, all 8 of these MFFR configurations are omitted from further analysis. \\
+\textit{HWiNFO64} monitoring values for most of the presented configurations proved uneventful and mostly followed baseline numbers within error. There are two exceptions to this, however. While baseline monitoring sat at 20\% average bus load, any case with \gls{MFFR} enabled saw a drop of about 3-4 percentage points in this metric, any case with Multiview enabled saw another 8 percentage point bus load reduction. Additionally, the two cases with both \gls{MFFR} and Superfrustum active but Stencil Masking disabled saw yet another drop of 4 percentage points. In other words, enabling Multiview usually resulted in 12\% bus load and enabling \gls{MFFR} as well resulted in a low 8\% bus load. While tangentially interesting, these numbers do not translate well into performance predictions for other systems and applications as too many system-specific factors affect bus load. 
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{SMASK ON performance (10 run average)} \label{fig:bmark_SMASK}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{SFRUST ON performance (10 run average)} \label{fig:bmark_SFRUST}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=3,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+              
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{MVIEW ON performance (10 run average)} \label{fig:bmark_MVIEW}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=4,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=30000, %16000
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{GPU only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Culling only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{CPU only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{\gls{MFFR} ON performance (10 run average)} \label{fig:bmark_MFFR}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+       \begin{axis}[
+          axis y line = right,
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=2,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=0,
+          ymax=30000, %16000
+          ylabel=call count in thousand,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{Whole frame}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=draws,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        \addlegendentry{draw call count}
+      \end{axis}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=2,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel={}, % Set the labels
+          xticklabels={,,},
+          ymin=0,
+          ymax=30000, %16000
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{Whole frame}
+      \end{axis}
+      
+    \end{tikzpicture}
+    \caption{\gls{MFFR} ON whole frame vs draw call count} \label{fig:bmark_MFFR_draws}
+  \end{center}
+\end{figure}
+
+\subsection{Comparison of individual optimizations} \label{singles_comp}
+Comparing the individual impacts per metric in one plot each gives a better idea of relative improvements or deterioration. 
+First off, overall frametimes (\autoref{fig:bmark_singles_whole}) clearly showcase the significant boost gotten when using Stereo Multiview, a 19.2\% reduction in median frametime and 19.7\% in average frametime as per the numbers in \autoref{tab:singles_medians}. Stencil Masking shows an appreciable albeit small performance gain as well, due to the particularly optimized fitment of the provided Valve Index mask. Here the median and average gains come out to 4.5\% and 4.3\%, respectively. The Superfrustum optimization results in a minor performance loss compared to baseline which seems counterintuitive at first. It becomes logical considering that with each eye still rendering individually, each eye now renders a higher load than with separate eye-fitted frusta. As such a Superfrustum the culling time reduction (\autoref{fig:bmark_singles_cull}) afforded by the Superfrustum is negated by the increased GPU load (\autoref{fig:bmark_singles_gpu}). An overall reduction including Superfrustum use can only be expected when combining its use with Stereo Multiview rendering so the per-eye surplus in draw calls is again negated by a reduction in command submission time. 
+An interesting effect on CPU and cull time can be observed for the Superfrustum and Multiview cases. While a CPU load reduction for Multiview is expected as it cuts down on command submissions, it is unexpected that it performs any better in cull time. But as \autoref{fig:bmark_singles_cull} clearly shows, Multiview leads to similar cull time savings as the Superfrustum. A retrospective look at the culling procedure of \gls{rtvklib} delivers an explanation. In an effort to fairly optimize dual frusta culling for Multiview rendering, the two eye frusta both write their resulting calls into the same output set. To avoid duplicate entries in that set and because it seemed illogical to check both frusta, when an \codeword{INSIDE} or \codeword{INTERSECT} frustum check for the first frustum is returned, the cell's draw command is added to the output set and as the second frustum's check would not change this command, it is not performed. Inadvertently this means the implemented Multiview path performs a form of frustum culling that approaches Superfrustum performance when the eye frusta have a high percentage of overlap. Effectively this means Multiview performs better than all other individual optimizations in GPU time but also in CPU time and is almost on par with the Superfrustum in cull time. As a sidenote, \autoref{tab:singles_medians} demonstrates that the presented benchmark data includes little skew as median and arithmetic mean values show no large differences and verifies again that the plotted frame data has no major outliers for any cases not involving MFFR. \\
+For each 
+
+\begin{table}[H]
+  \caption[Median/avg timings for frame/gpu/cull for baseline and individual optimizations]{Median and average (arithmetic mean) timings for frametime, gpu-time and cull-time for baseline and individual optimizations (rounded to two decimal places)}\label{tab:singles_medians}
+  \centering
+  \begin{tabular}{l || S S | S S | S S}
+    \toprule
+  	\multirow{2}{*}{Config} & 
+  		\multicolumn{2}{c}{frame} & 
+  		\multicolumn{2}{c}{gpu} & 
+  		\multicolumn{2}{c}{cull} \\
+       & {median} & {avg} & {median} & {avg} & {median} & {avg} \\
+    \midrule
+      baseline 	& 11.29 & 11.75 & 9.06 & 9.36 & 1.97 & 2.04 \\
+      SMASK 	& 10.78 & 11.24 & 8.63 & 8.88 & 1.95 & 2.02 \\
+      SFRUST	& 11.49 & 11.96 & 9.59 & 9.88 & 1.67 & 1.74 \\
+      MVIEW 	& 9.12 & 9.43 & 7.31 & 7.46 & 1.68 & 1.74 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=4,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=6000,
+          ymax=16000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (Whole frame time)} \label{fig:bmark_singles_whole}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=4,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=1000,
+          ymax=4000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=cputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (CPU time)} \label{fig:bmark_singles_cpu}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=4,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=500,
+          ymax=3500,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=culltime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (Cull time)} \label{fig:bmark_singles_cull}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+          width=\linewidth, % Scale the plot to \linewidth
+          height=0.5\linewidth,
+          grid=major, 
+          grid style={dashed,gray!30},
+          %legend style={at={(0.5,-0.2)},anchor=north},
+          legend cell align={left},
+          legend columns=4,
+          legend style={at={(1,1.11)},anchor=north east},
+          xmin=0,
+          xmax=5400,
+          xlabel=Frame Index, % Set the labels
+          x tick label style={rotate=90,anchor=east},
+          ymin=4000,
+          ymax=14000,
+          ylabel=time in milliseconds,
+          ylabel near ticks,
+          scaled y ticks={real:1000},
+          ytick scale label code/.code={}
+        ]
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{all OFF}
+        
+        %\addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        %table[x=frameindex,y=frametime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_OFF-MFFR_ON-VRBench-AVG.csv}; 
+        %\addlegendentry{MFFR ON}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_ON-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SFRUST only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_OFF-SFRUST_OFF-SMASK_ON-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{SMASK only}
+        
+        \addplot 
+        % add a plot from table; you select the columns by using the actual name in
+        % the .csv file (on top)
+        table[x=frameindex,y=gputime,col sep=comma] {plots/WS-Big/MVIEW_ON-SFRUST_OFF-SMASK_OFF-MFFR_OFF-VRBench-AVG.csv}; 
+        \addlegendentry{MVIEW only}
+      \end{axis}
+    \end{tikzpicture}
+    \caption{comparison (GPU time)} \label{fig:bmark_singles_gpu}
+  \end{center}
+\end{figure}

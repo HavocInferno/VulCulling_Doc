@@ -26,7 +26,7 @@ After all startup and initialization is done, the engine's render loop executes 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/Tachyon_VKRenderer_Update}
-  \caption[VKRenderer's Update]{Renderer update function \textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_VKRenderer_Update}
+  \caption[VKRenderer's Update]{Renderer Update function}\label{fig:lst_VKRenderer_Update}
 \end{figure} 
 \iffalse
 \begin{figure}[htb]
@@ -65,7 +65,7 @@ If any of these updates and culling passes set a pipeline or command buffer stat
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
+  \includegraphics[width=0.9\textwidth]{pictures/Tachyon_VKRenderer_RenderFrame}
   \caption[VKRenderer's RenderFrame]{Renderer frame render function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_VKRenderer_RenderFrame}
 \end{figure} 
 \iffalse
@@ -96,13 +96,12 @@ void VKRenderer::RenderFrame()
 \subsection{VR render loop}
 The \gls{VR} render target's \codeword{RenderFrame()} function is rather straight-forward. 
 As long as the target and compositor are active, it updates the \gls{OpenVR} device poses and virtual camera transforms. It then renders the stereoscopic views, resolves the multisampling layers into single sample and finally submits both eyes' images to SteamVR, which serves as the chosen \gls{OpenVR} compatible compositor on Windows systems. Note here, \gls{rtvklib}'s internal \gls{VR} render target class is also called \codeword{OpenVR} unfortunately but is not equivalent to the external \gls{OpenVR} library. Which of the two is meant in a given sentence is indicated by the formatting as showcased here. \\
-
 As the \gls{VR} view essentially moves constantly, its render target needs to update its Vulkan \codeword{VkCommandBuffer} every frame. This is done by setting the \codeword{mCommandBuffersInvalid} flag which has the renderer call \codeword{UpdateCommandBuffers()} which in turn prompts each render target to \codeword{RecordCommandBuffers()}. For each of the \gls{VR} render target's command buffers this is a simple loop through the \codeword{RecordDrawCommand()}s of the pipelines assigned to this render target between the Begin and End commands of the command buffer and render pass. The draw command recording function has the respective pipeline query the \codeword{InstanceManager} for its post-culling draw command set and writes the contained entries as \codeword{vkCmdDrawIndexedIndirect()} draw calls. 
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption[VR render target's RecordCommandBuffers]{VR command buffer recording function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_OpenVR_RecordCommandBuffers}
+  \includegraphics[width=0.9\textwidth]{pictures/Tachyon_OpenVR_RecordCommandBuffers}
+  \caption[VR render target's RecordCommandBuffers]{VR command buffer recording function}\label{fig:lst_OpenVR_RecordCommandBuffers}
 \end{figure} 
 \iffalse
 \begin{figure}[htb]
@@ -137,12 +136,12 @@ void OpenVR::RecordCommandBuffers(uint32_t passId)
 \end{figure}
 \fi
 
-Moreover, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, the \gls{VR} render target's \codeword{OpenVR::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the VR compositor for presentation inside the headset. \\
+Moreover, as seen in \autoref{fig:lst_OpenVR_RenderFrame}, the \gls{VR} render target's \codeword{OpenVR::RenderFrame()} render function first updates the API-supplied \gls{HMD} pose matrices and consequently recalculates its virtual camera parameters. It then submits any given \codeword{VkCommandBuffer}s assigned to itself, followed by a submission of the multisample resolve command buffer. At the end of the loop iteration it gathers the resulting resolved image textures for each eye and submits them to the VR compositor for presentation inside the headset. 
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption[VR render target's RenderFrame]{VR frame render function\textcolor{red}{[TODO: autoref code snippet in appendix]}}\label{fig:lst_OpenVR_RenderFrame}
+  \includegraphics[width=0.9\textwidth]{pictures/Tachyon_OpenVR_RenderFrame}
+  \caption[VR render target's RenderFrame]{VR frame render function}\label{fig:lst_OpenVR_RenderFrame}
 \end{figure} 
 \iffalse
 \begin{figure}[htb]

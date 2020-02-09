@@ -10,11 +10,11 @@ Eye tracking can be foregone in theory, assuming the headset's field of view is 
 Given eye tracking of some adequate sort is available, true foveated rendering can be performed in which in each frame the current focus position of each eye is queried and the virtual view matrix adjusted accordingly. This makes the rendering setup more complex as the high pixel density area can shift to any location within the image but it allows for a tighter foveal angle and lower peripheral resolution as it is much less likely - if not entirely impossible due to limits or occasional mistakes by the tracker - for the user to focus on any such low density frame data. See ZeroLight Limited's \gls{Nvidia VRS} based approach in \autoref{fig:ZeroLight_DFR}. 
 
 \begin{figure}[!ht]
-     \subfloat[Oculus Go Fixed Foveated Rendering map (colored tiles decrease in resolution outward) (from \cite{Palandri.2018}, R. Palandri et al., 2018.)\label{fig:Oculus_FFR}]{%
+     \subfloat[Oculus Go Fixed Foveated Rendering map (colored tiles decrease in resolution outward) (from \cite{Palandri.2018}, R. Palandri et al., 2018)\label{fig:Oculus_FFR}]{%
        \includegraphics[width=0.9\textwidth]{pictures/Oculus_Go_FFR}
      }
      \hfill
-     \subfloat[Dynamic Foveated Rendering using Nvidia Variable Rate Shading on HTC Vive Pro Eye (from \cite{ZeroLightLimited.2019}, 2019.)\label{fig:ZeroLight_DFR}]{%
+     \subfloat[Dynamic Foveated Rendering using Nvidia Variable Rate Shading on HTC Vive Pro Eye (from \cite{ZeroLightLimited.2019}, 2019)\label{fig:ZeroLight_DFR}]{%
        \includegraphics[width=0.9\textwidth]{pictures/ZeroLight_DFR}
      }
      \caption{Foveated rendering examples}

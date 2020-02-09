@@ -102,17 +102,17 @@ The per-frame culling pass of \gls{Tachyon} then naturally only checks against t
 Another culling variant specific to stereoscopy uses the round robin principle. Again, the concept springs from the desire to avoid frusta overlap but instead of combining the frusta, it exploits a common property of current stereoscopy rendering techniques. As modern headsets use circular lens optics and flat displays distorting the displayed image, the framebuffers commonly need to be warped to compensate so the picture looks undistorted to the user. As a result, a lot of the edge data of the image is either considerably pushed together or outside of the visible area of the HMD displays.
 This conservative property means a virtual eye frustum can be smaller than the technical frustum of that respective eye and false negative discards in these edge regions would go unseen by the user.
 Assuming both eyes of the headset have similar opening angles and parallel or nearly parallel viewing direction, the overlap of the two frusta would encompass the entire stereo-visible volume. It follows that only culling for one of the eye frusta would already give a sufficient representation of the actually visible scene. \\
-
 There is still a possibility of missing a few edge cases with this alone. So the extension of the idea to actual round robin assumes another common property of modern \gls{VR} headsets, namely high refresh rates. Many of these aim for at least 80Hz (Rift S, \gls{WMR}) ranging up to 144Hz (Index experimental mode) image refresh to give the user a smooth visual sensation.
 Exactly halving that refresh rate and reprojecting images for two refresh cycles with some pixel interpolation is an established way to still provide an acceptable experience with minor visual artifacting on slower devices as demonstrated by Oculus LLC's Asynchronous Space Warp\cite{Beeler.2016} and SteamVR's reprojection\cite{ValveCorporation.2018} features. Subsequently, a conceivable compromise is to alternate which frustum is used for culling in a round robin fashion so that even if edge cases include visible false negatives, they only persist for one frame at a time. In the worst case this would manifest as shimmering or flickering at the outer edges of the visible screen area. \\
-
 Overall this makes Round Robin Culling a viable candidate on systems with very limited culling performance but the tight constraints for sufficiently accurate results make it unfit as a general recommendation. 
 
+\iffalse
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/placeholder}
   \caption{\textcolor{red}{[TODO: small illustration?]}} \label{fig:blob}
 \end{figure}
+\fi
 
 \section{Conical Frustum Culling}
 This third alternative culling extension targets the circular shape of HMD lenses for leverage. Coming back to the conservative framebuffer size from the previous section, the lenses lead to a lot of invisible area in the corners of the display. Jonathan Hale attempts to demonstrate the method in his thesis \cite{Hale.2018} as both a contribution to the graphics middleware \textit{Magnum}\cite{Vondrus.30.10.2019} and a UE4 extension at Vhite Rabbit\cite{VhiteRabbit.08.01.2020} - albeit with limited success. However, his proof of concept shows the validity of the method. The traditional six sided trapezoid frustum is replaced by a cone encompassing a volumetric projection of the view through each respective lens as visualized in \autoref{fig:hale_cone}. \\
@@ -120,7 +120,7 @@ Hale examined various types of cone intersection math, including AABB and boundi
 Another note by Hale cautions that depending on the used HMD, a cone frustum may prove \textit{less} accurate than a trapezoid, such as for the Oculus Rift CV1. As some headsets show not a fully circular image through their lenses but rather the entire distorted frame, it may not be possible to fit a cone frustum within the traditional frustum and instead that cone may actually exceed the traditional dimensions and thus cull fewer objects. 
 For appropriate headsets and more geometry-bound GPUs, this method may provide a small relief if using even faster cone intersection math. 
 
-\begin{figure}[htb]
+\begin{figure}[h!]
   \centering
   \includegraphics[height=6cm]{pictures/hale_cone}
   \caption{Point-cone intersection illustration by Hale (\cite{Hale.2018}, p. 21)} \label{fig:hale_cone}

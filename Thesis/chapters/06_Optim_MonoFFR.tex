@@ -72,17 +72,19 @@ Secondly, Vulkan render passes discard fragments at their end by default if dept
 Lastly, and most importantly, performance simply is not up to par. On the i7 and RTX2080 test system (\textbf{WS-Big}, see \autoref{benchmark_setup}), enabling \gls{MFFR} with a sufficiently far split distance yielded a 34\% performance loss. The culprit for this is most likely two-fold. One factor is the detrimental Z ordering of the submitted draw commands since much of the far field color buffer is overdrawn by the near pass and thus counts as wasted effort. The other factor is the lack of parallelism due to the use of a shared framebuffer. The two render passes need to be synchronized to run in order and cannot be scheduled on parallel thread warps to increase GPU utilization and thus performance. What's puzzling in this scenario is that Palandri et al. in their Oculus blog entry\cite{Palandri.2016} saw a clear performance uplift in a Unity sample scene with seemingly very similar \gls{MFFR} construction. \\
 As such, the \gls{rtvklib} \gls{MFFR} implementation as presented here remains beneficial only in theory and will require further work to result in real performance gain. 
 
-\begin{figure}[htb]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: distorted picture example?]}} \label{fig:blob}
+  \caption{\textcolor{red}{[TODO: distorted picture example?]}} \label{fig:distortion_MFFR}
 \end{figure}
 
 \subsection{\gls{MFFR} Variant: Depth Shift}  \label{MFFR_depthshift}
 In its basic version \gls{MFFR} as described in \autoref{MFFR} completely foregoes separation beyond the split distance and as such the split distance has to be set relatively far back to minimize the visual inaccuracy. Naturally, an attempt to try and reduce that split distance closer to the camera is by artificially and cheaply increasing that accuracy again. One such way is to use the data already contained in the framebuffer's depth layer during rendering. As stereo separation is mostly dependent on depth, given the object itself and its properties are known, an improvement is to approximate small amounts of separation based on that depth buffer. Instead of simply copying or sampling the far image to both eyes after the far field pass, one can do an additional sampling or post-processing pass which includes slightly shifting pixels according to the depth value of the respective given fragment. \\
 This interpolation should allow pulling the field split distance closer to the camera and save some stereo render time, but it is unclear whether the savings outweigh the additional processing cost and this thesis does not explore \gls{MFFR} beyond the base variant. \\
 
+\iffalse
 \textcolor{red}{[TODO: shift math or geometric illustration]}
+\fi
 
 \subsection{\gls{MFFR} Variant: Alternate eye}
 Another possible way of pulling in the split distance value while retaining approximated separation comes back to the \gls{VR} property of high framerate as explained in earlier chapters like the Round Robin Culling (\autoref{RRCull}). Assuming high framerate and refresh rate, the mono render pass could be called with the camera parameters not custom calculated as a middle point between the two eyes but alternating between left and right eye parameters each frame. This way, each alternating eye would be correctly projected every other frame and incorrect data would likewise only persist for one frame at a time in each eye. If this eye-alternating \gls{MFFR} were to be combined with interpolation of the respective incorrect eye, the perceived inaccuracy (seen as flickering as the visual information is only incorrect every other frame) may be further reduced. Candidates for this are a simple frame interpolation or a single frame temporal reconstruction, although a single previous frame may not be enough for stable results. \\

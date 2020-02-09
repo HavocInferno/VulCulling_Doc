@@ -13,7 +13,7 @@ As can be gathered from the previous chapters, the optimizations implemented in 
 While expectations for the first three items were optimistic, it shall be noted again that MFFR unfortunately turned out unsuccessful, which will reflect in this following chapter. 
 
 \section{Benchmark scene}
-In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. \textcolor{red}{[TODO: conduct a few short tests with a lower workload just to get an idea of scaling?]} \\
+In order to properly assess how each of these implementations fares at run-time and how it impacts performance of the engine, a series of benchmarks were conducted. To ensure repeatability of the benchmark, a synthetic test scene was constructed, aimed to stress the tested systems to a degree not likely found in many real scenarios. While this may seem counterintuitive, it paints a worst-case picture of performance to be expected and how the tested methods hold up. \\
 This test scene is built as follows: the scene dimensions are set up as 32 by 32 \codeword{chunk}s, each \codeword{chunk} sized 80 units on each axis. This gives an overall scene volume of 2560 by 80 by 2560 units. This seems strongly skewed towards lateral expansion rather than vertical, chosen primarily due to the expected productive use being industrial scenes covering large factory floors but not necessarily very vertical setups. Another reason is that the Tachyon scene \codeword{chunk} system currently does not allow stacking of \codeword{chunk}s and as such an adequate compromise between scene scale and octree scale had to be chosen. 
 Filling this test scene is a selection of objects, the geometries namely being a primitive cube and three high polycount objects, a robot called "Robi", a material showcase sphere and a PBR showcase helmet. These objects are placed in the scene by iterating through a counter for each axis and placing an object instance at each new count. To determine the instance position, the three axis counts at that moment are multiplied by a spacing of 3.6 and a entropy value is added to each axis. This entropy value is combined as \codeword{x = sinf(sinf(x) + cosf(y) + tanf(z))}, \codeword{y = cosf(sinf(y) + cosf(z) + tanf(x))}, \codeword{z = sinf(cosf(sinf(z) + cosf(x) + tanf(y)))}. Adding this artificial entropy makes the scene look more chaotic but is still deterministic and repeatable.
 By default the placed object is a primitive cube, but at every intersection of x+z, y-z and z counts valued 11, one high polycount instance is placed, with the chosen type being modulo-index-incremented over the available high polycount types. 
@@ -40,8 +40,6 @@ Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are d
   \caption{Virtual Reality Pipeline as imagined by Nvidia\cite{Cleveland.2017} \textcolor{red}{[TODO: footnote of page in slides]}} \label{fig:VR_VSync}
 \end{figure} 
 
-\textcolor{red}{[TODO: resource usage aka memory per frame for relevant configurations, grabbed e.g. from representative NSight Frame]}
-
 \section{Compilation parameters}
 Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode using Microsoft Visual Studio 2015 and its v140 MSVC toolset. 
 To further eliminate potential slowdown from branching or data tracking, each of the 16 permutations of enabled optimizations is not done simply through \codeword{if} statements or \codeword{switch} cases, but through preprocessor defines. These defines are \codeword{SUPERFRUSTUM_ON}, \codeword{MULTIVIEW_ON}, \codeword{STENCILMASK_ON}, \codeword{MFFR_ON}. Similarly, benchmark timing code is enabled via the \codeword{BENCHMARK_MEASURE}, \codeword{BENCHMARK_CHUNKINFO} and \codeword{BENCHMARK_CAMRAILS} flags. \\
@@ -66,12 +64,12 @@ The second machine, further titled \textbf{WS-Small}, is specified as:
 \item Storage: ADATA SSD SX6000 Pro 500GB
 \item OS: Microsoft Windows 10 Pro x64 1909
 \end{itemize} 
-Furthermore, the following virtual reality headsets were available with the respective resolution setting and in the respective capacity:
+Furthermore, the following virtual reality headsets were available with the respective interal per-eye resolution setting and in the respective capacity:
 \begin{itemize}
 \item Valve Index (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} performance measurements, functionality verification
 \item HTC Vive (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} functionality verification
 \item HTC Vive Pro (0x0 pixels\textcolor{red}{[TODO]}) - \textbf{WS-Big} functionality verification
-\item Oculus Rift CV1 (1344x1600 pixels) - \textbf{WS-Big} functionality verification
+\item Oculus Rift CV1 (1344x1600 pixels) - \textbf{WS-Big} \& \textbf{WS-Small} functionality verification
 \item Samsung Odyssey (1449x1797 pixels) - \textbf{WS-Small} functionality verification
 \end{itemize} 
 To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 100 and 99\% respectively, which effectively disables singlecore turbo boost and speedshift and fixates the frequency at the allcore boost multiplier of 37x for 3.7GHz allcore. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. \\

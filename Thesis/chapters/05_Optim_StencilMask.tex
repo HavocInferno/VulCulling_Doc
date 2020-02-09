@@ -67,7 +67,7 @@ At the end of the \gls{VR} render pass, an ad-hoc command buffer is recorded and
 \begin{figure}[h]
   \centering
   \hspace*{\fill}
-     \subfloat[Stencil mask returned by SteamVR for the Index Vive]{%
+     \subfloat[Stencil mask returned by SteamVR for the Valve Index]{%
        \includegraphics[width=0.4\textwidth]{pictures/index_home}
      }
   \hfill
@@ -75,9 +75,15 @@ At the end of the \gls{VR} render pass, an ad-hoc command buffer is recorded and
        \includegraphics[width=0.4\textwidth]{pictures/odyssey_home}
      }
   \hspace*{\fill}
-  \subfloat[(lack of) Stencil mask returned by SteamVR for the Rift CV1]{%
-       \includegraphics[width=0.7\textwidth]{pictures/rift_home}
-  }
+  \hspace*{\fill}
+     \subfloat[Stencil mask returned by SteamVR for the HTC Vive]{%
+       \includegraphics[width=0.4\textwidth]{pictures/vive_home}
+     }
+  \hfill
+  	\subfloat[(lack of) Stencil mask returned by SteamVR for the Rift CV1]{%
+       \includegraphics[width=0.4\textwidth]{pictures/rift_home}
+     }
+  \hspace*{\fill}
      \caption{Comparison of stencil mask availability (while running SteamVR home)\textcolor{red}{[TODO: Odyssey, Vive]}}
      \label{fig:empty_mask}
 \end{figure}

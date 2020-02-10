@@ -1,0 +1,109 @@
+%\begin{titlepage}
+  % HACK for two-sided documents: ignore binding correction for cover page.
+  % Adapted from Markus Kohm's KOMA-Script titlepage=firstiscover handling.
+  % See http://mirrors.ctan.org/macros/latex/contrib/koma-script/scrkernel-title.dtx,
+  % \maketitle macro.
+  \setlength{\voffset}{-1.4in}
+  \oddsidemargin=\evensidemargin\relax
+  \textwidth=\dimexpr\paperwidth-2\evensidemargin-2in\relax
+  \hsize=\textwidth\relax
+
+  \centering
+
+  \IfFileExists{logos/tum.pdf}{%
+    \includegraphics[height=20mm]{logos/tum.pdf}
+  }{%
+    \vspace*{20mm}
+  }
+
+  \vspace{5mm}
+  {\huge\MakeUppercase{\getFaculty{}}}\\
+
+  \vspace{5mm}
+  {\large\MakeUppercase{\getUniversity{}}}\\
+
+  \vspace{10mm}
+  {\Large \getDoctype{}}
+
+  \vspace{15mm}
+  \makeatletter
+  \ifthenelse{\pdf@strcmp{\languagename}{english}=0}
+  {\huge\bfseries \getTitle{}}
+  {\huge\bfseries \getTitleGer{}}
+  \makeatother
+
+  \vspace{15mm}
+  \large
+  \begin{tabular}{l l}
+    Author:          & \getAuthor{} \\
+    Supervisor:      & \getSupervisor{} \\
+    Advisor:         & \getAdvisor{} \\
+    Submission Date: & \getSubmissionDate{} \\
+  \end{tabular}
+  %{\LARGE \getAuthor{}}
+  
+  \vspace{15mm}
+  {\huge{Project files \& supplemental data}}\\
+
+  \IfFileExists{logos/faculty.png}{%
+    %\vfill{}
+    \vspace{15mm}
+    \includegraphics[height=20mm]{logos/faculty.png}
+  }{}
+%\end{titlepage}
+
+
+
+
+
+\iffalse
+\newpage
+%\begin{titlepage}
+  \centering
+
+  \IfFileExists{logos/tum.pdf}{%
+    \includegraphics[height=20mm]{logos/tum.pdf}
+  }{%
+    \vspace*{20mm}
+  }
+
+  \vspace{5mm}
+  {\huge\MakeUppercase{\getFaculty{}}}\\
+
+  \vspace{5mm}
+  {\large\MakeUppercase{\getUniversity{}}}\\
+
+  \vspace{20mm}
+  {\Large \getDoctype{}}
+
+  \makeatletter
+  \vspace{15mm}
+  \ifthenelse{\pdf@strcmp{\languagename}{english}=0}
+  {
+  {\huge\bfseries \getTitle{}}
+
+  \vspace{10mm}
+  {\huge\bfseries \foreignlanguage{ngerman}{\getTitleGer{}}}
+  }
+  {
+  {\huge\bfseries \getTitleGer{}}
+
+  \vspace{10mm}
+  {\huge\bfseries \foreignlanguage{english}{\getTitle{}}}
+  }
+  \makeatother
+
+  \vspace{15mm}
+  \begin{tabular}{l l}
+    Author:          & \getAuthor{} \\
+    Supervisor:      & \getSupervisor{} \\
+    Advisor:         & \getAdvisor{} \\
+    Submission Date: & \getSubmissionDate{} \\
+  \end{tabular}
+
+  \IfFileExists{logos/faculty.png}{%
+    \vfill{}
+    \includegraphics[height=20mm]{logos/faculty.png}
+  }{}
+%\end{titlepage}
+\fi

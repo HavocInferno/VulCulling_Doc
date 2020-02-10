@@ -1,0 +1,37 @@
+\RequirePackage[l2tabu,orthodox]{nag}
+
+% TODO: decide if one-sided/two-sided
+%\documentclass[headsepline,footsepline,footinclude=false,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,BCOR=12mm,DIV=12]{scrbook} % two-sided % original source stated: BCOR=12mm,DIV=12
+\documentclass{cd-cover} % one-sided
+
+% TODO: change citation style in settings
+\input{settings}
+
+% TODO: change thesis information
+\newcommand*{\getUniversity}{Technische Universität München}
+\newcommand*{\getFaculty}{Department of Informatics}
+\newcommand*{\getTitle}{Evaluation of Rendering Optimizations for Virtual Reality Applications in Vulkan}
+\newcommand*{\getTitleGer}{Evaluation von Renderoptimierungen für Virtual Reality Anwendungen in Vulkan}
+\newcommand*{\getAuthor}{Paul Preißner}
+\newcommand*{\getDoctype}{Master's Thesis in Informatics: Games Engineering}
+\newcommand*{\getSupervisor}{Prof. Gudrun Klinker, Ph.D.}
+\newcommand*{\getAdvisor}{M.Sc. Sven Liedtke}
+\newcommand*{\getSubmissionDate}{February 15 2020}
+\newcommand*{\getSubmissionLocation}{Garching bei München}
+
+\begin{document}
+
+% TODO: decide on used language
+%\selectlanguage{ngerman}
+\selectlanguage{english}
+
+% Set page numbering to avoid "destination with the same identifier has been already used" warning for cover page.
+% (see https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Problems_with_Links_and_Pages).
+\pagenumbering{alph}
+\input{pages/cover}
+
+
+%\input{pages/title}
+
+
+\end{document}

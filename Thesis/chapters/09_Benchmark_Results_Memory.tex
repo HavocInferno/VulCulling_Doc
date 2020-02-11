@@ -6,21 +6,21 @@ Previously in this thesis for examination of various frame-internal buffers, lay
 For the baseline (all \textit{OFF}) configuration, the following resources are allocated: 
 
 \begin{table}[H]
-  \caption[VRAM usage of baseline test configuration}\label{tab:vmem_baseline}
+  \caption[VRAM usage of baseline test configuration]{VRAM usage of baseline (all \textit{OFF}) test configuration}\label{tab:vmem_baseline}
   \centering
   \begin{tabular}{l || S l }
     \toprule
-  	\multirow{2}{*}{Resource} & 
+  	\multirow{2}{*}{Resource (No. units)} & 
   		\multicolumn{2}{c}{memory} \\
-        & {footprint (units)} & {type} \\
+        & {footprint} & {type} \\
     \midrule
-      Color Buffer	& 137.81MB & (RGBA8 4xSample, 2 layers of 2016x2240) \\
-      Depth Buffer	& 139.58MB & (D32, 2 layers of 2016x2240) \\
-      Resolve Image	& 17.72MB x2 & (RGBA8 1 layer of 2016x2240) \\
-      Asset Textures	& 21.33MB x5 & (RGBA8, 1 layer of 2048x2048) \\
-      Env. Textures	& 16.03MB & (RGBA16, 6 layers of 512x512) \\
-      Env. Textures	& 528KB & (RGBA32, 6 layers of 64x64) \\
-      PBR Reference	& 1024KB & (RG16, 1 layer of 512x512) \\
+      Color Buffer	& 137.81 MB & (RGBA8 4xSample, 2 layers of 2016x2240) \\
+      Depth Buffer	& 139.58 MB & (D32, 2 layers of 2016x2240) \\
+      Resolve Image (2x)	& 17.72 MB & (RGBA8, 1 layer of 2016x2240) \\
+      Asset Textures (11x)	& 21.33 MB & (RGBA8, 1 layer of 2048x2048) \\
+      Env. Textures	& 16.03 MB & (RGBA16, 6 layers of 512x512) \\
+      Env. Textures	& 528.0 KB & (RGBA32, 6 layers of 64x64) \\
+      PBR Reference	& 1024.0 KB & (RG16, 1 layer of 512x512) \\
     \midrule
       Index Buffer	& 1.77MB & (cube + high poly assets geometry) \\
       Instance Model Matrices	& 678.80MB & (64B per instance) \\
@@ -28,7 +28,7 @@ For the baseline (all \textit{OFF}) configuration, the following resources are a
   \end{tabular}
 \end{table} 
 
-Another 257.41MB are used for texture and buffer staging but not used every frame thereafter. A buffer for camera matrices and positions takes up 288B. Additionally 1025 small (about 200-220KB) buffers are used at startup, declared as index buffers, but only about 30 are regularly reused in a frame. For each of the listed buffers, textures and images, a \codeword{DEVICE_LOCAL} memory pool of the corresponding size resides in the GPU onboard memory, model matrices and staging buffers are created as \codeword{HOST_VISIBLE \& HOST_COHERENT} memory to be synchronized between the CPU RAM and GPU VRAM when changed. Such changes may include object transformation via the respective model matrix or upload of new textures to the GPU. \\
+Another 257.41MB are used for texture and buffer staging but not used every frame thereafter. A buffer for camera matrices and positions takes up 288B. Additionally 1025 small (about 200-220KB) buffers are used at startup, declared as index buffers, but only about 30 are regularly reused in a frame. For each of the listed buffers, textures and images, a \codeword{DEVICE_LOCAL} memory pool of the corresponding size resides in the GPU onboard memory, model matrices and staging buffers are created as \codeword{HOST_VISIBLE} \& \codeword{HOST_COHERENT} memory to be synchronized between the CPU RAM and GPU VRAM when changed. Such changes may include object transformation via the respective model matrix or upload of new textures to the GPU. \\
 
 Upon activation of any optimizations, only one distinct change is observed. When Stencil Masking is enabled, the depth buffer is created with not only the depth bit set but also the stencil bit and its format is changed from a 32bit SFLOAT to a 32bit SFLOAT along with a layer of 8bit UINT. The effect of this change in resource usage is a size increase of the depth buffer from 139.58MB to a combined depth and stencil buffer with a size of 277.39MB. \\
 Apart from this, the other three optimizations have negligible effect on video memory utilization. For each frustum afforded or saved by \gls{MFFR} or the Superfrustum, the camera parameter buffer is expanded or shrunk by 144B. And for each additional frustum the command buffer increases in size, but the change is not easily measurable as the changed frustum sizes and changing draw lists in each frame lead to more fluctuation in the buffer size. \\

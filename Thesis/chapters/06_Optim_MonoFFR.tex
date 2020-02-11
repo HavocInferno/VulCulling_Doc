@@ -59,7 +59,7 @@ While the general approach is mostly straight-forward and both described ways ar
 \end{itemize}
 
 \subsection{\gls{rtvklib} \gls{MFFR} failure} \label{MFFR_failure}
-Some issues with this implementation prevail and make it unfit for productive deployment in \gls{Tachyon}. For one, while the projection matrix itself uses the correct parameters, view matrix transformation used for the far field remains incorrect, so head movement leads to incorrect projection distortion effects on the horizontal axis. While the lack of pure separation at little to no sideways tilt may be acceptable and not easily noticed with a correct view matrix, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical. Fixing this disparity would require translating the far field image of each eye to conform more closely to the expected overall stereo shift. 
+Some issues with this implementation prevail and make it unfit for productive deployment in \gls{Tachyon}. For one, while the projection matrix itself uses the correct parameters, view matrix transformation used for the far field remains incorrect, so head movement leads to incorrect projection distortion effects on the horizontal axis. While the lack of pure separation at little to no sideways tilt may be acceptable and not easily noticed with a correct view matrix, tilting the head means more severe separation mismatch as the spatial disconnect is expanded from being mostly horizontal to being horizontal and vertical, clearly visible in \autoref{fig:distortion_MFFR}. Fixing this disparity would require translating the far field image of each eye to conform more closely to the expected overall stereo shift. 
 Vitally, this visual distortion does not affect performance measurements presented in \autoref{results} as the used internal culling frustum is computed from the virtual camera's world position and direction in any given frame and not subject to incorrect projection transformation. Subsequently, submitted draws and render passes are correct and executed in the described order, as exemplified by the Nvidia \gls{Nsight VS} debug timeline in \autoref{fig:Nsight_MFFR}. 
 
 \begin{figure}[htb]
@@ -74,8 +74,8 @@ As such, the \gls{rtvklib} \gls{MFFR} implementation as presented here remains b
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.9\textwidth]{pictures/placeholder}
-  \caption{\textcolor{red}{[TODO: distorted picture example?]}} \label{fig:distortion_MFFR}
+  \includegraphics[width=0.9\textwidth]{pictures/mffr_tilt_distortion}
+  \caption{Incorrect monoscopic far field distortion (notice the thin center line of distant geometry shifted up and left in the Left Eye image, but shifted down and right in the Right Eye image)} \label{fig:distortion_MFFR}
 \end{figure}
 
 \subsection{\gls{MFFR} Variant: Depth Shift}  \label{MFFR_depthshift}

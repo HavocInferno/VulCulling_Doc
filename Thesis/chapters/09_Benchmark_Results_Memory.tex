@@ -3,3 +3,30 @@
 
 \section{Memory Usage}
 \textcolor{red}{[TODO: Nsight VS memory screencaps of 8 relevant cases]}
+baseline vmem: 
+
+	imgs:
+	- col buf: 137.81MB (R8G8B8A8 4xMSAA, 2 layer 2016x2240)
+	- d/s buf: 139.58MB (D32)
+	- resolved: 17.72MB x2 (R8G8B8A8)
+	- helmet tex: 21.33MB x5 (RGBA8, 1 layer 2Kx2K)
+	- robi tex: 21.33MB x2
+	- thing tex: 21.33MB x4
+	- env tex: 16.03MB (RGBA16, 6 layer 512x512) + 528KB (RGBA32, 6 layer 64x64)
+	- PBR?: 1024KB (RG16, 1 layer 512x512)
+	-> one mem pool each as DEVICE_LOCAL
+
+	bufs
+	- 1.77MB indexbuf
+	- 42.43MB ?
+	- 678.80MB (inst infos? aka modelmatrices)
+	- 212.13MB ? never used? -> tex staging?
+	- 2.85MB ?
+	- 1025x ~200-220KB indexbufs of which only ~30 are used
+	- cmdbuf < 1KB
+	-> one mem pool each
+	
+SMASK ON vmem:
+
+	imgs: 
+	- d/s buf: 277.39MB (D32 S8)

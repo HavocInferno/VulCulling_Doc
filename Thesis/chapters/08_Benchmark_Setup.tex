@@ -31,11 +31,11 @@ Still in the interest of repeatability, the head-tracked headset pose is disable
 \begin{figure}[!ht]
   \centering
      \subfloat[Sample scene with high object density, far draw distance and high degree of overdraw when rendered without per-frame Z ordering, screenshot taken of \gls{Tachyon}'s desktop viewport (repetition of \autoref{fig:scene_chaos})\label{fig:scene_chaos_2}]{%
-       \includegraphics[width=0.9\textwidth]{pictures/scene_chaos}
+       \includegraphics[width=0.8\textwidth]{pictures/scene_chaos}
      }
      \hfill
      \subfloat[The three high polycount assets used in the benchmark scene (LTR: robot "Robi" - 92430 tris, material ball - 46816 tris, glTF2.0 helmet - 15452 tris)\label{fig:highpolys}]{%
-       \includegraphics[width=0.9\textwidth]{pictures/highpolys}
+       \includegraphics[width=0.8\textwidth]{pictures/highpolys}
      }
      \caption{Benchmark scene details}
      \label{fig:bmark_scene_screencaps}
@@ -51,9 +51,8 @@ To get an accurate idea of how the computational effort within a frame changes a
 \item number of triangles submitted through draw calls
 \end{itemize}
 Times are measured by calculating elapsed counts between start and end time points of the respective function call. GPU-only time is measured by artificially placing a \\\codeword{VkQueueWaitIdle(graphicsQueue)} at the end of the \codeword{VKRenderer::RenderFrame} procedure. At first glance this seems counter-productive as it prevents frames from overlapping resource usage, but this is where synthetic repeatability becomes relevant. \\
-To guarantee runs with different optimizations enabled can be compared to each other, the render loop is modified to follow aforementioned camera pattern and and save the current frame number with each data point. This obviously flies in the face of desired real-world decoupling of motion from framerate and overlapping execution, but it ensures identical workload per frame for each tested configuration. Additionally, the camera pattern and timings loops are tuned to run exactly twice in exactly 5400 frames each for 10 loops. The resulting 54000 samples of frame data for each configuration are then filtered to exclude the worst outliers and the 10 loops are averaged into one representative set of 5400 data points. The very first frame of the averaged data sets is removed as the very first frame of the first loop after program start includes all initialization commands and major buffer transfers and thus results in an outlier frame time an order of magnitude higher than the remaining 53999 frames of each run. \\
-However in the interest of real-world scaling, a later section will also briefly explore average frametimes for a selection of configurations without these limits in place. \\
-Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are disabled for the testing runs as these calls otherwise force vertical refresh synchronization (\autoref{fig:VR_VSync}), completely distorting actual performance numbers. While this means during benchmarking there is no output to the connected HMD, the internal rendering loop still uses all of the HMD's rendering parameters and more importantly renders as many frames as it can without a framerate cap or refresh synchronization, exactly the behavior we need for accurate measurements. 
+To guarantee runs with different optimizations enabled can be compared to each other, the render loop is modified to follow aforementioned camera pattern and and save the current frame number with each data point. This obviously flies in the face of desired real-world decoupling of motion from framerate and overlapping execution, but it ensures identical workload per frame for each tested configuration. Additionally, the camera pattern and timings loops are tuned to run exactly twice in exactly 5400 frames each for 10 loops. The resulting 54000 samples of frame data for each configuration are then filtered to exclude the worst outliers and the 10 loops are averaged into one representative set of 5400 data points. The very first frame of the averaged data sets is removed as the very first frame of the first loop after program start includes all initialization commands and major buffer transfers and thus results in an outlier frame time an order of magnitude higher than the remaining 53999 frames of each run. However, in the interest of real-world scaling, a later section will also briefly explore average frametimes for a selection of configurations without these limits in place. \\
+Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are disabled for the testing runs as these calls otherwise force vertical refresh synchronization (\autoref{fig:VR_VSync}), completely distorting actual performance numbers. While this means during benchmarking there is no output to the connected HMD, the internal rendering loop still uses all of the HMD's rendering parameters and more importantly renders as many frames as it can without a framerate cap or refresh synchronization, exactly the behavior needed for accurate measurements. 
 
 \begin{figure}[htb]
   \centering
@@ -64,7 +63,7 @@ Lastly, and this part is crucial, the \codeword{Submit()} calls to SteamVR are d
 \section{Compilation parameters}
 Naturally productive deployment would go for fastest possible optimization and as such the tested configurations were all compiled with \codeword{-O2} in Release mode using Microsoft Visual Studio 2015 and its v140 MSVC toolset. 
 To further eliminate potential slowdown from branching or data tracking, each of the 16 permutations of enabled optimizations is not done simply through \codeword{if} statements or \codeword{switch} cases, but through preprocessor defines. These defines are \codeword{SUPERFRUSTUM_ON}, \codeword{MULTIVIEW_ON}, \codeword{STENCILMASK_ON}, \codeword{MFFR_ON}. Similarly, benchmark timing code is enabled via the \codeword{BENCHMARK_MEASURE}, \codeword{BENCHMARK_CHUNKINFO} and \codeword{BENCHMARK_CAMRAILS} flags. \\
-As a sidenote here, \textit{all} configurations were tested with distance culling (\codeword{DISTANCECULLING_ON}, draw distance 320 units) and frustum culling (\codeword{FRUSTUMCULLING_ON}) enabled as running the massive 11.1 million instance scene without these in place would realistically bring any test machine near a grinding halt. It also seems unrealistic to run any scene with advanced VR optimizations enabled but leave such simple measures disabled. 
+As a sidenote here, all configurations were tested with distance culling (\codeword{DISTANCECULLING_ON}, draw distance 320 units) and frustum culling (\codeword{FRUSTUMCULLING_ON}) enabled as running the massive 11.1 million instance scene without these in place would realistically bring any test machine near a grinding halt. It also seems unrealistic to run any scene with advanced VR optimizations enabled but leave such simple measures disabled. 
 Demonstrably, these culling methods are also not posing as dangerous bottlenecks to the tested configurations as the baseline measurement details will show. 
 
 \section{System specifications}
@@ -90,8 +89,8 @@ Furthermore, the following virtual reality headsets were available with the resp
 \item Valve Index (2016x2240 pixels)) - \textbf{WS-Big} performance measurements, functionality verification
 \item HTC Vive (1512x1680 pixels) - \textbf{WS-Big} functionality verification
 \item HTC Vive Pro (2016x2240 pixels) - \textbf{WS-Big} functionality verification
-\item Oculus Rift CV1 (1344x1600 pixels) - \textbf{WS-Big} \& \textbf{WS-Small} functionality verification
-\item Samsung Odyssey (1449x1797 pixels) - \textbf{WS-Small} functionality verification
+\item Oculus Rift CV1 (1344x1600 pixels) - \textbf{WS-Big} \& \textbf{WS-Small} functionality testing
+\item Samsung Odyssey (1449x1797 pixels) - \textbf{WS-Small} functionality testing
 \end{itemize} 
 To ensure repeatability and level the field as much as possible, the CPU of each system is locked to a fixed clock multiplier and thus operating frequency. For the i7 6700 and its lack of unlocked multiplier this is achieved by setting minimum and maximum processor state in Windows to 100 and 99\% respectively, which effectively disables singlecore turbo boost and speedshift and fixates the frequency at the allcore boost multiplier of 37x for 3.7GHz allcore. For the Ryzen 5 1600 a more reliable method is available, that being manually overriding the CPU multiplier within the mainboard UEFI, in this case to a fixed value of 38x for 3.8GHz across all 12 processor threads. \\
 Keeping GPU clock speeds at the same level for all test runs is harder to achieve as all modern graphics cards employ some version of dynamic boosting algorithms based on temperature, power target, voltage target and usage. The Radeon RX 580 is set to target a maximum of 1200MHz boost frequency via a VBIOS modification that disables higher automatic boost, and during core load it maintains this target stable unless the power target of 100 Watts is exceeded. 

@@ -10,13 +10,6 @@ Mono Far-Field Rendering opts to skip the second view during rendering of the na
 This approach has caveats however. The value at which a field split - the distance at which the stereo rendering is cut off and followed by only mono rendering - will depend on the individual user, their quality of vision and spatial awareness. It will also potentially depend on the resolution of the used headset given the user's vision is good enough to not deteriorate before that point. Note here, this thesis will not explore these constraints of \gls{MFFR} further than approximate values used for testing as time does not allow more. \\
 \gls{MFFR} has been implemented by Oculus LLC and Epic Games Inc in Unreal Engine 4 and was recommended for certain types of pixel-bound mobile \gls{VR} experiences with very limited GPU power but  has been removed from the engine in update 4.20 without further explanation. An odd decision, as UE documentation posts prior to the removal indicated continued optimization efforts such as added compatibility with UE4's multiview path\cite{EpicGamesInc..2016}. 
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=0.9\textwidth]{pictures/MFFR_farfirst}
-  \caption{Per-frame render pass flow of far-first \gls{MFFR}; \\
-  Each row represents one image buffer, each column represents the process steps the respective buffer is subjected to} \label{fig:flowchart_MFFR_FarFirst}
-\end{figure}
-
 \subsection{Estimated impact}
 The makeup of the scene itself will also affect the effectiveness of the solution. As cautioned by Oculus LLC in their developer reference on Mono Far-Field Rendering \cite{Palandri.2016}, there is a certain baseline overhead simply for enabling the additional render pass necessary for the monoscopic image and the associated context switches. Furthermore, only scenes with a significant amount of distant geometry beyond the field split distance will benefit from the optimization, as obviously the second view workload can only be saved for objects originally contained within that second pass. \\
 Going purely by Palandri and Green's blog entry, their forward-rendered UE4 implementation supposedly running on a GearVR device saw frametimes in the Epic SunTemple sample scene drop by 25\% and their best-case Unity test scene demonstrated a 49\% drop\cite{Palandri.2016}. 
@@ -28,6 +21,13 @@ If neither is done, the effective depth values of far-pass objects will be close
 The depth buffer clear option has the benefit of utilizing full projection precision and correct triangle clipping. The matrix squashing option avoids an extra clear but means vertices otherwise clipped outside of the uni-cube are pulled into the uni-cube and not skipped. \\
 The overall advantage of this far-first approach is it yields a full precision far-field depth buffer which may be useful for stereo interpolation as briefly described in the \autoref{MFFR_depthshift}. The disadvantage is early Z discard cannot be fully effective as all far geometry is rendered first even if opaque geometry close to the camera would later obstruct it. Whether the benefits of lower split distance coupled with interpolation can outweigh the additional cost of overdraw heavily depends on the scene and how much geometry is contained within the far volume. 
 The goal of this approach is to reduce memory operations and locality to a minimum and avoid more costly compositing methods. 
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pictures/MFFR_farfirst}
+  \caption{Per-frame render pass flow of far-first \gls{MFFR}; \\
+  Each row represents one image buffer, each column represents the process steps the respective buffer is subjected to} \label{fig:flowchart_MFFR_FarFirst}
+\end{figure}
 
 \subsection{Near-first approach}
 The alternative to rendering the far pass first is to render the stereo near volume at the start of each frame as illustrated in \autoref{fig:flowchart_MFFR_NearFirst}. A key difference to the former approach is the first pass needing to flag the stencil buffer pixel when an opaque fragment is within the uni-cube and a color value is written. After the stereo pass, each eye contains a binary stencil mask of the near-field occluded screen areas. In the next step, the far pass can then execute regularly except with stencil testing enabled. This sequence has no direct need for depth buffer clearing or uni-cube sharing. However, the constraint is the far pass also needing to sample from left to right eye separately as a straight buffer copy cannot work anymore. 
@@ -72,7 +72,7 @@ Secondly, Vulkan render passes discard fragments at their end by default if dept
 Lastly, and most importantly, performance simply is not up to par. On the i7 and RTX2080 test system (\textbf{WS-Big}, see \autoref{benchmark_setup}), enabling \gls{MFFR} with a sufficiently far split distance yielded a 34\% performance loss. The culprit for this is most likely two-fold. One factor is the detrimental Z ordering of the submitted draw commands since much of the far field color buffer is overdrawn by the near pass and thus counts as wasted effort. The other factor is the lack of parallelism due to the use of a shared framebuffer. The two render passes need to be synchronized to run in order and cannot be scheduled on parallel thread warps to increase GPU utilization and thus performance. What's puzzling in this scenario is that Palandri et al. in their Oculus blog entry\cite{Palandri.2016} saw a clear performance uplift in a Unity sample scene with seemingly very similar \gls{MFFR} construction. \\
 As such, the \gls{rtvklib} \gls{MFFR} implementation as presented here remains beneficial only in theory and will require further work to result in real performance gain. 
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.9\textwidth]{pictures/mffr_tilt_distortion}
   \caption{Incorrect monoscopic far field distortion (notice the thin center line of distant geometry shifted up and left in the Left Eye image, but shifted down and right in the Right Eye image)} \label{fig:distortion_MFFR}

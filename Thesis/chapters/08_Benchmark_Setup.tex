@@ -42,7 +42,7 @@ Still in the interest of repeatability, the head-tracked headset pose is disable
 \end{figure}
 
 \section{Timing code \& metrics} \label{bmark_metrics}
-To get an accurate idea of how the computational effort within a frame changes and is split up over its several steps, \codeword{STL::chrono high_resolution_clock} timings calls were used in strategic places. For each frame, the measured metrics are: \begin{itemize}
+To get an accurate idea of how the computational effort within a frame changes and is split up over its several steps, \codeword{STL::chrono high_resolution_clock} timing calls were used in strategic places. For each frame, the measured metrics are: \begin{itemize}
 \item total frame-time (microseconds)
 \item CPU-only time (microseconds)
 \item Culling-only time (microseconds)
